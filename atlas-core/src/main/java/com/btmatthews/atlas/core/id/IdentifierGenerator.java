@@ -16,7 +16,21 @@
 
 package com.btmatthews.atlas.core.id;
 
+/**
+ * This interface describes components that generate unique identifiers for
+ * objects.
+ * 
+ * @author <a href="mailto:brian@btmatthws.com">Brian Matthews</a>
+ * 
+ * @param <T>
+ *            The primitive type of the identifier.
+ */
 public interface IdentifierGenerator<T> {
 
+	/**
+	 * Generate an object identifier.
+	 * 
+	 * @return The object identifier.
+	 */
 	T generate();
 }

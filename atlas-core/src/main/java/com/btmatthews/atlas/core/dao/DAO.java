@@ -16,6 +16,10 @@
 
 package com.btmatthews.atlas.core.dao;
 
+import java.util.List;
+
+import com.btmatthews.atlas.core.common.Paging;
+
 /**
  * Describes the interface for data access objects that persist entities of
  * described by the interface {@code I} to a data store.
@@ -27,6 +31,10 @@ package com.btmatthews.atlas.core.dao;
  */
 public interface DAO<I> {
 
+	long count();
+	
+	List<I> find(Paging paging);
+	
 	/**
 	 * Persist a newly created entity in the data store.
 	 * 

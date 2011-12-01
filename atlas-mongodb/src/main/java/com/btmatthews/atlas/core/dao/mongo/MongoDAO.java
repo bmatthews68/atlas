@@ -21,8 +21,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 
+import com.btmatthews.atlas.core.common.Paging;
+import com.btmatthews.atlas.core.common.Paging.SortDirection;
 import com.btmatthews.atlas.core.dao.DAO;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
@@ -72,6 +75,16 @@ public abstract class MongoDAO<I, T extends I> implements DAO<I> {
 		mongoTemplate = new MongoTemplate(factory);
 	}
 
+	@Override
+	public long count() {
+		return mongoTemplate.count(new Query(), clazz);
+	}
+	
+	@Override
+	public List<I> find(final Paging paging) {
+		final Query query = new Query();
+		return find(query, paging);
+	}
 	/**
 	 * Persist a newly created object.
 	 * 
@@ -127,7 +140,16 @@ public abstract class MongoDAO<I, T extends I> implements DAO<I> {
 	 *            The query.
 	 * @return The matching objects.
 	 */
-	protected final List<I> find(final Query query) {
+	protected final List<I> find(final Query query, final Paging paging) {
+		query.skip(paging.getPageNumber() * paging.getPageSize());
+		query.limit(paging.getPageSize());
+		for (final Paging.Ordering ordering : paging.getSortOrderings()) {
+			if (ordering.getSortDirection() == SortDirection.ASCENDING) {
+				query.sort().on(ordering.getSortField(), Order.ASCENDING);
+			} else {
+				query.sort().on(ordering.getSortField(), Order.DESCENDING);
+			}
+		}
 		return Lists.transform(mongoTemplate.find(query, clazz),
 				new Function<T, I>() {
 					@Override
