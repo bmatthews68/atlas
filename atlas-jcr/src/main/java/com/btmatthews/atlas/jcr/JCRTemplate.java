@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Brian Matthews
+ * Copyright 2011-2012 Brian Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import javax.jcr.query.QueryResult;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class JCRTemplate implements JCRAccessor {
 
@@ -37,7 +36,13 @@ public class JCRTemplate implements JCRAccessor {
 
 	private SessionPool sessionPool;
 
-	@Autowired
+	public JCRTemplate() {
+	}
+
+	public JCRTemplate(final SessionPool pool) {
+		sessionPool = pool;
+	}
+
 	public void setSessionPool(final SessionPool pool) {
 		sessionPool = pool;
 	}

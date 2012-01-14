@@ -16,10 +16,9 @@
 
 package com.btmatthews.atlas.jcr;
 
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
+import javax.jcr.Repository;
 
-public interface SessionCallback<T> {
+public interface RepositoryProvider {
 
-	T doInSession(Session session) throws RepositoryException;
+	Repository getRepository();
 }

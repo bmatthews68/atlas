@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Brian Matthews
+ * Copyright 2011-2012 Brian Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,54 +16,33 @@
 
 package com.btmatthews.atlas.jcr;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.jcr.Session;
 
 import org.apache.commons.pool.KeyedObjectPool;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * A pool that provides session objects used to interact with the Java Content
  * Repository. This implementation uses Commons Pool to provide the underlying
  * pool implementation.
  */
-@Component
 public class SessionPoolImpl implements SessionPool {
 
 	/**
 	 * The underlying object pool that holds the pooled sessions.
 	 */
-	private KeyedObjectPool objectPool;
-
-	/**
-	 * The poolable object factory that is used to create sessions.
-	 */
-	private KeyedPoolableObjectFactory poolableSessionFactory;
+	private KeyedObjectPool<String, Session> objectPool;
 
 	/**
 	 * Used by the Spring Framework to inject the poolable object factory that
 	 * is used to create sessions.
 	 * 
-	 * @param poolableObjectFactory
+	 * @param factory
 	 *            The poolable object factory.
 	 */
-	@Autowired
-	public void setPoolableObjectFactory(
-			final KeyedPoolableObjectFactory poolableObjectFactory) {
-		poolableSessionFactory = poolableObjectFactory;
-	}
-
-	/**
-	 * Initialise the underlying object pool after the session pool has been
-	 * instantiated and auto-wired.
-	 */
-	@PostConstruct
-	public void init() {
-		objectPool = new GenericKeyedObjectPool(poolableSessionFactory);
+	public SessionPoolImpl(final KeyedPoolableObjectFactory<String, Session> factory) {
+		objectPool = new GenericKeyedObjectPool<String, Session>(factory);
 	}
 
 	/**
@@ -72,7 +51,6 @@ public class SessionPoolImpl implements SessionPool {
 	 * @throws Exception
 	 *             If there was an error closing the underlying object pool.
 	 */
-	@PreDestroy
 	public void shutdown() throws Exception {
 		objectPool.close();
 		objectPool = null;
@@ -91,7 +69,7 @@ public class SessionPoolImpl implements SessionPool {
 	 * @see SessionPool#borrowSession(String)
 	 */
 	public Session borrowSession(final String workspaceName) throws Exception {
-		return (Session) objectPool.borrowObject(workspaceName);
+		return objectPool.borrowObject(workspaceName);
 	}
 
 	/**

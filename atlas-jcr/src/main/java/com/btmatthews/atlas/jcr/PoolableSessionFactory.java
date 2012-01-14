@@ -16,19 +16,18 @@
 
 package com.btmatthews.atlas.jcr;
 
+import javax.jcr.Credentials;
 import javax.jcr.Repository;
 import javax.jcr.Session;
 
 import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * A factory that creates poolable sessions used to connect to the Java Content
  * Repository.
  */
-@Component
-public class PoolableSessionFactory extends BaseKeyedPoolableObjectFactory {
+public class PoolableSessionFactory extends
+		BaseKeyedPoolableObjectFactory<String, Session> {
 
 	/**
 	 * The Java Content Repository.
@@ -36,14 +35,23 @@ public class PoolableSessionFactory extends BaseKeyedPoolableObjectFactory {
 	private Repository repository;
 
 	/**
-	 * Used by the Spring Framework to inject the Java Content Repository.
+	 * Provides the credentials used to login to the Java Content Repository.
+	 */
+	private CredentialsProvider credentialsProvider;
+
+	/**
+	 * Initialise the poolable object factory setting the repository and
+	 * credentials providers
 	 * 
 	 * @param repo
-	 *            The Java Content Repository.
+	 *            Provides the Java Content Repository.
+	 * @param creds
+	 *            Provides the credentials.
 	 */
-	@Autowired
-	public void setRepository(final Repository repo) {
+	public PoolableSessionFactory(final Repository repo,
+			final CredentialsProvider creds) {
 		repository = repo;
+		credentialsProvider = creds;
 	}
 
 	/**
@@ -57,8 +65,10 @@ public class PoolableSessionFactory extends BaseKeyedPoolableObjectFactory {
 	 *             If there was an error logging into from the session.
 	 */
 	@Override
-	public Object makeObject(final Object key) throws Exception {
-		return repository.login((String) key);
+	public Session makeObject(final String key) throws Exception {
+		final Credentials credentials = credentialsProvider
+				.getGlobalCredentials();
+		return repository.login(credentials, key);
 	}
 
 	/**
@@ -72,8 +82,8 @@ public class PoolableSessionFactory extends BaseKeyedPoolableObjectFactory {
 	 *             If there was an error validating the session.
 	 */
 	@Override
-	public boolean validateObject(final Object key, final Object obj) {
-		return ((Session) obj).isLive();
+	public boolean validateObject(final String key, final Session obj) {
+		return obj.isLive();
 	}
 
 	/**
@@ -88,9 +98,9 @@ public class PoolableSessionFactory extends BaseKeyedPoolableObjectFactory {
 	 *             If there was an error logging out from the session.
 	 */
 	@Override
-	public void destroyObject(final Object key, final Object obj)
+	public void destroyObject(final String key, final Session obj)
 			throws Exception {
-		((Session) obj).logout();
+		obj.logout();
 	}
 
 }

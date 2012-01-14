@@ -16,10 +16,11 @@
 
 package com.btmatthews.atlas.jcr;
 
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
+import javax.jcr.Credentials;
 
-public interface SessionCallback<T> {
+public interface CredentialsProvider {
 
-	T doInSession(Session session) throws RepositoryException;
+	Credentials getGlobalCredentials();
+
+	Credentials getUserCredentials();
 }

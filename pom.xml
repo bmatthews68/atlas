@@ -19,12 +19,13 @@
 	</modules>
 
 	<properties>
-		<spring.version>3.1.0.RC2</spring.version>
+		<spring.version>3.1.0.RELEASE</spring.version>
 		<slf4j.version>1.6.4</slf4j.version>
 		<java.version>1.7</java.version>
 		<jcr.version>2.0</jcr.version>
 		<mongo.version>2.7.2</mongo.version>
-		<commons-pool.version>1.5.6</commons-pool.version>
+		<guava.version>11.0</guava.version>
+		<commons-pool.version>1.6</commons-pool.version>
 		<junit.version>4.10</junit.version>
 	</properties>
 
@@ -125,7 +126,7 @@
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
-				<version>10.0.1</version>
+				<version>${guava.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

@@ -12,7 +12,9 @@
 	</parent>
 	<artifactId>atlas-mongodb</artifactId>
 	<name>Atlas Framework - MongoDB Support</name>
-
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>com.btmatthews.atlas</groupId>

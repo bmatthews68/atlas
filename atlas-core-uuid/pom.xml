@@ -12,6 +12,9 @@
 	</parent>
 	<artifactId>atlas-core-uuid</artifactId>
 	<name>Atlas Framework - Core UUID</name>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>com.btmatthews.atlas</groupId>
