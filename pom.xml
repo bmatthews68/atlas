@@ -19,12 +19,12 @@
 	</modules>
 
 	<properties>
-		<spring.version>3.1.0.RELEASE</spring.version>
+		<spring.version>3.1.1.RELEASE</spring.version>
 		<slf4j.version>1.6.4</slf4j.version>
 		<java.version>1.7</java.version>
 		<jcr.version>2.0</jcr.version>
-		<mongo.version>2.7.2</mongo.version>
-		<guava.version>11.0</guava.version>
+		<mongo.version>2.7.3</mongo.version>
+		<guava.version>11.0.2</guava.version>
 		<commons-pool.version>1.6</commons-pool.version>
 		<junit.version>4.10</junit.version>
 	</properties>
@@ -116,7 +116,7 @@
 			<dependency>
 				<groupId>org.springframework.data</groupId>
 				<artifactId>spring-data-mongodb</artifactId>
-				<version>1.0.0.M5</version>
+				<version>1.0.1.RELEASE</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mongodb</groupId>
