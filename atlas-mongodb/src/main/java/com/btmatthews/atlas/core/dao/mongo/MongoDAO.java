@@ -68,7 +68,7 @@ public abstract class MongoDAO<I, T extends I> implements DAO<I> {
 	 * Mongo Template.
 	 * 
 	 * @param factory
-	 *            A {@link MongDbFactory}.
+	 *            A {@link MongoDbFactory}.
 	 */
 	@Autowired
 	public void setMongoDbFactory(final MongoDbFactory factory) {

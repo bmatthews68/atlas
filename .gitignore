@@ -1,4 +1,5 @@
-
+*.iml
+.idea
 /.project
 /.settings
 /atlas-core/.classpath
