@@ -4,6 +4,10 @@
         http://maven.apache.org/POM/4.0.0
         http://maven.apache.org/maven-v4_0_0.xsd">
 
+    <prerequisites>
+        <maven>3.0.5</maven>
+    </prerequisites>
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.btmatthews.atlas</groupId>
     <artifactId>atlas</artifactId>
@@ -12,21 +16,16 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>atlas-core</module>
-        <module>atlas-core-uuid</module>
-        <module>atlas-mongodb</module>
         <module>atlas-jcr</module>
-        <module>atlas-opencmis</module>
-        <module>atlas-tenancy-support</module>
     </modules>
 
     <properties>
-        <spring.version>3.2.1.RELEASE</spring.version>
-        <slf4j.version>1.7.2</slf4j.version>
+        <spring.version>3.2.2.RELEASE</spring.version>
+        <slf4j.version>1.7.5</slf4j.version>
         <java.version>1.7</java.version>
         <jcr.version>2.0</jcr.version>
-        <mongo.version>2.10.1</mongo.version>
-        <guava.version>13.0.1</guava.version>
+        <mongo.version>2.11.1</mongo.version>
+        <guava.version>14.0.1</guava.version>
         <commons-pool.version>1.6</commons-pool.version>
     </properties>
 
@@ -47,16 +46,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>com.btmatthews.atlas</groupId>
-                <artifactId>atlas-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.btmatthews.atlas</groupId>
-                <artifactId>atlas-core-uuid</artifactId>
-                <version>${project.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>

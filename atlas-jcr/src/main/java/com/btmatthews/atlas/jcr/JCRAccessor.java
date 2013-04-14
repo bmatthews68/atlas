@@ -20,24 +20,27 @@ import java.util.List;
 
 public interface JCRAccessor {
 
-	void withRoot(String workspaceName, NodeVoidCallback callback);
+    void withRoot(String workspaceName, NodeVoidCallback callback);
 
-	<T> T withRoot(String workspaceName, NodeCallback<T> callback);
+    <T> T withRoot(String workspaceName, NodeCallback<T> callback);
 
-	void withNodePath(String workspaceName, String path,
-			NodeVoidCallback callback);
+    void withNodePath(String workspaceName, String path,
+                      NodeVoidCallback callback);
 
-	<T> T withNodePath(String workspaceName, String path,
-			NodeCallback<T> callback);
+    <T> T withNodePath(String workspaceName, String path,
+                       NodeCallback<T> callback);
 
-	void withNodeId(String workspaceName, String id, NodeVoidCallback callback);
+    void withNodeId(String workspaceName, String id, NodeVoidCallback callback);
 
-	<T> T withNodeId(String workspaceName, String id, NodeCallback<T> callback);
+    <T> T withNodeId(String workspaceName, String id, NodeCallback<T> callback);
 
-	void execute(String workspaceName, SessionVoidCallback callback);
+    void withSession(String workspaceName, SessionVoidCallback callback);
 
-	<T> T execute(String workspaceName, SessionCallback<T> callback);
+    <T> T withSession(String workspaceName, SessionCallback<T> callback);
 
-	<T> List<T> execute(String workspaceName, String statement,
-			String language, NodeCallback<T> callback);
+    void withQueryResults(String workspaceName, String statement,
+                          String language, NodeVoidCallback callback, long offset, long limit);
+
+    <T> List<T> withQueryResults(String workspaceName, String statement,
+                                 String language, NodeCallback<T> callback, long offset, long limit);
 }
