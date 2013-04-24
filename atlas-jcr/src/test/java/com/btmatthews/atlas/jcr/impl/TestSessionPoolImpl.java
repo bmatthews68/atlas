@@ -35,8 +35,8 @@ public class TestSessionPoolImpl {
         sessionPool.shutdown();
         verify(poolableSessionFactory).makeObject(eq(DEFAULT_WORKSPACE_NAME));
         verify(poolableSessionFactory).activateObject(eq(DEFAULT_WORKSPACE_NAME), same(session));
-        verify(poolableSessionFactory).passivateObject(eq(DEFAULT_WORKSPACE_NAME),same(pooledSession));
-        verify(poolableSessionFactory).destroyObject(eq(DEFAULT_WORKSPACE_NAME),same(pooledSession));
+        verify(poolableSessionFactory).passivateObject(eq(DEFAULT_WORKSPACE_NAME), same(pooledSession));
+        verify(poolableSessionFactory).destroyObject(eq(DEFAULT_WORKSPACE_NAME), same(pooledSession));
         verifyNoMoreInteractions(poolableSessionFactory);
         verifyZeroInteractions(pooledSession);
     }

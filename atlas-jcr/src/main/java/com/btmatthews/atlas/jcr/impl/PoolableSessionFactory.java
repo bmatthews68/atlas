@@ -28,80 +28,70 @@ import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
  * Repository.
  */
 public final class PoolableSessionFactory extends
-		BaseKeyedPoolableObjectFactory<String, Session> {
+        BaseKeyedPoolableObjectFactory<String, Session> {
 
-	/**
-	 * The Java Content Repository.
-	 */
-	private Repository repository;
+    /**
+     * The Java Content Repository.
+     */
+    private Repository repository;
 
-	/**
-	 * Provides the credentials used to login to the Java Content Repository.
-	 */
-	private CredentialsProvider credentialsProvider;
+    /**
+     * Provides the credentials used to login to the Java Content Repository.
+     */
+    private CredentialsProvider credentialsProvider;
 
-	/**
-	 * Initialise the poolable object factory setting the repository and
-	 * credentials providers
-	 * 
-	 * @param repo
-	 *            Provides the Java Content Repository.
-	 * @param creds
-	 *            Provides the credentials.
-	 */
-	public PoolableSessionFactory(final Repository repo,
-			final CredentialsProvider creds) {
-		repository = repo;
-		credentialsProvider = creds;
-	}
+    /**
+     * Initialise the poolable object factory setting the repository and
+     * credentials providers
+     *
+     * @param repo  Provides the Java Content Repository.
+     * @param creds Provides the credentials.
+     */
+    public PoolableSessionFactory(final Repository repo,
+                                  final CredentialsProvider creds) {
+        repository = repo;
+        credentialsProvider = creds;
+    }
 
-	/**
-	 * Create a new session object by logging in to the Java Content Repository
-	 * anonymously.
-	 * 
-	 * @param key
-	 *            The workspace name.
-	 * @return The session.
-	 * @throws Exception
-	 *             If there was an error logging into from the session.
-	 */
-	@Override
-	public Session makeObject(final String key) throws Exception {
-		final Credentials credentials = credentialsProvider
-				.getGlobalCredentials();
-		return repository.login(credentials, key);
-	}
+    /**
+     * Create a new session object by logging in to the Java Content Repository
+     * anonymously.
+     *
+     * @param key The workspace name.
+     * @return The session.
+     * @throws Exception If there was an error logging into from the session.
+     */
+    @Override
+    public Session makeObject(final String key) throws Exception {
+        final Credentials credentials = credentialsProvider
+                .getGlobalCredentials();
+        return repository.login(credentials, key);
+    }
 
-	/**
-	 * Validate a session by checking that it is still live.
-	 * 
-	 * @param key
-	 *            The workspace name.
-	 * @param obj
-	 *            The session.
-	 * @throws Exception
-	 *             If there was an error validating the session.
-	 */
-	@Override
-	public boolean validateObject(final String key, final Session obj) {
-		return obj.isLive();
-	}
+    /**
+     * Validate a session by checking that it is still live.
+     *
+     * @param key The workspace name.
+     * @param obj The session.
+     * @throws Exception If there was an error validating the session.
+     */
+    @Override
+    public boolean validateObject(final String key, final Session obj) {
+        return obj.isLive();
+    }
 
-	/**
-	 * Destroy the pooled session by logging out from the Java Content
-	 * Repository.
-	 * 
-	 * @param key
-	 *            The workspace name.
-	 * @param obj
-	 *            The session.
-	 * @throws Exception
-	 *             If there was an error logging out from the session.
-	 */
-	@Override
-	public void destroyObject(final String key, final Session obj)
-			throws Exception {
-		obj.logout();
-	}
+    /**
+     * Destroy the pooled session by logging out from the Java Content
+     * Repository.
+     *
+     * @param key The workspace name.
+     * @param obj The session.
+     * @throws Exception If there was an error logging out from the session.
+     */
+    @Override
+    public void destroyObject(final String key, final Session obj)
+            throws Exception {
+        obj.logout();
+    }
 
 }
