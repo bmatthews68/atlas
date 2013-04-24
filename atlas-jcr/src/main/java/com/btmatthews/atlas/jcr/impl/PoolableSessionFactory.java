@@ -16,12 +16,12 @@
 
 package com.btmatthews.atlas.jcr.impl;
 
+import com.btmatthews.atlas.jcr.CredentialsProvider;
+import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
+
 import javax.jcr.Credentials;
 import javax.jcr.Repository;
 import javax.jcr.Session;
-
-import com.btmatthews.atlas.jcr.CredentialsProvider;
-import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
 
 /**
  * A factory that creates poolable sessions used to connect to the Java Content
@@ -34,7 +34,6 @@ public final class PoolableSessionFactory extends
      * The Java Content Repository.
      */
     private Repository repository;
-
     /**
      * Provides the credentials used to login to the Java Content Repository.
      */
