@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Brian Matthews
+ * Copyright 2011-2013 Brian Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,21 @@
 
 package com.btmatthews.atlas.jcr;
 
-import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+/**
+ * This callback is passed to {@link JCRAccessor} methods that perform perform operations on the JCR session.
+ *
+ * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
+ * @since 1.0.0
+ */
 public interface SessionVoidCallback {
 
-	void doInSession(Session session) throws RepositoryException;
+    /**
+     * The method that implements the callback.
+     *
+     * @param session The session.
+     * @throws Exception The callback can throw an exception but it will get translated to a {@link RepositoryAccessException}.
+     */
+    void doInSession(Session session) throws Exception;
 }

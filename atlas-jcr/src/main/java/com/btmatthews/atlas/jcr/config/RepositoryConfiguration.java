@@ -19,10 +19,10 @@ package com.btmatthews.atlas.jcr.config;
 import com.btmatthews.atlas.jcr.CredentialsProvider;
 import com.btmatthews.atlas.jcr.JCRAccessor;
 import com.btmatthews.atlas.jcr.RepositoryProvider;
-import com.btmatthews.atlas.jcr.SessionPool;
+import com.btmatthews.atlas.jcr.SessionFactory;
 import com.btmatthews.atlas.jcr.impl.JCRTemplate;
 import com.btmatthews.atlas.jcr.impl.PoolableSessionFactory;
-import com.btmatthews.atlas.jcr.impl.SessionPoolImpl;
+import com.btmatthews.atlas.jcr.impl.PooledSessionFactory;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -56,13 +56,13 @@ public class RepositoryConfiguration {
 
     @Bean(destroyMethod = "shutdown")
     @Autowired
-    public SessionPool sessionPool(final KeyedPoolableObjectFactory<String, Session> objectFactory) {
-        return new SessionPoolImpl(objectFactory);
+    public SessionFactory sessionPool(final KeyedPoolableObjectFactory<String, Session> objectFactory) {
+        return new PooledSessionFactory(objectFactory);
     }
 
     @Bean
     @Autowired
-    public JCRAccessor jcrTemplate(final SessionPool sessionPool) {
-        return new JCRTemplate(sessionPool);
+    public JCRAccessor jcrTemplate(final SessionFactory sessionFactory) {
+        return new JCRTemplate(sessionFactory);
     }
 }

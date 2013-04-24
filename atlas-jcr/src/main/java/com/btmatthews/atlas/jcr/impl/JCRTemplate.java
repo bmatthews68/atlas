@@ -24,12 +24,15 @@ import javax.jcr.*;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
+import java.math.BigDecimal;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 
 public class JCRTemplate implements JCRAccessor {
-    private final static String BORROW_SESSION_RETURNED_NULL = "SessionPool#borrowSession(String) returned null";
+    private final static String BORROW_SESSION_RETURNED_NULL = "SessionFactory#getSession(String) returned null";
     private final static String GET_ROOT_NODE_RETURNED_NULL = "Session#getRootNode() returned null.";
     private final static String GET_NODE_RETURNED_NULL = "Session#getNode(String) returned null";
     private final static String GET_NODE_BY_IDENTIFIER_RETURNED_NULL = "Session#getNodeByIdentifier(String) returned null";
@@ -48,7 +51,7 @@ public class JCRTemplate implements JCRAccessor {
     private final static String LANGUAGE_PATTERN = "(JCR-SQL2)|(JCR-JQOM)";
     private static final Logger LOGGER = LoggerFactory.getLogger(JCRTemplate.class);
     private static final Map<String, Object> EMPTY_PARAMETERS = new HashMap<String, Object>();
-    private SessionPool sessionPool;
+    private SessionFactory sessionFactory;
 
     /**
      * The default constructor.
@@ -61,8 +64,8 @@ public class JCRTemplate implements JCRAccessor {
      *
      * @param pool The session pool.
      */
-    public JCRTemplate(final SessionPool pool) {
-        sessionPool = pool;
+    public JCRTemplate(final SessionFactory pool) {
+        sessionFactory = pool;
     }
 
     /**
@@ -70,8 +73,107 @@ public class JCRTemplate implements JCRAccessor {
      *
      * @param pool The session pool.
      */
-    public void setSessionPool(final SessionPool pool) {
-        sessionPool = pool;
+    public void setSessionFactory(final SessionFactory pool) {
+        sessionFactory = pool;
+    }
+
+    public boolean hasProperty(final Node node, final String name) {
+        try {
+            return node.hasProperty(name);
+        } catch (final RepositoryException e) {
+            throw new RepositoryAccessException(e.getMessage(), e);
+        }
+    }
+
+    public boolean hasProperties(final Node node, final String... names) {
+        for (final String name : names) {
+            if (!hasProperty(node, name)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Binary getBinaryProperty(final Node node, final String name) {
+        try {
+            return node.getProperty(name).getBinary();
+        } catch (final RepositoryException e) {
+            throw new RepositoryAccessException(e.getMessage(), e);
+        }
+    }
+
+    public BigDecimal getBigDecimalProperty(final Node node, final String name) {
+        try {
+            return node.getProperty(name).getDecimal();
+        } catch (final RepositoryException e) {
+            throw new RepositoryAccessException(e.getMessage(), e);
+        }
+    }
+
+    public boolean getBooleanProperty(final Node node, final String name) {
+        try {
+            return node.getProperty(name).getBoolean();
+        } catch (final RepositoryException e) {
+            throw new RepositoryAccessException(e.getMessage(), e);
+        }
+    }
+
+    public Calendar getCalendarProperty(final Node node, final String name) {
+        try {
+            return node.getProperty(name).getDate();
+        } catch (final RepositoryException e) {
+            throw new RepositoryAccessException(e.getMessage(), e);
+        }
+    }
+
+    public double getDoubleProperty(final Node node, final String name) {
+        try {
+            return node.getProperty(name).getDouble();
+        } catch (final RepositoryException e) {
+            throw new RepositoryAccessException(e.getMessage(), e);
+        }
+    }
+
+    public long getLongProperty(final Node node, final String name) {
+        try {
+            return node.getProperty(name).getLong();
+        } catch (RepositoryException e) {
+            throw new RepositoryAccessException(e.getMessage(), e);
+        }
+    }
+
+    public String getPathProperty(final Node node, final String name) {
+        try {
+            return node.getProperty(name).getString();
+        } catch (final RepositoryException e) {
+            throw new RepositoryAccessException(e.getMessage(), e);
+        }
+    }
+
+    public Node getReferenceProperty(final Node node, final String name) {
+        try {
+            return node.getProperty(name).getNode();
+        } catch (final RepositoryException e) {
+            throw new RepositoryAccessException(e.getMessage(), e);
+        }
+    }
+
+    public String getStringProperty(final Node node, final String name) {
+        try {
+            return node.getProperty(name).getString();
+        } catch (final RepositoryException e) {
+            throw new RepositoryAccessException(e.getMessage(), e);
+        }
+    }
+
+    public URI getURIProperty(final Node node, final String name) {
+        try {
+            return new URI(node.getProperty(name).getString());
+        } catch (final RepositoryException e) {
+            throw new RepositoryAccessException(e.getMessage(), e);
+        } catch (final URISyntaxException e) {
+            throw new RepositoryAccessException(e.getMessage(), e);
+        }
     }
 
     /**
@@ -83,7 +185,7 @@ public class JCRTemplate implements JCRAccessor {
     public void withRoot(final String workspaceName,
                          final NodeVoidCallback callback) {
         withSession(workspaceName, new SessionVoidCallback() {
-            public void doInSession(final Session session) throws RepositoryException {
+            public void doInSession(final Session session) throws Exception {
                 final Node node = session.getRootNode();
                 if (node == null) {
                     throw new RepositoryAccessException(GET_ROOT_NODE_RETURNED_NULL);
@@ -105,7 +207,7 @@ public class JCRTemplate implements JCRAccessor {
     public <T> T withRoot(final String workspaceName,
                           final NodeCallback<T> callback) {
         return withSession(workspaceName, new SessionCallback<T>() {
-            public T doInSession(final Session session) throws RepositoryException {
+            public T doInSession(final Session session) throws Exception {
                 final Node node = session.getRootNode();
                 if (node == null) {
                     throw new RepositoryAccessException(GET_ROOT_NODE_RETURNED_NULL);
@@ -125,7 +227,7 @@ public class JCRTemplate implements JCRAccessor {
     public void withNodePath(final String workspaceName, final String path,
                              final NodeVoidCallback callback) {
         withSession(workspaceName, new SessionVoidCallback() {
-            public void doInSession(final Session session) throws RepositoryException {
+            public void doInSession(final Session session) throws Exception {
                 final Node node = session.getNode(path);
                 if (node == null) {
                     throw new RepositoryAccessException(GET_NODE_RETURNED_NULL);
@@ -148,7 +250,7 @@ public class JCRTemplate implements JCRAccessor {
     public <T> T withNodePath(final String workspaceName, final String path,
                               final NodeCallback<T> callback) {
         return withSession(workspaceName, new SessionCallback<T>() {
-            public T doInSession(final Session session) throws RepositoryException {
+            public T doInSession(final Session session) throws Exception {
                 final Node node = session.getNode(path);
                 if (node == null) {
                     throw new RepositoryAccessException(GET_NODE_RETURNED_NULL);
@@ -166,7 +268,7 @@ public class JCRTemplate implements JCRAccessor {
     public void withNodeId(final String workspaceName, final String id,
                            final NodeVoidCallback callback) {
         withSession(workspaceName, new SessionVoidCallback() {
-            public void doInSession(final Session session) throws RepositoryException {
+            public void doInSession(final Session session) throws Exception {
                 final Node node = session.getNodeByIdentifier(id);
                 if (node == null) {
                     throw new RepositoryAccessException(GET_NODE_BY_IDENTIFIER_RETURNED_NULL);
@@ -192,7 +294,7 @@ public class JCRTemplate implements JCRAccessor {
         assert callback != null;
 
         return withSession(workspaceName, new SessionCallback<T>() {
-            public T doInSession(final Session session) throws RepositoryException {
+            public T doInSession(final Session session) throws Exception {
                 final Node node = session.getNodeByIdentifier(id);
                 if (node == null) {
                     throw new RepositoryAccessException(GET_NODE_BY_IDENTIFIER_RETURNED_NULL);
@@ -213,14 +315,14 @@ public class JCRTemplate implements JCRAccessor {
         assert callback != null;
 
         try {
-            final Session session = sessionPool.borrowSession(workspaceName);
+            final Session session = sessionFactory.getSession(workspaceName);
             if (session == null) {
                 throw new RepositoryAccessException(BORROW_SESSION_RETURNED_NULL);
             }
             try {
                 callback.doInSession(session);
             } finally {
-                sessionPool.returnSession(workspaceName, session);
+                sessionFactory.releaseSession(workspaceName, session);
             }
         } catch (final RepositoryAccessException e) {
             LOGGER.debug(e.getMessage(), e);
@@ -245,14 +347,14 @@ public class JCRTemplate implements JCRAccessor {
         assert callback != null;
 
         try {
-            final Session session = sessionPool.borrowSession(workspaceName);
+            final Session session = sessionFactory.getSession(workspaceName);
             if (session == null) {
                 throw new RepositoryAccessException(BORROW_SESSION_RETURNED_NULL);
             }
             try {
                 return callback.doInSession(session);
             } finally {
-                sessionPool.returnSession(workspaceName, session);
+                sessionFactory.releaseSession(workspaceName, session);
             }
         } catch (final RepositoryAccessException e) {
             LOGGER.debug(e.getMessage(), e);
@@ -286,7 +388,7 @@ public class JCRTemplate implements JCRAccessor {
         assert limit > 0;
 
         withSession(workspaceName, new SessionVoidCallback() {
-            public void doInSession(final Session session) throws RepositoryException {
+            public void doInSession(final Session session) throws Exception {
                 final NodeIterator iterator = getQueryResults(session, statement, language, EMPTY_PARAMETERS, offset, limit);
                 while (iterator.hasNext()) {
                     final Node node = iterator.nextNode();
@@ -325,7 +427,7 @@ public class JCRTemplate implements JCRAccessor {
         assert limit > 0;
 
         return withSession(workspaceName, new SessionCallback<List<T>>() {
-            public List<T> doInSession(final Session session) throws RepositoryException {
+            public List<T> doInSession(final Session session) throws Exception {
                 final NodeIterator iterator = getQueryResults(session, statement, language, EMPTY_PARAMETERS, offset, limit);
                 final List<T> results = new ArrayList<T>((int) iterator.getSize());
                 while (iterator.hasNext()) {

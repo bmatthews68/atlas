@@ -1,6 +1,5 @@
 package com.btmatthews.atlas.jcr.impl;
 
-import com.btmatthews.atlas.jcr.SessionPool;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,11 +27,11 @@ public class TestSessionPoolImpl {
 
     @Test
     public void borrowAndReturnASingleSession() throws Exception {
-        final SessionPoolImpl sessionPool = new SessionPoolImpl(poolableSessionFactory);
+        final PooledSessionFactory sessionPool = new PooledSessionFactory(poolableSessionFactory);
         when(poolableSessionFactory.makeObject(DEFAULT_WORKSPACE_NAME)).thenReturn(pooledSession);
-        final Session session = sessionPool.borrowSession(DEFAULT_WORKSPACE_NAME);
+        final Session session = sessionPool.getSession(DEFAULT_WORKSPACE_NAME);
         assertSame(pooledSession, session);
-        sessionPool.returnSession(DEFAULT_WORKSPACE_NAME, session);
+        sessionPool.releaseSession(DEFAULT_WORKSPACE_NAME, session);
         sessionPool.shutdown();
         verify(poolableSessionFactory).makeObject(eq(DEFAULT_WORKSPACE_NAME));
         verify(poolableSessionFactory).activateObject(eq(DEFAULT_WORKSPACE_NAME), same(session));

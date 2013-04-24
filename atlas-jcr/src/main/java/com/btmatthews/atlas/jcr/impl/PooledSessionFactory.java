@@ -18,7 +18,7 @@ package com.btmatthews.atlas.jcr.impl;
 
 import javax.jcr.Session;
 
-import com.btmatthews.atlas.jcr.SessionPool;
+import com.btmatthews.atlas.jcr.SessionFactory;
 import org.apache.commons.pool.KeyedObjectPool;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
@@ -28,7 +28,7 @@ import org.apache.commons.pool.impl.GenericKeyedObjectPool;
  * Repository. This implementation uses Commons Pool to provide the underlying
  * pool implementation.
  */
-public class SessionPoolImpl implements SessionPool {
+public class PooledSessionFactory implements SessionFactory {
 
 	/**
 	 * The underlying object pool that holds the pooled sessions.
@@ -42,7 +42,7 @@ public class SessionPoolImpl implements SessionPool {
 	 * @param factory
 	 *            The poolable object factory.
 	 */
-	public SessionPoolImpl(final KeyedPoolableObjectFactory<String, Session> factory) {
+	public PooledSessionFactory(final KeyedPoolableObjectFactory<String, Session> factory) {
 		objectPool = new GenericKeyedObjectPool<String, Session>(factory);
 	}
 
@@ -67,9 +67,9 @@ public class SessionPoolImpl implements SessionPool {
 	 * @throws Exception
 	 *             If there was an error obtaining the session from the
 	 *             underlying object pool.
-	 * @see SessionPool#borrowSession(String)
+	 * @see com.btmatthews.atlas.jcr.SessionFactory#getSession(String)
 	 */
-	public Session borrowSession(final String workspaceName) throws Exception {
+	public Session getSession(final String workspaceName) throws Exception {
 		return objectPool.borrowObject(workspaceName);
 	}
 
@@ -84,9 +84,9 @@ public class SessionPoolImpl implements SessionPool {
 	 * @throws Exception
 	 *             If there was an error returning the session to the underlying
 	 *             object pool.
-	 * @see SessionPool#returnSession(String, Session)
+	 * @see com.btmatthews.atlas.jcr.SessionFactory#releaseSession(String, Session)
 	 */
-	public void returnSession(final String workspaceName, final Session session)
+	public void releaseSession(final String workspaceName, final Session session)
 			throws Exception {
 		objectPool.returnObject(workspaceName, session);
 	}

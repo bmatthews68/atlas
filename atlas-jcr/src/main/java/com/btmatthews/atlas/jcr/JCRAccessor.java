@@ -16,9 +16,38 @@
 
 package com.btmatthews.atlas.jcr;
 
+import javax.jcr.Binary;
+import javax.jcr.Node;
+import java.math.BigDecimal;
+import java.net.URI;
+import java.util.Calendar;
 import java.util.List;
 
 public interface JCRAccessor {
+
+    boolean hasProperty(Node node, String name);
+
+    boolean hasProperties(Node node, String... names);
+
+    Binary getBinaryProperty(Node node, String name);
+
+    BigDecimal getBigDecimalProperty(Node node, String name);
+
+    boolean getBooleanProperty(Node node, String name);
+
+    Calendar getCalendarProperty(Node node, String name);
+
+    double getDoubleProperty(Node node, String name);
+
+    long getLongProperty(Node node, String name);
+
+    String getPathProperty(Node node, String name);
+
+    Node getReferenceProperty(Node node, String name);
+
+    String getStringProperty(Node node, String name);
+
+    URI getURIProperty(Node node, String name);
 
     void withRoot(String workspaceName, NodeVoidCallback callback);
 

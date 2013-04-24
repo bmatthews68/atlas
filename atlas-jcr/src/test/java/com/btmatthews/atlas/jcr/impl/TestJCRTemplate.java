@@ -30,7 +30,7 @@ public class TestJCRTemplate {
     private static final String TEST_ID = "00000000-0000-0000-0000-000000000000";
     private static final String TEST_PATH = "/home/admin/data";
     @Mock
-    private SessionPool sessionPool;
+    private SessionFactory sessionFactory;
     @Mock
     private Session session;
     @Mock
@@ -41,20 +41,20 @@ public class TestJCRTemplate {
     public void setup() throws Exception {
         initMocks(this);
         final JCRTemplate jcrTemplateImpl = new JCRTemplate();
-        jcrTemplateImpl.setSessionPool(sessionPool);
+        jcrTemplateImpl.setSessionFactory(sessionFactory);
         jcrTemplate = jcrTemplateImpl;
-        when(sessionPool.borrowSession(anyString())).thenReturn(session);
+        when(sessionFactory.getSession(anyString())).thenReturn(session);
         when(session.getRootNode()).thenReturn(rootNode);
     }
 
     @Test
     public void initialiseSessionPoolUsingConstructor() throws Exception {
         final SessionVoidCallback callback = mock(SessionVoidCallback.class);
-        new JCRTemplate(sessionPool).withSession(TEST_WORKSPACE_NAME, callback);
-        verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+        new JCRTemplate(sessionFactory).withSession(TEST_WORKSPACE_NAME, callback);
+        verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
         verify(callback).doInSession(same(session));
-        verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-        verifyNoMoreInteractions(sessionPool, callback);
+        verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+        verifyNoMoreInteractions(sessionFactory, callback);
         verifyZeroInteractions(session);
     }
 
@@ -62,23 +62,23 @@ public class TestJCRTemplate {
     public void withRootUsingVoidCallbackShouldSucceed() throws Exception {
         final NodeVoidCallback callback = mock(NodeVoidCallback.class);
         jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback);
-        verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+        verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
         verify(session).getRootNode();
         verify(callback).doInSessionWithNode(same(session), same(rootNode));
-        verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-        verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+        verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+        verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
     }
 
     @Test
     public void withRootNodeUsingVoidCallbackShouldFailWhenBorrowSessionReturnsNull() throws Exception {
         final NodeVoidCallback callback = mock(NodeVoidCallback.class);
-        when(sessionPool.borrowSession(eq(TEST_WORKSPACE_NAME))).thenReturn(null);
+        when(sessionFactory.getSession(eq(TEST_WORKSPACE_NAME))).thenReturn(null);
         try {
             jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -90,10 +90,10 @@ public class TestJCRTemplate {
             jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
             verify(session).getRootNode();
-            verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -105,10 +105,10 @@ public class TestJCRTemplate {
             jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
             verify(session).getRootNode();
-            verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -120,11 +120,11 @@ public class TestJCRTemplate {
             jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
             verify(session).getRootNode();
             verify(callback).doInSessionWithNode(same(session), same(rootNode));
-            verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -134,23 +134,23 @@ public class TestJCRTemplate {
         final Object result = new Object();
         when(callback.doInSessionWithNode(same(session), same(rootNode))).thenReturn(result);
         assertSame(result, jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback));
-        verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+        verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
         verify(session).getRootNode();
         verify(callback).doInSessionWithNode(same(session), same(rootNode));
-        verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-        verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+        verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+        verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
     }
 
     @Test
     public void withRootNodeUsingTypedCallbackShouldFailWhenBorrowSessionReturnsNull() throws Exception {
         final NodeCallback<Object> callback = mock(NodeCallback.class);
-        when(sessionPool.borrowSession(eq(TEST_WORKSPACE_NAME))).thenReturn(null);
+        when(sessionFactory.getSession(eq(TEST_WORKSPACE_NAME))).thenReturn(null);
         try {
             jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -162,10 +162,10 @@ public class TestJCRTemplate {
             jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
             verify(session).getRootNode();
-            verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -177,10 +177,10 @@ public class TestJCRTemplate {
             jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
             verify(session).getRootNode();
-            verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -192,11 +192,11 @@ public class TestJCRTemplate {
             jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
             verify(session).getRootNode();
             verify(callback).doInSessionWithNode(same(session), same(rootNode));
-            verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -206,24 +206,24 @@ public class TestJCRTemplate {
         final Node node = mock(Node.class);
         when(session.getNode(anyString())).thenReturn(node);
         jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback);
-        verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+        verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
         verify(session).getNode(eq(TEST_PATH));
         verify(callback).doInSessionWithNode(same(session), same(node));
-        verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-        verifyNoMoreInteractions(sessionPool, session, callback);
+        verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+        verifyNoMoreInteractions(sessionFactory, session, callback);
         verifyZeroInteractions(node);
     }
 
     @Test
     public void withNodePathUsingVoidCallbackShouldFailWhenBorrowSessionReturnsNullIsSuccessful() throws Exception {
         final NodeVoidCallback callback = mock(NodeVoidCallback.class);
-        when(sessionPool.borrowSession(eq(TEST_WORKSPACE_NAME))).thenReturn(null);
+        when(sessionFactory.getSession(eq(TEST_WORKSPACE_NAME))).thenReturn(null);
         try {
             jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -235,10 +235,10 @@ public class TestJCRTemplate {
             jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
             verify(session).getNode(eq(TEST_PATH));
-            verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -250,10 +250,10 @@ public class TestJCRTemplate {
             jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
             verify(session).getNode(eq(TEST_PATH));
-            verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -267,11 +267,11 @@ public class TestJCRTemplate {
             jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
             verify(session).getNode(eq(TEST_PATH));
             verify(callback).doInSessionWithNode(same(session), same(node));
-            verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
             verifyZeroInteractions(node);
         }
     }
@@ -284,24 +284,24 @@ public class TestJCRTemplate {
         when(session.getNode(anyString())).thenReturn(node);
         when(callback.doInSessionWithNode(any(Session.class), any(Node.class))).thenReturn(result);
         assertSame(result, jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback));
-        verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+        verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
         verify(session).getNode(eq(TEST_PATH));
         verify(callback).doInSessionWithNode(same(session), same(node));
-        verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-        verifyNoMoreInteractions(sessionPool, session, callback);
+        verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+        verifyNoMoreInteractions(sessionFactory, session, callback);
         verifyZeroInteractions(node);
     }
 
     @Test
     public void withNodePathUsingTypedCallbackShouldFailWhenBorrowSessionReturnsNull() throws Exception {
         final NodeCallback<Object> callback = mock(NodeCallback.class);
-        when(sessionPool.borrowSession(eq(TEST_WORKSPACE_NAME))).thenReturn(null);
+        when(sessionFactory.getSession(eq(TEST_WORKSPACE_NAME))).thenReturn(null);
         try {
             jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -313,10 +313,10 @@ public class TestJCRTemplate {
             jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
             verify(session).getNode(eq(TEST_PATH));
-            verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -328,10 +328,10 @@ public class TestJCRTemplate {
             jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
             verify(session).getNode(eq(TEST_PATH));
-            verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -345,11 +345,11 @@ public class TestJCRTemplate {
             jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
             verify(session).getNode(eq(TEST_PATH));
             verify(callback).doInSessionWithNode(same(session), same(node));
-            verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
             verifyZeroInteractions(node);
         }
     }
@@ -360,24 +360,24 @@ public class TestJCRTemplate {
         final Node node = mock(Node.class);
         when(session.getNodeByIdentifier(anyString())).thenReturn(node);
         jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);
-        verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+        verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
         verify(session).getNodeByIdentifier(eq(TEST_ID));
         verify(callback).doInSessionWithNode(same(session), same(node));
-        verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-        verifyNoMoreInteractions(sessionPool, session, callback);
+        verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+        verifyNoMoreInteractions(sessionFactory, session, callback);
         verifyZeroInteractions(node);
     }
 
     @Test
     public void withNodeIdUsingVoidCallbackShouldFailWhenBorrowSessionReturnsNull() throws Exception {
         final NodeVoidCallback callback = mock(NodeVoidCallback.class);
-        when(sessionPool.borrowSession(eq(TEST_WORKSPACE_NAME))).thenReturn(null);
+        when(sessionFactory.getSession(eq(TEST_WORKSPACE_NAME))).thenReturn(null);
         try {
             jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -389,10 +389,10 @@ public class TestJCRTemplate {
             jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
             verify(session).getNodeByIdentifier(eq(TEST_ID));
-            verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -404,10 +404,10 @@ public class TestJCRTemplate {
             jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
             verify(session).getNodeByIdentifier(eq(TEST_ID));
-            verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -421,11 +421,11 @@ public class TestJCRTemplate {
             jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
             verify(session).getNodeByIdentifier(eq(TEST_ID));
             verify(callback).doInSessionWithNode(same(session), same(node));
-            verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
             verifyZeroInteractions(node);
         }
     }
@@ -438,24 +438,24 @@ public class TestJCRTemplate {
         when(session.getNodeByIdentifier(anyString())).thenReturn(node);
         when(callback.doInSessionWithNode(any(Session.class), any(Node.class))).thenReturn(result);
         assertSame(result, jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback));
-        verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+        verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
         verify(session).getNodeByIdentifier(eq(TEST_ID));
         verify(callback).doInSessionWithNode(same(session), same(node));
-        verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-        verifyNoMoreInteractions(sessionPool, session, callback);
+        verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+        verifyNoMoreInteractions(sessionFactory, session, callback);
         verifyZeroInteractions(node);
     }
 
     @Test
     public void withNodeIdUsingTypedCallbackShouldFailWhenBorrowSessionReturnsNull() throws Exception {
         final NodeCallback<Object> callback = mock(NodeCallback.class);
-        when(sessionPool.borrowSession(eq(TEST_WORKSPACE_NAME))).thenReturn(null);
+        when(sessionFactory.getSession(eq(TEST_WORKSPACE_NAME))).thenReturn(null);
         try {
             jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -467,10 +467,10 @@ public class TestJCRTemplate {
             jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
             verify(session).getNodeByIdentifier(eq(TEST_ID));
-            verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -482,10 +482,10 @@ public class TestJCRTemplate {
             jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
             verify(session).getNodeByIdentifier(eq(TEST_ID));
-            verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
         }
     }
 
@@ -499,11 +499,11 @@ public class TestJCRTemplate {
             jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);
             fail();
         } catch (final RepositoryAccessException e) {
-            verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+            verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
             verify(session).getNodeByIdentifier(eq(TEST_ID));
             verify(callback).doInSessionWithNode(same(session), same(node));
-            verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-            verifyNoMoreInteractions(sessionPool, session, rootNode, callback);
+            verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+            verifyNoMoreInteractions(sessionFactory, session, rootNode, callback);
             verifyZeroInteractions(node);
         }
     }
@@ -514,10 +514,10 @@ public class TestJCRTemplate {
     public void executeWithVoidSessionCallbackIsSuccessful() throws Exception {
         final SessionVoidCallback callback = mock(SessionVoidCallback.class);
         jcrTemplate.withSession(TEST_WORKSPACE_NAME, callback);
-        verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+        verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
         verify(callback).doInSession(same(session));
-        verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-        verifyNoMoreInteractions(sessionPool, callback);
+        verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+        verifyNoMoreInteractions(sessionFactory, callback);
         verifyZeroInteractions(session);
     }
 
@@ -525,10 +525,10 @@ public class TestJCRTemplate {
     public void executeWithTypedSessionCallbackIsSuccessful() throws Exception {
         final SessionCallback<Object> callback = mock(SessionCallback.class);
         jcrTemplate.withSession(TEST_WORKSPACE_NAME, callback);
-        verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+        verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
         verify(callback).doInSession(same(session));
-        verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-        verifyNoMoreInteractions(sessionPool, callback);
+        verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+        verifyNoMoreInteractions(sessionFactory, callback);
         verifyZeroInteractions(session);
     }
 
@@ -549,7 +549,7 @@ public class TestJCRTemplate {
         when(queryResult.getNodes()).thenReturn(nodeIterator);
         when(nodeIterator.hasNext()).thenReturn(false);
         jcrTemplate.withQueryResults(TEST_WORKSPACE_NAME, TEST_STATEMENT, Query.JCR_SQL2, callback, 0, 100);
-        verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+        verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
         verify(session).getWorkspace();
         verify(workspace).getQueryManager();
         verify(queryManager).createQuery(eq(TEST_STATEMENT), eq(Query.JCR_SQL2));
@@ -558,8 +558,8 @@ public class TestJCRTemplate {
         verify(query).execute();
         verify(queryResult).getNodes();
         verify(nodeIterator).hasNext();
-        verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-        verifyNoMoreInteractions(sessionPool, session, workspace, queryManager, query, queryResult, nodeIterator);
+        verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+        verifyNoMoreInteractions(sessionFactory, session, workspace, queryManager, query, queryResult, nodeIterator);
     }
 
     // <T> List<T> withSession(String workspaceName, String statement,
@@ -583,7 +583,7 @@ public class TestJCRTemplate {
         final List<Object> results = jcrTemplate.withQueryResults(TEST_WORKSPACE_NAME, TEST_STATEMENT, Query.JCR_SQL2, callback, 0, 100);
         assertNotNull(results);
         assertEquals(0, results.size());
-        verify(sessionPool).borrowSession(eq(TEST_WORKSPACE_NAME));
+        verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
         verify(session).getWorkspace();
         verify(workspace).getQueryManager();
         verify(queryManager).createQuery(eq(TEST_STATEMENT), eq(Query.JCR_SQL2));
@@ -593,7 +593,7 @@ public class TestJCRTemplate {
         verify(queryResult).getNodes();
         verify(nodeIterator).getSize();
         verify(nodeIterator).hasNext();
-        verify(sessionPool).returnSession(eq(TEST_WORKSPACE_NAME), same(session));
-        verifyNoMoreInteractions(sessionPool, session, workspace, queryManager, query, queryResult, nodeIterator);
+        verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+        verifyNoMoreInteractions(sessionFactory, session, workspace, queryManager, query, queryResult, nodeIterator);
     }
 }

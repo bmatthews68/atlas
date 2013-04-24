@@ -17,11 +17,10 @@
 package com.btmatthews.atlas.jcr;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 public interface NodeVoidCallback {
 
-	void doInSessionWithNode(Session session, Node node)
-			throws RepositoryException;
+    void doInSessionWithNode(Session session, Node node)
+            throws Exception;
 }
