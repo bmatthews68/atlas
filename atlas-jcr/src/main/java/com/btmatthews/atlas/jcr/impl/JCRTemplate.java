@@ -226,6 +226,11 @@ public class JCRTemplate implements JCRAccessor {
      */
     public void withNodePath(final String workspaceName, final String path,
                              final NodeVoidCallback callback) {
+
+        assert workspaceName != null && Pattern.matches(WORKSPACE_PATTERN, workspaceName);
+        assert path != null && Pattern.matches(PATH_PATTERN, path);
+        assert callback != null;
+
         withSession(workspaceName, new SessionVoidCallback() {
             public void doInSession(final Session session) throws Exception {
                 final Node node = session.getNode(path);
@@ -249,6 +254,11 @@ public class JCRTemplate implements JCRAccessor {
 
     public <T> T withNodePath(final String workspaceName, final String path,
                               final NodeCallback<T> callback) {
+
+        assert workspaceName != null && Pattern.matches(WORKSPACE_PATTERN, workspaceName);
+        assert path != null && Pattern.matches(PATH_PATTERN, path);
+        assert callback != null;
+
         return withSession(workspaceName, new SessionCallback<T>() {
             public T doInSession(final Session session) throws Exception {
                 final Node node = session.getNode(path);
@@ -261,12 +271,18 @@ public class JCRTemplate implements JCRAccessor {
     }
 
     /**
-     * @param workspaceName
-     * @param id
-     * @param callback
+     * Perform a callback operation on the node identified by {@code id} in the workspace named {@code workspaceName}.
+     *
+     * @param workspaceName The name of the workspace.
+     * @param id            The identifier of the node.
+     * @param callback      The callback.
      */
     public void withNodeId(final String workspaceName, final String id,
                            final NodeVoidCallback callback) {
+        assert workspaceName != null && Pattern.matches(WORKSPACE_PATTERN, workspaceName);
+        assert id != null && Pattern.matches(ID_PATTERN, id);
+        assert callback != null;
+
         withSession(workspaceName, new SessionVoidCallback() {
             public void doInSession(final Session session) throws Exception {
                 final Node node = session.getNodeByIdentifier(id);
@@ -279,11 +295,14 @@ public class JCRTemplate implements JCRAccessor {
     }
 
     /**
-     * @param workspaceName
-     * @param id
-     * @param callback      The callback that implements the function to be executed.
-     * @param <T>           The type returned by the function.
-     * @return The result of the function.
+     * Perform a callback operation on the node identified by {@code id} in the workspace named {@code workspaceName}
+     * and return the result of the callback operation to the caller.
+     *
+     * @param workspaceName The name of the workspace.
+     * @param id            The identifier of the node.
+     * @param callback      The callback.
+     * @param <T>           The type returned by the callback operation.
+     * @return The result of the callback operation.
      */
     public <T> T withNodeId(final String workspaceName,
                             final String id,
@@ -402,14 +421,14 @@ public class JCRTemplate implements JCRAccessor {
     }
 
     /**
-     * @param workspaceName
-     * @param statement
-     * @param language
-     * @param callback
-     * @param offset
-     * @param limit
-     * @param <T>
-     * @return
+     * @param workspaceName The name of the workspace.
+     * @param statement     The query statement.
+     * @param language      The query language.
+     * @param callback      The callback operation to be performed on each item in the query result.
+     * @param offset        The offset in the query result to start processing.
+     * @param limit         The maximum number of items to process.
+     * @param <T>           The type returned by the callback operation.
+     * @return A {@link List} containing the callback results.
      * @throws RepositoryAccessException If there was an error executing the query or processing the results.
      */
     public <T> List<T> withQueryResults(final String workspaceName,

@@ -24,7 +24,7 @@ import javax.jcr.Session;
  * 
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  */
-public class SessionHolder {
+public final class SessionHolder {
 
 	/**
 	 * Thread local holding the JCR session currently associated with the

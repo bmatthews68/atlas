@@ -9,13 +9,10 @@ import javax.jcr.Repository;
 import javax.jcr.Session;
 
 /**
- * Created with IntelliJ IDEA.
- * User: bmatthews68
- * Date: 24/04/2013
- * Time: 08:23
- * To change this template use File | Settings | File Templates.
+ * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
+ * @since 1.0.0
  */
-public class SimpleSessionFactory implements SessionFactory {
+public final class SimpleSessionFactory implements SessionFactory {
 
     private RepositoryProvider repositoryProvider;
     private CredentialsProvider credentialsProvider;

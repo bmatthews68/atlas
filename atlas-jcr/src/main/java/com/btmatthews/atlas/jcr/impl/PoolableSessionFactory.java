@@ -27,7 +27,7 @@ import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
  * A factory that creates poolable sessions used to connect to the Java Content
  * Repository.
  */
-public class PoolableSessionFactory extends
+public final class PoolableSessionFactory extends
 		BaseKeyedPoolableObjectFactory<String, Session> {
 
 	/**
