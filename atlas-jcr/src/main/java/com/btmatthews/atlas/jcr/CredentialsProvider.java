@@ -20,7 +20,12 @@ import javax.jcr.Credentials;
 
 public interface CredentialsProvider {
 
-	Credentials getGlobalCredentials();
+    /**
+     * Get global application wide {@link Credentials} used to log in to the repository.
+     *
+     * @return The application wide credentials.
+     */
+    Credentials getGlobalCredentials();
 
-	Credentials getUserCredentials();
+    Credentials getUserCredentials();
 }

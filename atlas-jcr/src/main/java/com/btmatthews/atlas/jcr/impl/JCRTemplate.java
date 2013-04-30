@@ -52,6 +52,7 @@ public class JCRTemplate implements JCRAccessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(JCRTemplate.class);
     private static final Map<String, Object> EMPTY_PARAMETERS = new HashMap<String, Object>();
     private SessionFactory sessionFactory;
+    private CredentialsProvider credentialsProvider;
 
     /**
      * The default constructor.
@@ -64,8 +65,9 @@ public class JCRTemplate implements JCRAccessor {
      *
      * @param pool The session pool.
      */
-    public JCRTemplate(final SessionFactory pool) {
+    public JCRTemplate(final SessionFactory pool, final CredentialsProvider provider) {
         sessionFactory = pool;
+        credentialsProvider = provider;
     }
 
     /**
@@ -75,6 +77,10 @@ public class JCRTemplate implements JCRAccessor {
      */
     public void setSessionFactory(final SessionFactory pool) {
         sessionFactory = pool;
+    }
+
+    public void setCredentialsProvider(final CredentialsProvider provider) {
+        credentialsProvider = provider;
     }
 
     public boolean hasProperty(final Node node, final String name) {
@@ -339,7 +345,17 @@ public class JCRTemplate implements JCRAccessor {
                 throw new RepositoryAccessException(BORROW_SESSION_RETURNED_NULL);
             }
             try {
-                callback.doInSession(session);
+                final Credentials credentials = credentialsProvider.getUserCredentials();
+                if (credentials != null) {
+                    final Session impersonatedSession = session.impersonate(credentials);
+                    try {
+                        callback.doInSession(impersonatedSession);
+                    } finally {
+                        impersonatedSession.logout();
+                    }
+                } else {
+                    callback.doInSession(session);
+                }
             } finally {
                 sessionFactory.releaseSession(workspaceName, session);
             }

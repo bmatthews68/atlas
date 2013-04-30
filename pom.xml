@@ -16,7 +16,10 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>atlas-core</module>
+        <module>atlas-core-uuid</module>
         <module>atlas-jcr</module>
+        <module>atlas-mongodb</module>
     </modules>
 
     <properties>
@@ -46,6 +49,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.btmatthews.atlas</groupId>
+                <artifactId>atlas-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
@@ -83,6 +91,16 @@
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-core</artifactId>
+                <version>3.2.0.M1</version>
+            </dependency>
+            <dependency>
                 <groupId>javax.annotation</groupId>
                 <artifactId>jsr250-api</artifactId>
                 <version>1.0</version>
@@ -91,7 +109,6 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
                 <version>3.0.1</version>
-                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>javax.jcr</groupId>
@@ -101,7 +118,7 @@
             <dependency>
                 <groupId>org.apache.chemistry.opencmis</groupId>
                 <artifactId>chemistry-opencmis-client-api</artifactId>
-                <version>0.8.0</version>
+                <version>0.9.0-beta-1</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -137,7 +154,7 @@
             <dependency>
                 <groupId>org.springframework.data</groupId>
                 <artifactId>spring-data-mongodb</artifactId>
-                <version>1.2.0.RELEASE</version>
+                <version>1.2.1.RELEASE</version>
             </dependency>
             <dependency>
                 <groupId>org.mongodb</groupId>
