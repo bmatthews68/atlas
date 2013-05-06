@@ -31,6 +31,10 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 
+/**
+ * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
+ * @since 1.0.0
+ */
 public class JCRTemplate implements JCRAccessor {
     private final static String BORROW_SESSION_RETURNED_NULL = "SessionFactory#getSession(String) returned null";
     private final static String GET_ROOT_NODE_RETURNED_NULL = "Session#getRootNode() returned null.";
@@ -61,12 +65,22 @@ public class JCRTemplate implements JCRAccessor {
     }
 
     /**
-     * Initialise the JCR template with a session pool.
+     * Initialise the JCR template with a session factory.
      *
-     * @param pool The session pool.
+     * @param factory The session factory.
      */
-    public JCRTemplate(final SessionFactory pool, final CredentialsProvider provider) {
-        sessionFactory = pool;
+    public JCRTemplate(final SessionFactory factory) {
+        sessionFactory = factory;
+    }
+
+    /**
+     * Initialise the JCR template with a session factory and a credentials provider.
+     *
+     * @param factory  The session factory.
+     * @param provider The credentials provider.
+     */
+    public JCRTemplate(final SessionFactory factory, final CredentialsProvider provider) {
+        sessionFactory = factory;
         credentialsProvider = provider;
     }
 
@@ -79,10 +93,22 @@ public class JCRTemplate implements JCRAccessor {
         sessionFactory = pool;
     }
 
+    /**
+     * Used to inject the credentials provider.
+     *
+     * @param provider The credentials provider.
+     */
     public void setCredentialsProvider(final CredentialsProvider provider) {
         credentialsProvider = provider;
     }
 
+    /**
+     * Determine if the node contains the named property.
+     *
+     * @param node The node.
+     * @param name The property name.
+     * @return {@code true} if the node contains the named property. {@code false} otherwise.
+     */
     public boolean hasProperty(final Node node, final String name) {
         try {
             return node.hasProperty(name);
@@ -91,6 +117,13 @@ public class JCRTemplate implements JCRAccessor {
         }
     }
 
+    /**
+     * Determine if the node contains all the named properties.
+     *
+     * @param node  The node.
+     * @param names The property names.
+     * @return {@code true} if the node contains the named property. {@code false} otherwise.
+     */
     public boolean hasProperties(final Node node, final String... names) {
         for (final String name : names) {
             if (!hasProperty(node, name)) {
@@ -103,6 +136,8 @@ public class JCRTemplate implements JCRAccessor {
     public Binary getBinaryProperty(final Node node, final String name) {
         try {
             return node.getProperty(name).getBinary();
+        } catch (final PathNotFoundException e) {
+            return null;
         } catch (final RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         }
@@ -111,14 +146,18 @@ public class JCRTemplate implements JCRAccessor {
     public BigDecimal getBigDecimalProperty(final Node node, final String name) {
         try {
             return node.getProperty(name).getDecimal();
+        } catch (final PathNotFoundException e) {
+            return null;
         } catch (final RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         }
     }
 
-    public boolean getBooleanProperty(final Node node, final String name) {
+    public Boolean getBooleanProperty(final Node node, final String name) {
         try {
             return node.getProperty(name).getBoolean();
+        } catch (final PathNotFoundException e) {
+            return null;
         } catch (final RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         }
@@ -127,22 +166,28 @@ public class JCRTemplate implements JCRAccessor {
     public Calendar getCalendarProperty(final Node node, final String name) {
         try {
             return node.getProperty(name).getDate();
+        } catch (final PathNotFoundException e) {
+            return null;
         } catch (final RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         }
     }
 
-    public double getDoubleProperty(final Node node, final String name) {
+    public Double getDoubleProperty(final Node node, final String name) {
         try {
             return node.getProperty(name).getDouble();
+        } catch (final PathNotFoundException e) {
+            return null;
         } catch (final RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         }
     }
 
-    public long getLongProperty(final Node node, final String name) {
+    public Long getLongProperty(final Node node, final String name) {
         try {
             return node.getProperty(name).getLong();
+        } catch (final PathNotFoundException e) {
+            return null;
         } catch (RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         }
@@ -151,6 +196,8 @@ public class JCRTemplate implements JCRAccessor {
     public String getPathProperty(final Node node, final String name) {
         try {
             return node.getProperty(name).getString();
+        } catch (final PathNotFoundException e) {
+            return null;
         } catch (final RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         }
@@ -159,6 +206,8 @@ public class JCRTemplate implements JCRAccessor {
     public Node getReferenceProperty(final Node node, final String name) {
         try {
             return node.getProperty(name).getNode();
+        } catch (final PathNotFoundException e) {
+            return null;
         } catch (final RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         }
@@ -167,6 +216,8 @@ public class JCRTemplate implements JCRAccessor {
     public String getStringProperty(final Node node, final String name) {
         try {
             return node.getProperty(name).getString();
+        } catch (final PathNotFoundException e) {
+            return null;
         } catch (final RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         }
@@ -175,6 +226,8 @@ public class JCRTemplate implements JCRAccessor {
     public URI getURIProperty(final Node node, final String name) {
         try {
             return new URI(node.getProperty(name).getString());
+        } catch (final PathNotFoundException e) {
+            return null;
         } catch (final RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         } catch (final URISyntaxException e) {
@@ -339,34 +392,13 @@ public class JCRTemplate implements JCRAccessor {
         assert workspaceName != null && Pattern.matches(WORKSPACE_PATTERN, workspaceName);
         assert callback != null;
 
-        try {
-            final Session session = sessionFactory.getSession(workspaceName);
-            if (session == null) {
-                throw new RepositoryAccessException(BORROW_SESSION_RETURNED_NULL);
+        withSession(workspaceName, new SessionCallback<Object>() {
+            @Override
+            public Object doInSession(Session session) throws Exception {
+                callback.doInSession(session);
+                return null;
             }
-            try {
-                final Credentials credentials = credentialsProvider.getUserCredentials();
-                if (credentials != null) {
-                    final Session impersonatedSession = session.impersonate(credentials);
-                    try {
-                        callback.doInSession(impersonatedSession);
-                    } finally {
-                        impersonatedSession.logout();
-                    }
-                } else {
-                    callback.doInSession(session);
-                }
-            } finally {
-                sessionFactory.releaseSession(workspaceName, session);
-            }
-        } catch (final RepositoryAccessException e) {
-            LOGGER.debug(e.getMessage(), e);
-            throw e;
-        } catch (final Exception e) {
-            final String message = e.getMessage();
-            LOGGER.debug(message, e);
-            throw new RepositoryAccessException(message, e);
-        }
+        });
     }
 
     /**
@@ -387,7 +419,21 @@ public class JCRTemplate implements JCRAccessor {
                 throw new RepositoryAccessException(BORROW_SESSION_RETURNED_NULL);
             }
             try {
-                return callback.doInSession(session);
+                if (credentialsProvider == null) {
+                    return callback.doInSession(session);
+                } else {
+                    final Credentials credentials = credentialsProvider.getUserCredentials();
+                    if (credentials == null) {
+                        return callback.doInSession(session);
+                    } else {
+                        final Session impersonatedSession = session.impersonate(credentials);
+                        try {
+                            return callback.doInSession(impersonatedSession);
+                        } finally {
+                            impersonatedSession.logout();
+                        }
+                    }
+                }
             } finally {
                 sessionFactory.releaseSession(workspaceName, session);
             }

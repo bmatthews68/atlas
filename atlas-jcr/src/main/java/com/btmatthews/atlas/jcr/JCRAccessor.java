@@ -23,6 +23,11 @@ import java.net.URI;
 import java.util.Calendar;
 import java.util.List;
 
+/**
+ *
+ * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
+ * @since 1.0.0
+ */
 public interface JCRAccessor {
 
     boolean hasProperty(Node node, String name);
@@ -33,13 +38,13 @@ public interface JCRAccessor {
 
     BigDecimal getBigDecimalProperty(Node node, String name);
 
-    boolean getBooleanProperty(Node node, String name);
+    Boolean getBooleanProperty(Node node, String name);
 
     Calendar getCalendarProperty(Node node, String name);
 
-    double getDoubleProperty(Node node, String name);
+    Double getDoubleProperty(Node node, String name);
 
-    long getLongProperty(Node node, String name);
+    Long getLongProperty(Node node, String name);
 
     String getPathProperty(Node node, String name);
 

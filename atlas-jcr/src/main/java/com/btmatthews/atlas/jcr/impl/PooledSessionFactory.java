@@ -16,78 +16,78 @@
 
 package com.btmatthews.atlas.jcr.impl;
 
-import javax.jcr.Session;
-
 import com.btmatthews.atlas.jcr.SessionFactory;
 import org.apache.commons.pool.KeyedObjectPool;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 
+import javax.jcr.Session;
+
 /**
  * A pool that provides session objects used to interact with the Java Content
  * Repository. This implementation uses Commons Pool to provide the underlying
  * pool implementation.
+ *
+ * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
+ * @since 1.0.0
  */
 public class PooledSessionFactory implements SessionFactory {
 
-	/**
-	 * The underlying object pool that holds the pooled sessions.
-	 */
-	private KeyedObjectPool<String, Session> objectPool;
+    /**
+     * The underlying object pool that holds the pooled sessions.
+     */
+    private KeyedObjectPool<String, Session> objectPool;
 
-	/**
-	 * Used by the Spring Framework to inject the poolable object factory that
-	 * is used to create sessions.
-	 * 
-	 * @param factory
-	 *            The poolable object factory.
-	 */
-	public PooledSessionFactory(final KeyedPoolableObjectFactory<String, Session> factory) {
-		objectPool = new GenericKeyedObjectPool<String, Session>(factory);
-	}
+    /**
+     * Used by the Spring Framework to inject the poolable object factory that
+     * is used to create sessions.
+     *
+     * @param factory The poolable object factory.
+     */
+    public PooledSessionFactory(final KeyedPoolableObjectFactory<String, Session> factory) {
+        objectPool = new GenericKeyedObjectPool<String, Session>(factory);
+    }
 
-	/**
-	 * Close the underlying object pool when the session pool is destroyed.
-	 * 
-	 * @throws Exception
-	 *             If there was an error closing the underlying object pool.
-	 */
-	public void shutdown() throws Exception {
-		objectPool.close();
-		objectPool = null;
-	}
+    public PooledSessionFactory(final  KeyedPoolableObjectFactory<String, Session> factory, GenericKeyedObjectPool.Config config)  {
+        objectPool = new GenericKeyedObjectPool<String, Session>(factory, config);
+    }
 
-	/**
-	 * Borrow a session from the underlying object pool. The workspace name is
-	 * used as a key when obtaining a session from the underlying object pool.
-	 * 
-	 * @param workspaceName
-	 *            The workspace name.
-	 * @return The session.
-	 * @throws Exception
-	 *             If there was an error obtaining the session from the
-	 *             underlying object pool.
-	 * @see com.btmatthews.atlas.jcr.SessionFactory#getSession(String)
-	 */
-	public Session getSession(final String workspaceName) throws Exception {
-		return objectPool.borrowObject(workspaceName);
-	}
+    /**
+     * Close the underlying object pool when the session pool is destroyed.
+     *
+     * @throws Exception If there was an error closing the underlying object pool.
+     */
+    public void shutdown() throws Exception {
+        objectPool.close();
+        objectPool = null;
+    }
 
-	/**
-	 * Return a session to the underlying object pool. The workspace name is
-	 * used as a key when obtaining a session from the underlying object pool.
-	 * 
-	 * @param workspaceName
-	 *            The workspace name.
-	 * @param session
-	 *            The session.
-	 * @throws Exception
-	 *             If there was an error returning the session to the underlying
-	 *             object pool.
-	 * @see com.btmatthews.atlas.jcr.SessionFactory#releaseSession(String, Session)
-	 */
-	public void releaseSession(final String workspaceName, final Session session)
-			throws Exception {
-		objectPool.returnObject(workspaceName, session);
-	}
+    /**
+     * Borrow a session from the underlying object pool. The workspace name is
+     * used as a key when obtaining a session from the underlying object pool.
+     *
+     * @param workspaceName The workspace name.
+     * @return The session.
+     * @throws Exception If there was an error obtaining the session from the
+     *                   underlying object pool.
+     * @see com.btmatthews.atlas.jcr.SessionFactory#getSession(String)
+     */
+    public Session getSession(final String workspaceName) throws Exception {
+        return objectPool.borrowObject(workspaceName);
+    }
+
+    /**
+     * Return a session to the underlying object pool. The workspace name is
+     * used as a key when obtaining a session from the underlying object pool.
+     *
+     * @param workspaceName The workspace name.
+     * @param session       The session.
+     * @throws Exception If there was an error returning the session to the underlying
+     *                   object pool.
+     * @see com.btmatthews.atlas.jcr.SessionFactory#releaseSession(String, Session)
+     */
+    public void releaseSession(final String workspaceName, final Session session)
+            throws Exception {
+        objectPool.returnObject(workspaceName, session);
+    }
 }

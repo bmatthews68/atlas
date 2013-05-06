@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Brian Matthews
+ * Copyright 2011-2013 Brian Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,55 +16,60 @@
 
 package com.btmatthews.atlas.core.dao;
 
-import java.util.List;
-
 import com.btmatthews.atlas.core.common.Paging;
+
+import java.util.List;
 
 /**
  * Describes the interface for data access objects that persist entities of
  * described by the interface {@code I} to a data store.
- * 
+ *
+ * @param <I> The interface that describes the persistent entity.
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
- * 
- * @param <I>
- *            The interface that describes the persistent entity.
  */
 public interface DAO<I> {
 
-	long count();
-	
-	List<I> find(Paging paging);
-	
-	/**
-	 * Persist a newly created entity in the data store.
-	 * 
-	 * @param entity
-	 *            The newly created entity.
-	 */
-	void create(I entity);
+    /**
+     * Count the number of entities described by {@code I} in the data source.
+     *
+     * @return The number of entities.
+     */
+    long count();
 
-	/**
-	 * Retrieve a persistent entity from the data store.
-	 * 
-	 * @param id
-	 *            The object identifier of the persistent entity.
-	 * @return The persistent entity.
-	 */
-	I read(String id);
+    /**
+     * Retrieve a portion of the ordered entities described by interface {@code I} from the data store.
+     *
+     * @param paging Describes the portion of the result set to return.
+     * @return An ordered list of {@code I} entities.
+     */
+    List<I> find(Paging paging);
 
-	/**
-	 * Update a persistent entity in the data store.
-	 * 
-	 * @param entity
-	 *            The persistent entity.
-	 */
-	void update(I entity);
+    /**
+     * Persist a newly created entity in the data store.
+     *
+     * @param entity The newly created entity.
+     */
+    void create(I entity);
 
-	/**
-	 * Delete a persistent entity from the data store.
-	 * 
-	 * @param entity
-	 *            The persistent entity.
-	 */
-	void destroy(I entity);
+    /**
+     * Retrieve a persistent entity from the data store.
+     *
+     * @param id The object identifier of the persistent entity.
+     * @return The persistent entity.
+     */
+    I read(String id);
+
+    /**
+     * Update a persistent entity in the data store.
+     *
+     * @param entity The persistent entity.
+     */
+    void update(I entity);
+
+    /**
+     * Delete a persistent entity from the data store.
+     *
+     * @param entity The persistent entity.
+     */
+    void destroy(I entity);
 }

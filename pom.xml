@@ -20,6 +20,7 @@
         <module>atlas-core-uuid</module>
         <module>atlas-jcr</module>
         <module>atlas-mongodb</module>
+        <module>atlas-quartz</module>
     </modules>
 
     <properties>
@@ -77,6 +78,11 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
+                <artifactId>spring-context-support</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
                 <artifactId>spring-expression</artifactId>
                 <version>${spring.version}</version>
             </dependency>
@@ -99,6 +105,11 @@
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-core</artifactId>
                 <version>3.2.0.M1</version>
+            </dependency>
+            <dependency>
+                <groupId>opensymphony</groupId>
+                <artifactId>quartz</artifactId>
+                <version>1.6.2</version>
             </dependency>
             <dependency>
                 <groupId>javax.annotation</groupId>

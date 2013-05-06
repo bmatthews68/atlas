@@ -24,6 +24,7 @@ import com.btmatthews.atlas.jcr.impl.JCRTemplate;
 import com.btmatthews.atlas.jcr.impl.PoolableSessionFactory;
 import com.btmatthews.atlas.jcr.impl.PooledSessionFactory;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
+import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,20 +32,40 @@ import org.springframework.context.annotation.Configuration;
 import javax.jcr.Repository;
 import javax.jcr.Session;
 
+/**
+ * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
+ * @since 1.0.0
+ */
 @Configuration
-public class RepositoryConfiguration {
+public class PooledRepositoryConfiguration {
 
     private RepositoryProvider repositoryProvider;
     private CredentialsProvider credentialsProvider;
+    private GenericKeyedObjectPool.Config poolConfiguration;
 
+    /**
+     * Used to inject the repository provider defined in another context.
+     *
+     * @param provider The repository provider.
+     */
     @Autowired
-    public void setRepository(final RepositoryProvider repo) {
-        repositoryProvider = repo;
+    public void setRepository(final RepositoryProvider provider) {
+        repositoryProvider = provider;
     }
 
+    /**
+     * Used to inject the credentials provider defined in another context.
+     *
+     * @param provider The credential provider.
+     */
     @Autowired
-    public void setCredentialsProvider(final CredentialsProvider creds) {
-        credentialsProvider = creds;
+    public void setCredentialsProvider(final CredentialsProvider provider) {
+        credentialsProvider = provider;
+    }
+
+    @Autowired(required = false)
+    public void setPoolConfiguration(GenericKeyedObjectPool.Config configuration) {
+        poolConfiguration = configuration;
     }
 
     @Bean
@@ -56,13 +77,17 @@ public class RepositoryConfiguration {
 
     @Bean(destroyMethod = "shutdown")
     @Autowired
-    public SessionFactory sessionPool(final KeyedPoolableObjectFactory<String, Session> objectFactory) {
-        return new PooledSessionFactory(objectFactory);
+    public SessionFactory sessionFactory(final KeyedPoolableObjectFactory<String, Session> objectFactory) {
+        if (poolConfiguration == null) {
+            return new PooledSessionFactory(objectFactory);
+        } else {
+            return new PooledSessionFactory(objectFactory, poolConfiguration);
+        }
     }
 
     @Bean
     @Autowired
     public JCRAccessor jcrTemplate(final SessionFactory sessionFactory) {
-        return new JCRTemplate(sessionFactory);
+        return new JCRTemplate(sessionFactory, credentialsProvider);
     }
 }

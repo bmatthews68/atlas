@@ -18,6 +18,11 @@ package com.btmatthews.atlas.jcr;
 
 import javax.jcr.Repository;
 
+/**
+ *
+ * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
+ * @since 1.0.0
+ */
 public interface RepositoryProvider {
 
 	Repository getRepository();

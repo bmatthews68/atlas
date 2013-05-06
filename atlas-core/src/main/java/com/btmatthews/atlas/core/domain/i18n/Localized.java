@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Brian Matthews
+ * Copyright 2011-2013 Brian Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,36 +16,67 @@
 
 package com.btmatthews.atlas.core.domain.i18n;
 
+import com.google.common.collect.ImmutableMap;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import com.google.common.collect.ImmutableMap;
-
+/**
+ * A localized value. Maps Java locales to the locale-specific value.
+ *
+ * @param <T> The value type.
+ */
 public class Localized<T> {
 
-	private Map<Locale, T> values;
+    /**
+     * Maps the Java locale to the locale-specific value.
+     */
+    private ImmutableMap<Locale, T> values;
 
-	public Localized(final Map<Locale, T> vals) {
-		final ImmutableMap.Builder<Locale, T> builder = ImmutableMap.builder();
-		values = builder.putAll(vals).build();
-	}
+    private Localized(final Locale locale, T val) {
+        final ImmutableMap.Builder<Locale, T> builder = ImmutableMap.builder();
+        values = builder.put(locale, val).build();
+    }
 
-	public T getValue(final Locale locale) {
-		return values.get(locale);
-	}
+    /**
+     * Construct a localized value with the values.
+     * @param vals
+     */
+    public Localized(final Map<Locale, T> vals) {
+        final ImmutableMap.Builder<Locale, T> builder = ImmutableMap.builder();
+        values = builder.putAll(vals).build();
+    }
 
-	public void setValue(final Locale locale, final T value) {
-		values.put(locale, value);
-	}
+    /**
+     * Create a singleton localized value.
+     *
+     * @param locale The locale.
+     * @param val    The value.
+     * @param <T>    The value type.
+     * @return The singledton localized value.
+     */
+    public static <T> Localized<T> create(final Locale locale, final T val) {
+        return new Localized(locale, val);
+    }
 
-	public void removeValue(final Locale locale) {
-		values.remove(locale);
-	}
+    /**
+     * Get a locale specific value.
+     * @param locale              The locale.
+     * @return
+     */
+    public T getValue(final Locale locale) {
+        return values.get(locale);
+    }
 
-	public static <T> Localized<T> create(final Locale locale, final T val) {
-		final Map<Locale, T> vals = new HashMap<Locale, T>();
-		vals.put(locale, val);
-		return new Localized<>(vals);
-	}
+    public void setValue(final Locale locale, final T value) {
+        final ImmutableMap.Builder<Locale, T> builder = ImmutableMap.builder();
+        values = builder.putAll(values).put(locale, value).build();
+    }
+
+    public void removeValue(final Locale locale) {
+        final ImmutableMap.Builder<Locale, T> builder = ImmutableMap.builder();
+        builder.putAll(values);
+        values.remove(locale);
+    }
 }

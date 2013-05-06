@@ -19,6 +19,11 @@ package com.btmatthews.atlas.jcr;
 import javax.jcr.Node;
 import javax.jcr.Session;
 
+/**
+ *
+ * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
+ * @since 1.0.0
+ */
 public interface NodeVoidCallback {
 
     void doInSessionWithNode(Session session, Node node)

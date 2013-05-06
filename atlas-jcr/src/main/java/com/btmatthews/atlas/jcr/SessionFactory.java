@@ -21,30 +21,28 @@ import javax.jcr.Session;
 /**
  * A factory that provides session objects used to interact with the Java Content
  * Repository.
+ *
+ * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
+ * @since 1.0.0
  */
 public interface SessionFactory {
 
-	/**
-	 * Get a session for the named workspace.
-	 * 
-	 * @param workspaceName
-	 *            The workspace name.
-	 * @return The session.
-	 * @throws Exception
-	 *             If there was an error obtaining a session.
-	 */
-	Session getSession(String workspaceName) throws Exception;
+    /**
+     * Get a session for the named workspace.
+     *
+     * @param workspaceName The workspace name.
+     * @return The session.
+     * @throws Exception If there was an error obtaining a session.
+     */
+    Session getSession(String workspaceName) throws Exception;
 
-	/**
-	 * Release a session for the named workspace.
-	 * 
-	 * @param workspaceName
-	 *            The workspace name.
-	 * @param session
-	 *            The session.
-	 * @throws Exception
-	 *             If there was an error releasing the session.
-	 */
-	void releaseSession(String workspaceName, final Session session)
-			throws Exception;
+    /**
+     * Release a session for the named workspace.
+     *
+     * @param workspaceName The workspace name.
+     * @param session       The session.
+     * @throws Exception If there was an error releasing the session.
+     */
+    void releaseSession(String workspaceName, final Session session)
+            throws Exception;
 }

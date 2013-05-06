@@ -18,6 +18,15 @@ package com.btmatthews.atlas.jcr;
 
 import javax.jcr.Credentials;
 
+/**
+ * Implementations of {@link CredentialsProvider} are used to obtain the global application wide credentials that are
+ * required to log on to the repository when there is no end-user or an administrative operations is being performed.
+ * If there is an end-user then the global credentials are used to create the initial session then the the end-user
+ * credentials are used to spawn a session with the end-user's credentials.
+ *
+ * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
+ * @since 1.0.0
+ */
 public interface CredentialsProvider {
 
     /**
@@ -27,5 +36,10 @@ public interface CredentialsProvider {
      */
     Credentials getGlobalCredentials();
 
+    /**
+     * Get the {@link Credentials} used to log into the repository as the current end-user.
+     *
+     * @return The end-user credentials.
+     */
     Credentials getUserCredentials();
 }
