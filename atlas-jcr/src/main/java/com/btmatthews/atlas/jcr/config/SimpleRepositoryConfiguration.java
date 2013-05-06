@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Brian Matthews
+ * Copyright 2011-2013 Brian Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,25 +21,27 @@ import com.btmatthews.atlas.jcr.JCRAccessor;
 import com.btmatthews.atlas.jcr.RepositoryProvider;
 import com.btmatthews.atlas.jcr.SessionFactory;
 import com.btmatthews.atlas.jcr.impl.JCRTemplate;
-import com.btmatthews.atlas.jcr.impl.PoolableSessionFactory;
-import com.btmatthews.atlas.jcr.impl.PooledSessionFactory;
 import com.btmatthews.atlas.jcr.impl.SimpleSessionFactory;
-import org.apache.commons.pool.KeyedPoolableObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.jcr.Repository;
-import javax.jcr.Session;
-
 /**
+ * Configuration when using a simple session factory.
+ *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @since 1.0.0
  */
 @Configuration
 public class SimpleRepositoryConfiguration {
 
+    /**
+     * Used to get a reference to the repository.
+     */
     private RepositoryProvider repositoryProvider;
+    /**
+     * Used to get references to the global and user-specific credentials.
+     */
     private CredentialsProvider credentialsProvider;
 
     /**
@@ -62,12 +64,23 @@ public class SimpleRepositoryConfiguration {
         credentialsProvider = provider;
     }
 
+    /**
+     * Create the session factory bean.
+     *
+     * @return A {@link SimpleSessionFactory} object.
+     */
     @Bean
     @Autowired
     public SessionFactory sessionFactory() {
         return new SimpleSessionFactory(repositoryProvider, credentialsProvider);
     }
 
+    /**
+     * Create a {@link JCRAccessor} that is used to simplify interaction with the JCR repository.
+     *
+     * @param sessionFactory The session factory.
+     * @return A {@link JCRTemplate} object.
+     */
     @Bean
     @Autowired
     public JCRAccessor jcrTemplate(final SessionFactory sessionFactory) {

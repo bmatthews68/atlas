@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Brian Matthews
+ * Copyright 2011-2013 Brian Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,14 +33,25 @@ import javax.jcr.Repository;
 import javax.jcr.Session;
 
 /**
+ * Configuration when using a session pool.
+ *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @since 1.0.0
  */
 @Configuration
 public class PooledRepositoryConfiguration {
 
+    /**
+     * Used to get a reference to the repository.
+     */
     private RepositoryProvider repositoryProvider;
+    /**
+     * Used to get references to the global and user-specific credentials.
+     */
     private CredentialsProvider credentialsProvider;
+    /**
+     * Used to configure the behaviour of the session object pool.
+     */
     private GenericKeyedObjectPool.Config poolConfiguration;
 
     /**
@@ -63,17 +74,34 @@ public class PooledRepositoryConfiguration {
         credentialsProvider = provider;
     }
 
+    /**
+     * Used to inject the session object pool configuration.
+     *
+     * @param configuration The object pool configuration.
+     */
     @Autowired(required = false)
     public void setPoolConfiguration(GenericKeyedObjectPool.Config configuration) {
         poolConfiguration = configuration;
     }
 
+    /**
+     * Create the keyed poolable object factory that will be used by the session object pool to create session objects.
+     *
+     * @return The keyed poolable object factory.
+     */
     @Bean
     @Autowired
     public KeyedPoolableObjectFactory<String, Session> poolableObjectFactory() {
         final Repository repository = repositoryProvider.getRepository();
         return new PoolableSessionFactory(repository, credentialsProvider);
     }
+
+    /**
+     * Create the session factory that dispenses sessions from a keyed pool of session objects.
+     *
+     * @param objectFactory The poolable object factory that is used to create the session objects.
+     * @return The session factory.
+     */
 
     @Bean(destroyMethod = "shutdown")
     @Autowired
@@ -85,6 +113,12 @@ public class PooledRepositoryConfiguration {
         }
     }
 
+    /**
+     * Create a {@link JCRAccessor} that is used to simplify interaction with the JCR repository.
+     *
+     * @param sessionFactory The session factory.
+     * @return A {@link JCRTemplate} object.
+     */
     @Bean
     @Autowired
     public JCRAccessor jcrTemplate(final SessionFactory sessionFactory) {
