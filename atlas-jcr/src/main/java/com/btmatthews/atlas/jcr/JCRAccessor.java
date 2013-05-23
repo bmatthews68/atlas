@@ -36,23 +36,43 @@ public interface JCRAccessor {
 
     Binary getBinaryProperty(Node node, String name);
 
+    Binary getBinaryProperty(Node node, String name, Binary defaultValue);
+
     BigDecimal getBigDecimalProperty(Node node, String name);
+
+    BigDecimal getBigDecimalProperty(Node node, String name, BigDecimal defaultValue);
 
     Boolean getBooleanProperty(Node node, String name);
 
+    Boolean getBooleanProperty(Node node, String name, Boolean defaultValue);
+
     Calendar getCalendarProperty(Node node, String name);
+
+    Calendar getCalendarProperty(Node node, String name, Calendar defaultValue);
 
     Double getDoubleProperty(Node node, String name);
 
+    Double getDoubleProperty(Node node, String name, Double defaultValue);
+
     Long getLongProperty(Node node, String name);
+
+    Long getLongProperty(Node node, String name, Long defaultValue);
 
     String getPathProperty(Node node, String name);
 
+    String getPathProperty(Node node, String name, String defaultValue);
+
     Node getReferenceProperty(Node node, String name);
+
+    Node getReferenceProperty(Node node, String name, Node defaultValue);
 
     String getStringProperty(Node node, String name);
 
+    String getStringProperty(Node node, String name, String defaultValue);
+
     URI getURIProperty(Node node, String name);
+
+    URI getURIProperty(Node node, String name, URI defaultValue);
 
     void withRoot(String workspaceName, NodeVoidCallback callback);
 

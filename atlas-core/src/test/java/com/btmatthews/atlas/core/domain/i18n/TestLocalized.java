@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2013 Brian Matthews
+ * Copyright 2011-2013 Brian Thomas Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,10 @@
  * limitations under the License.
  */
 
-package com.btmatthews.atlas.jcr;
-
-import javax.jcr.Repository;
+package com.btmatthews.atlas.core.domain.i18n;
 
 /**
- * Used to lookup the JCR repository.
- *
- * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
- * @since 1.0.0
+ * Created by bmatthews68 on 21/05/2013.
  */
-public interface RepositoryProvider {
-
-    /**
-     * Returns the JCR repository.
-     *
-     * @return The JCR repository.
-     */
-    Repository getRepository();
+public class TestLocalized {
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Brian Matthews
+ * Copyright 2011-2013 Brian Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,22 @@ import javax.jcr.Node;
 import javax.jcr.Session;
 
 /**
+ * A callback used to events for individual repository nodes and return a typed result.
  *
- * @param <T>
+ * @param <T> The result type.
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @since 1.0.0
  */
 public interface NodeCallback<T> {
 
+    /**
+     * The method that handles the callback event.
+     *
+     * @param session The session.
+     * @param node    The node.
+     * @return The result.
+     * @throws Exception If there was an error handling the callback event.
+     */
     T doInSessionWithNode(Session session, Node node)
             throws Exception;
 }

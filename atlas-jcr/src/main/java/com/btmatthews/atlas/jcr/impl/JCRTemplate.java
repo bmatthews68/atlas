@@ -134,100 +134,140 @@ public class JCRTemplate implements JCRAccessor {
     }
 
     public Binary getBinaryProperty(final Node node, final String name) {
+        return getBinaryProperty(node, name, null);
+    }
+
+    public Binary getBinaryProperty(final Node node, final String name, final Binary defaultValue) {
         try {
             return node.getProperty(name).getBinary();
         } catch (final PathNotFoundException e) {
-            return null;
+            return defaultValue;
         } catch (final RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         }
     }
 
     public BigDecimal getBigDecimalProperty(final Node node, final String name) {
+        return getBigDecimalProperty(node, name, null);
+    }
+
+    public BigDecimal getBigDecimalProperty(final Node node, final String name, final BigDecimal defaultValue) {
         try {
             return node.getProperty(name).getDecimal();
         } catch (final PathNotFoundException e) {
-            return null;
+            return defaultValue;
         } catch (final RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         }
     }
 
     public Boolean getBooleanProperty(final Node node, final String name) {
+        return getBooleanProperty(node, name, null);
+    }
+
+    public Boolean getBooleanProperty(final Node node, final String name, final Boolean defaultValue) {
         try {
             return node.getProperty(name).getBoolean();
         } catch (final PathNotFoundException e) {
-            return null;
+            return defaultValue;
         } catch (final RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         }
     }
 
     public Calendar getCalendarProperty(final Node node, final String name) {
+        return getCalendarProperty(node, name, null);
+    }
+
+    public Calendar getCalendarProperty(final Node node, final String name, final Calendar defaultValue) {
         try {
             return node.getProperty(name).getDate();
         } catch (final PathNotFoundException e) {
-            return null;
+            return defaultValue;
         } catch (final RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         }
     }
 
     public Double getDoubleProperty(final Node node, final String name) {
+        return getDoubleProperty(node, name, null);
+    }
+
+    public Double getDoubleProperty(final Node node, final String name, final Double defaultValue) {
         try {
             return node.getProperty(name).getDouble();
         } catch (final PathNotFoundException e) {
-            return null;
+            return defaultValue;
         } catch (final RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         }
     }
 
     public Long getLongProperty(final Node node, final String name) {
+        return getLongProperty(node, name, null);
+    }
+
+    public Long getLongProperty(final Node node, final String name, final Long defaultValue) {
         try {
             return node.getProperty(name).getLong();
         } catch (final PathNotFoundException e) {
-            return null;
-        } catch (RepositoryException e) {
+            return defaultValue;
+        } catch (final RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         }
     }
 
     public String getPathProperty(final Node node, final String name) {
+        return getPathProperty(node, name, null);
+    }
+
+    public String getPathProperty(final Node node, final String name, final String defaultValue) {
         try {
             return node.getProperty(name).getString();
         } catch (final PathNotFoundException e) {
-            return null;
+            return defaultValue;
         } catch (final RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         }
     }
 
     public Node getReferenceProperty(final Node node, final String name) {
+        return getReferenceProperty(node, name, null);
+    }
+
+    public Node getReferenceProperty(final Node node, final String name, final Node defaultValue) {
         try {
             return node.getProperty(name).getNode();
         } catch (final PathNotFoundException e) {
-            return null;
+            return defaultValue;
         } catch (final RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         }
     }
 
     public String getStringProperty(final Node node, final String name) {
+        return getStringProperty(node, name, null);
+    }
+
+    public String getStringProperty(final Node node, final String name, final String defaultValue) {
         try {
             return node.getProperty(name).getString();
         } catch (final PathNotFoundException e) {
-            return null;
+            return defaultValue;
         } catch (final RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         }
     }
 
     public URI getURIProperty(final Node node, final String name) {
+        return getURIProperty(node, name, null);
+    }
+
+    public URI getURIProperty(final Node node, final String name, final URI defaultValue) {
         try {
             return new URI(node.getProperty(name).getString());
         } catch (final PathNotFoundException e) {
-            return null;
+            return defaultValue;
         } catch (final RepositoryException e) {
             throw new RepositoryAccessException(e.getMessage(), e);
         } catch (final URISyntaxException e) {

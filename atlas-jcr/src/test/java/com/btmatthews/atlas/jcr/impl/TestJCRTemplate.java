@@ -34,6 +34,10 @@ public class TestJCRTemplate {
     @Mock
     private Session session;
     @Mock
+    private Property nameProperty;
+    @Mock
+    private Node node;
+    @Mock
     private Node rootNode;
     private JCRAccessor jcrTemplate;
 
@@ -45,6 +49,7 @@ public class TestJCRTemplate {
         jcrTemplate = jcrTemplateImpl;
         when(sessionFactory.getSession(anyString())).thenReturn(session);
         when(session.getRootNode()).thenReturn(rootNode);
+        when(nameProperty.getString()).thenReturn("style.css");
     }
 
     @Test
@@ -56,6 +61,36 @@ public class TestJCRTemplate {
         verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
         verifyNoMoreInteractions(sessionFactory, callback);
         verifyZeroInteractions(session);
+    }
+
+    @Test
+    public void hasPropertyExisting() throws Exception {
+        when(node.hasProperty(eq(Property.JCR_NAME))).thenReturn(true);
+        assertTrue(jcrTemplate.hasProperty(node, Property.JCR_NAME));
+    }
+
+    @Test
+    public void hasPropertyNonExisting() throws Exception {
+        when(node.hasProperty(eq(Property.JCR_NAME))).thenReturn(false);
+        assertFalse(jcrTemplate.hasProperty(node, Property.JCR_NAME));
+    }
+
+    @Test
+    public void getStringPropertyExistingWithoutDefault() throws Exception {
+        when(node.getProperty(eq(Property.JCR_NAME))).thenReturn(nameProperty);
+        assertEquals("style.css", jcrTemplate.getStringProperty(node, Property.JCR_NAME));
+    }
+
+    @Test
+    public void getStringPropertyNonExistingWithoutDefault() throws Exception {
+        when(node.getProperty(eq(Property.JCR_NAME))).thenThrow(PathNotFoundException.class);
+        assertNull(jcrTemplate.getStringProperty(node, Property.JCR_NAME));
+    }
+
+    @Test
+    public void getStringPropertyNonExistingWithDefault() throws Exception {
+        when(node.getProperty(eq(Property.JCR_NAME))).thenThrow(PathNotFoundException.class);
+        assertEquals("style.css", jcrTemplate.getStringProperty(node, Property.JCR_NAME, "style.css"));
     }
 
     @Test
@@ -493,7 +528,7 @@ public class TestJCRTemplate {
     public void withNodeIdUsingTypedCallbackShouldFailWhenCallbackThrowsException() throws Exception {
         final NodeCallback<Object> callback = mock(NodeCallback.class);
         final Node node = mock(Node.class);
-        when(session.getNodeByIdentifier(anyString()) ).thenReturn(node);
+        when(session.getNodeByIdentifier(anyString())).thenReturn(node);
         when(callback.doInSessionWithNode(any(Session.class), any(Node.class))).thenThrow(RepositoryException.class);
         try {
             jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);

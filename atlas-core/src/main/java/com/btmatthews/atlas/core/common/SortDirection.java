@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2013 Brian Matthews
+ * Copyright 2011-2013 Brian Thomas Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package com.btmatthews.atlas.jcr;
-
-import javax.jcr.Repository;
+package com.btmatthews.atlas.core.common;
 
 /**
- * Used to lookup the JCR repository.
+ * The sort directions.
  *
- * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
+ * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  * @since 1.0.0
  */
-public interface RepositoryProvider {
-
+public enum SortDirection {
     /**
-     * Returns the JCR repository.
-     *
-     * @return The JCR repository.
+     * Sort based on the ascending values of a field.
      */
-    Repository getRepository();
+    ASCENDING,
+    /**
+     * Sort based on the descending values of a field.
+     */
+    DESCENDING
 }

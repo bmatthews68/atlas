@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Brian Matthews
+ * Copyright 2011-2013 Brian Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,16 +22,27 @@ package com.btmatthews.atlas.jcr;
  */
 public class RepositoryAccessException extends RuntimeException {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3931707994177411056L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -3931707994177411056L;
 
-	public RepositoryAccessException(final String msg) {
-		super(msg);
-	}
+    /**
+     * Initialise the {@link RepositoryAccessException} with an error message.
+     *
+     * @param msg The error message.
+     */
+    public RepositoryAccessException(final String msg) {
+        super(msg);
+    }
 
-	public RepositoryAccessException(final String msg, final Throwable cause) {
-		super(msg, cause);
-	}
+    /**
+     * Initialise the {@link RepositoryAccessException} with an error message and a root cause.
+     *
+     * @param msg   The error message.
+     * @param cause The root cause.
+     */
+    public RepositoryAccessException(final String msg, final Throwable cause) {
+        super(msg, cause);
+    }
 }

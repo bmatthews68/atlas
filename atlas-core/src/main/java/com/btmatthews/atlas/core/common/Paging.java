@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Brian Matthews
+ * Copyright 2011-2013 Brian Thomas Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,92 +16,114 @@
 
 package com.btmatthews.atlas.core.common;
 
-import java.util.List;
-
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.List;
+
+/**
+ * A paging object describes the page number, page size and sort ordering to use when returning
+ * large result sets.
+ *
+ * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
+ * @since 1.0.0
+ */
 public final class Paging {
 
-	public enum SortDirection {
-		ASCENDING, DESCENDING
-	}
+    /**
+     * The page number.
+     */
+    private int pageNumber;
+    /**
+     * The page size.
+     */
+    private int pageSize;
+    /**
+     * The sort fields and directions.
+     */
+    private List<Ordering> sortOrderings;
 
-	public final class Ordering {
-		private String sortField;
-		private SortDirection sortDirection;
+    /**
+     * Initialise the paging object.
+     *
+     * @param number The page number.
+     * @param size   The page size.
+     * @param sorts  The sort orderings.
+     */
+    public Paging(final int number, final int size, final Ordering... sorts) {
+        pageNumber = number;
+        pageSize = size;
+        sortOrderings = Lists.newArrayList(sorts);
+    }
 
-		public Ordering(final String field, final SortDirection direction) {
-			sortField = field;
-			sortDirection = direction;
-		}
+    /**
+     * Get the page number.
+     *
+     * @return The page number.
+     */
+    public int getPageNumber() {
+        return pageNumber;
+    }
 
-		public String getSortField() {
-			return sortField;
-		}
+    /**
+     * Get the page size.
+     *
+     * @return The page size.
+     */
+    public int getPageSize() {
+        return pageSize;
+    }
 
-		public SortDirection getSortDirection() {
-			return sortDirection;
-		}
-	}
+    /**
+     * Get the sort orderings.
+     *
+     * @return The sort orderings.
+     */
+    public List<Ordering> getSortOrderings() {
+        return sortOrderings;
+    }
 
-	private int pageNumber;
+    /**
+     * Compare two paging objects.
+     *
+     * @param obj The other paging object.
+     * @return {@code true} if both paging object are equal. Otherwise, {@code false}.
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
 
-	private int pageSize;
+    /**
+     * Calculate a hash code for this paging object.
+     *
+     * @return The hash code.
+     */
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(pageNumber)
+                .append(pageSize)
+                .append(sortOrderings)
+                .toHashCode();
+    }
 
-	private List<Ordering> sortOrderings;
-
-	public Paging(final int number, final int size, final Ordering... sorts) {
-		pageNumber = number;
-		pageSize = size;
-		sortOrderings = Lists.newArrayList(sorts);
-	}
-
-	public int getPageNumber() {
-		return pageNumber;
-	}
-
-	public int getPageSize() {
-		return pageSize;
-	}
-
-	public List<Ordering> getSortOrderings() {
-		return sortOrderings;
-	}
-
-	public void addSortOrdering(final String field,
-			final SortDirection direction) {
-		final Ordering ordering = new Ordering(field, direction);
-		sortOrderings.add(ordering);
-	}
-
-	public void toggleSortOdering(final String field) {
-		final Ordering ordering = Iterables.find(sortOrderings,
-				new Predicate<Ordering>() {
-					public boolean apply(final Ordering ordering) {
-						return ordering.getSortField().equals(field);
-					};
-				});
-		if (ordering == null) {
-			addSortOrdering(field, SortDirection.ASCENDING);
-		} else {
-			if (ordering.getSortDirection() == SortDirection.ASCENDING) {
-				removeSortOrdering(field);
-				addSortOrdering(field, SortDirection.DESCENDING);
-			} else {
-				removeSortOrdering(field);
-				addSortOrdering(field, SortDirection.ASCENDING);
-			}
-		}
-	}
-
-	public void removeSortOrdering(final String field) {
-		Iterables.removeIf(sortOrderings, new Predicate<Ordering>() {
-			public boolean apply(final Ordering ordering) {
-				return ordering.getSortField().equals(field);
-			};
-		});
-	}
-
+    /**
+     * Convert the paging object to a string.
+     *
+     * @return The string.
+     */
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("pageNumber", pageNumber)
+                .append("pageSize", pageSize)
+                .append("sortOrderings", sortOrderings)
+                .toString();
+    }
 }
