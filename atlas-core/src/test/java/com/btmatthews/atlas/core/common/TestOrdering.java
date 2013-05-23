@@ -16,7 +16,6 @@
 
 package com.btmatthews.atlas.core.common;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -25,14 +24,16 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 
 /**
- * Created by bmatthews68 on 21/05/2013.
+ * Unit test the {@link Ordering} object.
+ *
+ * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
+ * @since 1.0.0
  */
 public class TestOrdering {
 
     private static final Ordering ASC_ORDERING = new Ordering("name", SortDirection.ASCENDING);
     private static final Ordering DESC_ORDERING = new Ordering("name", SortDirection.DESCENDING);
     private static final Ordering ASC_ORDERING_OTHER = new Ordering("name", SortDirection.ASCENDING);
-
     @Rule
     public ErrorCollector collector = new ErrorCollector();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2013 Brian Matthews
+ * Copyright 2011-2013 Brian Thomas Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 /**
  * Overrides {@link SpringBeanJobFactory} to auto-wire dependencies from the application context when creating job beans.
  *
- * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
+ * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  * @since 1.0.0
  */
 public final class AutowiringSpringBeanJobFactory

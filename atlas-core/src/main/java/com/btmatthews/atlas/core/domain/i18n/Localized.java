@@ -20,13 +20,10 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.Locale;
 import java.util.Map;
-
-import static com.google.common.base.Predicates.equalTo;
-import static com.google.common.base.Predicates.not;
-import static com.google.common.collect.Maps.filterKeys;
 
 /**
  * A localized value. Maps Java locales to the locale-specific value.
@@ -48,7 +45,7 @@ public final class Localized<T> {
      * @param locale The locale.
      * @param val    The value.
      */
-    private Localized(final Locale locale, T val) {
+    public Localized(final Locale locale, T val) {
         final ImmutableMap.Builder<Locale, T> builder = ImmutableMap.builder();
         values = builder.put(locale, val).build();
     }
@@ -58,32 +55,9 @@ public final class Localized<T> {
      *
      * @param vals Maps locales to values.
      */
-    private Localized(final Map<Locale, T> vals) {
+    public Localized(final Map<Locale, T> vals) {
         final ImmutableMap.Builder<Locale, T> builder = ImmutableMap.builder();
         values = builder.putAll(vals).build();
-    }
-
-    /**
-     * Create a singleton localized value.
-     *
-     * @param locale The locale.
-     * @param val    The value.
-     * @param <T>    The value type.
-     * @return The singleton localized value.
-     */
-    public static <T> Localized<T> create(final Locale locale, final T val) {
-        return new Localized(locale, val);
-    }
-
-    /**
-     * Create a localized value.
-     *
-     * @param vals Maps locales to values.
-     * @param <T>  The value type.
-     * @return The localized value.
-     */
-    public static <T> Localized<T> create(final Map<Locale, T> vals) {
-        return new Localized<T>(vals);
     }
 
     /**
@@ -96,25 +70,8 @@ public final class Localized<T> {
         return values.get(locale);
     }
 
-    /**
-     * Set a locale specific value.
-     *
-     * @param locale The locale.
-     * @param value  The local specific value.
-     */
-    public void setValue(final Locale locale, final T value) {
-        final ImmutableMap.Builder<Locale, T> builder = ImmutableMap.builder();
-        values = builder.putAll(values).put(locale, value).build();
-    }
-
-    /**
-     * Remove a locale specific value.
-     *
-     * @param locale The locale.
-     */
-    public void removeValue(final Locale locale) {
-        final ImmutableMap.Builder<Locale, T> builder = ImmutableMap.builder();
-        values = builder.putAll(filterKeys(values, not(equalTo(locale)))).build();
+    public ImmutableMap<Locale, T> getValues() {
+        return values;
     }
 
     /**
@@ -145,6 +102,6 @@ public final class Localized<T> {
      */
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append(values).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append(values).toString();
     }
 }

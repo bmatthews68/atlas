@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2013 Brian Matthews
+ * Copyright 2011-2013 Brian Thomas Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import javax.jcr.Credentials;
  * If there is an end-user then the global credentials are used to create the initial session then the the end-user
  * credentials are used to spawn a session with the end-user's credentials.
  *
- * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
+ * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  * @since 1.0.0
  */
 public interface CredentialsProvider {

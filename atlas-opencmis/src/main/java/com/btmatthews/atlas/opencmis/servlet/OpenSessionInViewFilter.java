@@ -7,7 +7,7 @@ import javax.servlet.*;
 import java.io.IOException;
 
 /**
- * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
+ * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  * @since 1.0.0
  */
 public class OpenSessionInViewFilter implements Filter {

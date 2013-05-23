@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Brian Matthews
+ * Copyright 2013 Brian Thomas Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.util.Stack;
  * This holder is used to maintain the domain object for the current thread. This implementation uses a stack so
  * that nesting can be supported.
  *
- * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
+ * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  * @since 1.0.0
  */
 public abstract class TenantContextHolder {

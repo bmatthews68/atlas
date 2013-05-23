@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Brian Matthews
+ * Copyright 2013 Brian Thomas Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import com.btmatthews.atlas.tenancy.support.domain.Tenant;
 /**
  * This marker interface is implemented by beans that want to be injected with the current tenant domain objiect.
  *
- * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
+ * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  * @since 1.0.0
  */
 public interface TenantAware {

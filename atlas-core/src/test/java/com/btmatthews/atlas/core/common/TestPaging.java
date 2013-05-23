@@ -26,7 +26,10 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * Created by bmatthews68 on 21/05/2013.
+ * Unit test the {@link Paging} object.
+ *
+ * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
+ * @since 1.0.0
  */
 public class TestPaging {
 
