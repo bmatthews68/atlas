@@ -114,7 +114,7 @@
             <dependency>
                 <groupId>opensymphony</groupId>
                 <artifactId>quartz</artifactId>
-                <version>1.6.2</version>
+                <version>1.6.5</version>
             </dependency>
             <dependency>
                 <groupId>javax.annotation</groupId>
@@ -200,7 +200,7 @@
             <dependency>
                 <groupId>com.foursquare</groupId>
                 <artifactId>fongo</artifactId>
-                <version>1.0.8</version>
+                <version>1.0.9</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
