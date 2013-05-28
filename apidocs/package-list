@@ -1,0 +1,11 @@
+com.btmatthews.atlas.core.common
+com.btmatthews.atlas.core.dao
+com.btmatthews.atlas.core.dao.mongo
+com.btmatthews.atlas.core.domain.i18n
+com.btmatthews.atlas.core.id
+com.btmatthews.atlas.core.id.uuid
+com.btmatthews.atlas.jcr
+com.btmatthews.atlas.jcr.config
+com.btmatthews.atlas.jcr.impl
+com.btmatthews.atlas.jcr.servlet
+com.btmatthews.atlas.quartz
