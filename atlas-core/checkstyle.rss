@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<rss version="0.91">
+  <channel>
+    <title>Atlas Framework - Core - Checkstyle report</title>
+    <link>https://github.com/bmatthews68/atlas/atlas-core</link>
+    <description>Atlas Framework - Core - Checkstyle report</description>
+    <language>en-us</language>
+    <copyright>&#169;2011 - 2013 Brian Thomas Matthews</copyright>
+    <item>
+      <title>File: 12,
+             Errors: 30,
+             Warnings: 0,
+             Infos: 0
+      </title>
+            <link>https://github.com/bmatthews68/atlas/atlas-core/checkstyle.html</link>
+      <description>
+        <p>Click <a href="https://github.com/bmatthews68/atlas/atlas-core/checkstyle.html">here</a> for the full Checkstyle report.</p>
+
+        <table summary="Files" boder="1">
+          <thead>
+            <tr>
+              <th>Files</th>
+              <th style="width:30px;"><abbr title="Info">I</abbr></th>
+              <th style="width:30px;"><abbr title="Warning">W</abbr></th>
+              <th style="width:30px;"><abbr title="Error">E</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-core/checkstyle.html#com.btmatthews.atlas.core.domain.i18n.package-info.java">com/btmatthews/atlas/core/domain/i18n/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-core/checkstyle.html#com.btmatthews.atlas.core.id.IdentifierGenerator.java">com/btmatthews/atlas/core/id/IdentifierGenerator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-core/checkstyle.html#com.btmatthews.atlas.core.common.Ordering.java">com/btmatthews/atlas/core/common/Ordering.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-core/checkstyle.html#com.btmatthews.atlas.core.domain.i18n.LocalizedBuilder.java">com/btmatthews/atlas/core/domain/i18n/LocalizedBuilder.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-core/checkstyle.html#com.btmatthews.atlas.core.common.Paging.java">com/btmatthews/atlas/core/common/Paging.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-core/checkstyle.html#com.btmatthews.atlas.core.common.package-info.java">com/btmatthews/atlas/core/common/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-core/checkstyle.html#com.btmatthews.atlas.core.domain.i18n.Localized.java">com/btmatthews/atlas/core/domain/i18n/Localized.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-core/checkstyle.html#com.btmatthews.atlas.core.id.package-info.java">com/btmatthews/atlas/core/id/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-core/checkstyle.html#com.btmatthews.atlas.core.dao.package-info.java">com/btmatthews/atlas/core/dao/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-core/checkstyle.html#com.btmatthews.atlas.core.common.PagingBuilder.java">com/btmatthews/atlas/core/common/PagingBuilder.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  11
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-core/checkstyle.html#com.btmatthews.atlas.core.common.SortDirection.java">com/btmatthews/atlas/core/common/SortDirection.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-core/checkstyle.html#com.btmatthews.atlas.core.dao.DAO.java">com/btmatthews/atlas/core/dao/DAO.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                      </tbody>
+        </table>
+        
+      </description>
+    </item>
+  </channel>
+</rss>
+
