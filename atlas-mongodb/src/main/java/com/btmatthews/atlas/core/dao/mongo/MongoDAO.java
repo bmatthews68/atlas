@@ -77,11 +77,22 @@ public abstract class MongoDAO<I, T extends I> implements DAO<I> {
         mongoTemplate = new MongoTemplate(factory);
     }
 
+    /**
+     * Count the objects of the specified type in the data store.
+     *
+     * @return The number of objects.
+     */
     @Override
     public long count() {
         return mongoTemplate.count(new Query(), clazz);
     }
 
+    /**
+     * Retrieve a subset of the matching objects of the specified type from the data store.
+     *
+     * @param paging Describes the portion of the result set to return.
+     * @return The subset of the matching objects.
+     */
     @Override
     public List<I> find(final Paging paging) {
         if (paging == null) {
@@ -119,8 +130,10 @@ public abstract class MongoDAO<I, T extends I> implements DAO<I> {
     }
 
     /**
-     * @param query
-     * @return
+     * Retrieve an object from the database that matches the specified query.
+     *
+     * @param query The query.
+     * @return The matching object.
      */
     protected final I read(final Query query) {
         if (query == null) {
@@ -129,6 +142,11 @@ public abstract class MongoDAO<I, T extends I> implements DAO<I> {
         return mongoTemplate.findOne(query, clazz);
     }
 
+    /**
+     * Update an existing object in the data store.
+     *
+     * @param entity The existing object.
+     */
     @Override
     public void update(final I entity) {
         if (entity == null) {
@@ -137,6 +155,11 @@ public abstract class MongoDAO<I, T extends I> implements DAO<I> {
         mongoTemplate.save(entity);
     }
 
+    /**
+     * Delete a object from the data store.
+     *
+     * @param entity The persistent object.
+     */
     @Override
     public void destroy(final I entity) {
         if (entity == null) {
@@ -146,7 +169,7 @@ public abstract class MongoDAO<I, T extends I> implements DAO<I> {
     }
 
     /**
-     * Execute a query that should a single object.
+     * Execute a query that should a return single object from the data store.
      *
      * @param query The query.
      * @return The matching object.

@@ -31,16 +31,30 @@ import org.springframework.data.mongodb.MongoDbFactory;
 import static org.hamcrest.Matchers.*;
 
 /**
+ * Unit test the {@link MongoDAO} data access object implementation.
+ *
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  * @since 1.0.0
  */
 public class TestMongoDAO {
 
+    /**
+     * Used to collect test failures within a single test case.
+     */
     @Rule
     public ErrorCollector collector = new ErrorCollector();
+    /**
+     * The data access object being tested.
+     */
     private DAO<Person> dao;
+    /**
+     * Used to mock the Mongo data store.
+     */
     private Fongo fongo = new Fongo("localhost");
 
+    /**
+     * Prepare for test case execution.
+     */
     @Before
     public void setup() {
         final MongoDAO<Person, PersonImpl> mongoDao = new MongoDAO<Person, PersonImpl>(PersonImpl.class) {
@@ -59,11 +73,21 @@ public class TestMongoDAO {
         dao = mongoDao;
     }
 
+    /**
+     * Make sure the {@link MongoDAO#find(com.btmatthews.atlas.core.common.Paging)} throws an {@link IllegalArgumentException} if {@code null} is
+     * passed as the {@code paging} parameter.
+     *
+     * @throws Exception An {@link IllegalArgumentException} is expected.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void findWithNullPagingShouldFail() throws Exception {
         dao.find(null);
     }
 
+    /**
+     * Test the {@link MongoDAO#count()}, {@link MongoDAO#find(com.btmatthews.atlas.core.common.Paging)}, {@link MongoDAO#create(Object),
+     * {@link MongoDAO#read(String)}, {@link MongoDAO#update(Object)} and {@link MongoDAO#destroy(Object)} methods.}
+     */
     @Test
     public void checkFullObjectLifecycle() {
         final Paging paging = new PagingBuilder().setPageNumber(0).setPageSize(100).build();
@@ -89,21 +113,43 @@ public class TestMongoDAO {
         collector.checkThat(dao.find(paging).size(), is(equalTo(0)));
     }
 
+    /**
+     * Make sure the {@link MongoDAO#create(Object)} method throws an {@link IllegalArgumentException} if {@code null} is
+     * passed as the {@code entity} parameter.
+     *
+     * @throws Exception An {@link IllegalArgumentException} is expected.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void createNullShouldFail() throws Exception {
         dao.create(null);
     }
 
+    /**
+     * Make sure the {@link MongoDAO#update(Object)} method throws an {@link IllegalArgumentException} if {@code null} is
+     * passed as the {@code entity} parameter.
+     *
+     * @throws Exception An {@link IllegalArgumentException} is expected.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void updateNullShouldFail() throws Exception {
         dao.update(null);
     }
 
+    /**
+     * Make sure the {@link MongoDAO#destroy(Object)} method throws an {@link IllegalArgumentException} if {@code null} is
+     * passed as the {@code entity} parameter.
+     *
+     * @throws Exception An {@link IllegalArgumentException} is expected.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void deleteNullShouldFail() throws Exception {
         dao.destroy(null);
     }
 
+    /**
+     * Make sure the {@link MongoDAO#read(String)} method returns {@code null} if the object does not already exist
+     * in the data store.
+     */
     @Test
     public void readFromEmptyDatabaseShouldFail() {
         final Person result = dao.read("2c6c4910-c69f-11e2-8b8b-0800200c9a66");

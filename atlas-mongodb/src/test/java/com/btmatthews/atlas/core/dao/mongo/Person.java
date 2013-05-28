@@ -17,12 +17,24 @@
 package com.btmatthews.atlas.core.dao.mongo;
 
 /**
+ * Describes a person object.
+ *
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  * @since 1.0.0
  */
 public interface Person {
 
+    /**
+     * Get the unique object identifier.
+     *
+     * @return The object identifier.
+     */
     String getId();
 
+    /**
+     * Get the person's name.
+     *
+     * @return The person's name.
+     */
     String getName();
 }

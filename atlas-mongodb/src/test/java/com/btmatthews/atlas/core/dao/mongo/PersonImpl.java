@@ -17,23 +17,47 @@
 package com.btmatthews.atlas.core.dao.mongo;
 
 /**
+ * Implements a person object.
+ *
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  * @since 1.0.0
  */
 public class PersonImpl implements Person {
 
+    /**
+     * The object identifier.
+     */
     private String id;
+    /**
+     * The person's name.
+     */
     private String name;
 
+    /**
+     * Construct a person object.
+     *
+     * @param id   The object identifier.
+     * @param name The person's name.
+     */
     public PersonImpl(final String id, final String name) {
         this.id = id;
         this.name = name;
     }
 
+    /**
+     * Get the object identifier.
+     *
+     * @return The object identifier.
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Get the person's name.
+     *
+     * @return The person's name.
+     */
     public String getName() {
         return name;
     }
