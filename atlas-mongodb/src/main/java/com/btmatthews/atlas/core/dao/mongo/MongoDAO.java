@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Brian Thomas Matthews
+ * Copyright 2011-2013 Brian Thomas Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,9 @@
 
 package com.btmatthews.atlas.core.dao.mongo;
 
-import java.util.List;
-
+import com.btmatthews.atlas.core.common.Ordering;
 import com.btmatthews.atlas.core.common.Paging;
-import com.btmatthews.atlas.core.common.Paging.SortDirection;
+import com.btmatthews.atlas.core.common.SortDirection;
 import com.btmatthews.atlas.core.dao.DAO;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
@@ -29,7 +28,12 @@ import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.util.List;
+
 /**
+ * Abstract base class that implements common features of data access objects that
+ * use MongoDB for persistence.
+ *
  * @param <I> The interface class.
  * @param <T> The concrete class.
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
@@ -40,7 +44,6 @@ public abstract class MongoDAO<I, T extends I> implements DAO<I> {
      * The concrete class.
      */
     private Class<T> clazz;
-
     /**
      * The {@link MongoTemplate} is used to interface with the underlying
      * MongoDB database.
@@ -54,6 +57,9 @@ public abstract class MongoDAO<I, T extends I> implements DAO<I> {
      * @param clazz The concrete class.
      */
     protected MongoDAO(final Class<T> clazz) {
+        if (clazz == null) {
+            throw new IllegalArgumentException("clazz must not be null");
+        }
         this.clazz = clazz;
     }
 
@@ -65,6 +71,9 @@ public abstract class MongoDAO<I, T extends I> implements DAO<I> {
      */
     @Autowired
     public void setMongoDbFactory(final MongoDbFactory factory) {
+        if (factory == null) {
+            throw new IllegalArgumentException("factory must not be null");
+        }
         mongoTemplate = new MongoTemplate(factory);
     }
 
@@ -75,6 +84,9 @@ public abstract class MongoDAO<I, T extends I> implements DAO<I> {
 
     @Override
     public List<I> find(final Paging paging) {
+        if (paging == null) {
+            throw new IllegalArgumentException("paging must not be null");
+        }
         final Query query = new Query();
         return find(query, paging);
     }
@@ -86,6 +98,9 @@ public abstract class MongoDAO<I, T extends I> implements DAO<I> {
      */
     @Override
     public void create(final I entity) {
+        if (entity == null) {
+            throw new IllegalArgumentException("entity must not be null");
+        }
         mongoTemplate.insert(entity);
     }
 
@@ -97,20 +112,36 @@ public abstract class MongoDAO<I, T extends I> implements DAO<I> {
      */
     @Override
     public I read(final String id) {
+        if (id == null) {
+            throw new IllegalArgumentException("id must not be null");
+        }
         return mongoTemplate.findById(id, clazz);
     }
 
+    /**
+     * @param query
+     * @return
+     */
     protected final I read(final Query query) {
+        if (query == null) {
+            throw new IllegalArgumentException("query must not be null");
+        }
         return mongoTemplate.findOne(query, clazz);
     }
 
     @Override
     public void update(final I entity) {
+        if (entity == null) {
+            throw new IllegalArgumentException("entity must not be null");
+        }
         mongoTemplate.save(entity);
     }
 
     @Override
     public void destroy(final I entity) {
+        if (entity == null) {
+            throw new IllegalArgumentException("entity must not be null");
+        }
         mongoTemplate.remove(entity);
     }
 
@@ -121,6 +152,9 @@ public abstract class MongoDAO<I, T extends I> implements DAO<I> {
      * @return The matching object.
      */
     protected final I findOne(final Query query) {
+        if (query == null) {
+            throw new IllegalArgumentException("query must not be null");
+        }
         return mongoTemplate.findOne(query, clazz);
     }
 
@@ -131,9 +165,15 @@ public abstract class MongoDAO<I, T extends I> implements DAO<I> {
      * @return The matching objects.
      */
     protected final List<I> find(final Query query, final Paging paging) {
+        if (query == null) {
+            throw new IllegalArgumentException("query must not be null");
+        }
+        if (paging == null) {
+            throw new IllegalArgumentException("paging must not be null");
+        }
         query.skip(paging.getPageNumber() * paging.getPageSize());
         query.limit(paging.getPageSize());
-        for (final Paging.Ordering ordering : paging.getSortOrderings()) {
+        for (final Ordering ordering : paging.getSortOrderings()) {
             if (ordering.getSortDirection() == SortDirection.ASCENDING) {
                 query.with(new Sort(Sort.Direction.ASC, ordering.getSortField()));
             } else {
