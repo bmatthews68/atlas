@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<rss version="0.91">
+  <channel>
+    <title>Atlas Framework - JCR - Checkstyle report</title>
+    <link>https://github.com/bmatthews68/atlas/atlas-jcr</link>
+    <description>Atlas Framework - JCR - Checkstyle report</description>
+    <language>en-us</language>
+    <copyright>&#169;2011 - 2013 Brian Thomas Matthews</copyright>
+    <item>
+      <title>File: 20,
+             Errors: 354,
+             Warnings: 0,
+             Infos: 0
+      </title>
+            <link>https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html</link>
+      <description>
+        <p>Click <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html">here</a> for the full Checkstyle report.</p>
+
+        <table summary="Files" boder="1">
+          <thead>
+            <tr>
+              <th>Files</th>
+              <th style="width:30px;"><abbr title="Info">I</abbr></th>
+              <th style="width:30px;"><abbr title="Warning">W</abbr></th>
+              <th style="width:30px;"><abbr title="Error">E</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.servlet.SpringSecurityCredentialsProvider.java">com/btmatthews/atlas/jcr/servlet/SpringSecurityCredentialsProvider.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  6
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.JCRAccessor.java">com/btmatthews/atlas/jcr/JCRAccessor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  35
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.config.SimpleRepositoryConfiguration.java">com/btmatthews/atlas/jcr/config/SimpleRepositoryConfiguration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  6
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.SessionCallback.java">com/btmatthews/atlas/jcr/SessionCallback.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.impl.JNDIRepositoryProvider.java">com/btmatthews/atlas/jcr/impl/JNDIRepositoryProvider.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.SessionVoidCallback.java">com/btmatthews/atlas/jcr/SessionVoidCallback.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.impl.PoolableSessionFactory.java">com/btmatthews/atlas/jcr/impl/PoolableSessionFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.servlet.OpenSessionInViewFilter.java">com/btmatthews/atlas/jcr/servlet/OpenSessionInViewFilter.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  21
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.config.PooledRepositoryConfiguration.java">com/btmatthews/atlas/jcr/config/PooledRepositoryConfiguration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  14
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.CredentialsProvider.java">com/btmatthews/atlas/jcr/CredentialsProvider.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  6
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.SessionHolder.java">com/btmatthews/atlas/jcr/SessionHolder.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  40
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.servlet.RequestCredentialsProvider.java">com/btmatthews/atlas/jcr/servlet/RequestCredentialsProvider.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.impl.SimpleSessionFactory.java">com/btmatthews/atlas/jcr/impl/SimpleSessionFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  13
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.impl.JCRTemplate.java">com/btmatthews/atlas/jcr/impl/JCRTemplate.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  181
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.SessionFactory.java">com/btmatthews/atlas/jcr/SessionFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.RepositoryAccessException.java">com/btmatthews/atlas/jcr/RepositoryAccessException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.RepositoryProvider.java">com/btmatthews/atlas/jcr/RepositoryProvider.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.impl.PooledSessionFactory.java">com/btmatthews/atlas/jcr/impl/PooledSessionFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  12
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.NodeCallback.java">com/btmatthews/atlas/jcr/NodeCallback.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-jcr/checkstyle.html#com.btmatthews.atlas.jcr.NodeVoidCallback.java">com/btmatthews/atlas/jcr/NodeVoidCallback.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                      </tbody>
+        </table>
+        
+      </description>
+    </item>
+  </channel>
+</rss>
+
