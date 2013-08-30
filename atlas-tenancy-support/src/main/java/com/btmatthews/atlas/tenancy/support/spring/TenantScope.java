@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
- * @since 1.0.0
+ * @since 1.1.0
  */
 public final class TenantScope implements Scope {
 
@@ -49,14 +49,14 @@ public final class TenantScope implements Scope {
         if (tenantId == null) {
             return objectFactory.getObject();
         } else {
-            Map<String, Object> scope;
+            final Map<String, Object> scope;
             if (scopes.containsKey(tenantId)) {
                 scope = scopes.get(tenantId);
             } else {
                 scope = new ConcurrentHashMap<String, Object>();
                 scopes.put(tenantId, scope);
             }
-            Object bean;
+            final Object bean;
             if (scope.containsKey(name)) {
                 bean = scope.get(name);
             } else {

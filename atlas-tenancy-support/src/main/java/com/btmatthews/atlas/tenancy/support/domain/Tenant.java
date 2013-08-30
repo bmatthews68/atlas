@@ -20,7 +20,7 @@ package com.btmatthews.atlas.tenancy.support.domain;
  * The interface that defines the attributes of a tenant domain object.
  *
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
- * @since 1.0.0
+ * @since 1.1.0
  */
 public interface Tenant {
 

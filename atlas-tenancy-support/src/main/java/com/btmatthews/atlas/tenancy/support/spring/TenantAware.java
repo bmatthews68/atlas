@@ -22,7 +22,7 @@ import com.btmatthews.atlas.tenancy.support.domain.Tenant;
  * This marker interface is implemented by beans that want to be injected with the current tenant domain objiect.
  *
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
- * @since 1.0.0
+ * @since 1.1.0
  */
 public interface TenantAware {
 

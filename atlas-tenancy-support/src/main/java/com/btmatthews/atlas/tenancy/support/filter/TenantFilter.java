@@ -23,26 +23,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
- * @since 1.0.0
+ * @since 1.1.0
  */
-public final class TenantFilter extends OncePerRequestFilter {
+public final class TenantFilter implements Filter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TenantFilter.class);
-
     /**
      * The name of the HTTP header containing the tenant key.
      */
-    private String headerName;
+    private String headerName = "X-Atlas-Tenant";
     /**
      * The tenant service.
      */
@@ -68,6 +64,10 @@ public final class TenantFilter extends OncePerRequestFilter {
         tenantService = service;
     }
 
+    @Override
+    public void init(final FilterConfig config) {
+    }
+
     /**
      * Examine the HTTP request headers and if the tenant key header (see {@link #headerName}) is present then lookup
      * the tenant domain object using the tenant key and store it in the {@link TenantContextHolder} for used by
@@ -80,29 +80,38 @@ public final class TenantFilter extends OncePerRequestFilter {
      * @throws IOException      If there was an I/O exception processing the HTTP request.
      */
     @Override
-    protected void doFilterInternal(
-            final HttpServletRequest request,
-            final HttpServletResponse response,
+    public void doFilter(
+            final ServletRequest request,
+            final ServletResponse response,
             final FilterChain chain)
             throws ServletException, IOException {
-        final String headerValue = request.getHeader(headerName);
-        if (headerValue != null) {
-            final Tenant tenant = tenantService.lookupTenantByKey(headerValue);
-            if (tenant != null) {
-                LOGGER.debug("Tenant being set for tenant key {}", headerValue);
-                TenantContextHolder.push(tenant);
-                try {
+        if (request instanceof HttpServletRequest) {
+            final String headerValue = ((HttpServletRequest)request).getHeader(headerName);
+            if (headerValue != null) {
+                final Tenant tenant = tenantService.lookupTenantByKey(headerValue);
+                if (tenant != null) {
+                    LOGGER.debug("Tenant being set for tenant key {}", headerValue);
+                    TenantContextHolder.push(tenant);
+                    try {
+                        chain.doFilter(request, response);
+                    } finally {
+                        TenantContextHolder.pop();
+                    }
+                } else {
+                    LOGGER.warn("Tenant not being set because tenant with key {} not found", headerValue);
                     chain.doFilter(request, response);
-                } finally {
-                    TenantContextHolder.pop();
                 }
             } else {
-                LOGGER.warn("Tenant not being set because tenant with key {} not found", headerValue);
+                LOGGER.warn("Tenant not being set because {} header not present", headerValue);
                 chain.doFilter(request, response);
             }
         } else {
-            LOGGER.warn("Tenant not being set because {} header not present", headerValue);
+            LOGGER.warn("Tenant not being set because the request is not a HTTP request");
             chain.doFilter(request, response);
         }
+    }
+
+    @Override
+    public void destroy() {
     }
 }

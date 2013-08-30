@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.btmatthews.atlas</groupId>
         <artifactId>atlas</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>atlas-opencmis</artifactId>
     <name>Atlas Framework - OpenCMIS</name>

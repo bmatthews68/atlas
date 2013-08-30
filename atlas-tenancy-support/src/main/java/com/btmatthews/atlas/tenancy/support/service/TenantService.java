@@ -20,7 +20,7 @@ import com.btmatthews.atlas.tenancy.support.domain.Tenant;
 
 /**
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
- * @since 1.0.0
+ * @since 1.1.0
  */
 public interface TenantService {
 

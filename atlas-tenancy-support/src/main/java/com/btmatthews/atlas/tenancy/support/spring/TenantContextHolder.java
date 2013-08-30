@@ -25,14 +25,14 @@ import java.util.Stack;
  * that nesting can be supported.
  *
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
- * @since 1.0.0
+ * @since 1.1.0
  */
 public abstract class TenantContextHolder {
 
     /**
      * The context stack is a {@link ThreadLocal}.
      */
-    private static final ThreadLocal<Stack<Tenant>> TENANT_STACKS = new ThreadLocal<>();
+    private static final ThreadLocal<Stack<Tenant>> TENANT_STACKS = new ThreadLocal<Stack<Tenant>>();
 
     /**
      * Push a new {@link Tenant} onto the context stack.
@@ -42,7 +42,7 @@ public abstract class TenantContextHolder {
     public static void push(final Tenant tenant) {
         Stack<Tenant> tenantStack = TENANT_STACKS.get();
         if (tenantStack == null) {
-            tenantStack = new Stack<>();
+            tenantStack = new Stack<Tenant>();
             TENANT_STACKS.set(tenantStack);
         }
         tenantStack.push(tenant);
@@ -55,7 +55,7 @@ public abstract class TenantContextHolder {
      */
     public static Tenant peek() {
         final Stack<Tenant> tenantStack = TENANT_STACKS.get();
-        if (tenantStack == null) {
+        if (tenantStack == null || tenantStack.isEmpty()) {
             return null;
         } else {
             return tenantStack.peek();
@@ -69,7 +69,7 @@ public abstract class TenantContextHolder {
      */
     public static Tenant pop() {
         final Stack<Tenant> tenantStack = TENANT_STACKS.get();
-        if (tenantStack == null) {
+        if (tenantStack == null || tenantStack.isEmpty()) {
             return null;
         } else {
             return tenantStack.pop();
