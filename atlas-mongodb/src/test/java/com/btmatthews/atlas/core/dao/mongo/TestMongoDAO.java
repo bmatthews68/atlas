@@ -26,6 +26,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.support.PersistenceExceptionTranslator;
 import org.springframework.data.mongodb.MongoDbFactory;
 
 import static org.hamcrest.Matchers.*;
@@ -68,6 +69,11 @@ public class TestMongoDAO {
             @Override
             public DB getDb(final String name) throws DataAccessException {
                 return fongo.getDB(name);
+            }
+
+            @Override
+            public PersistenceExceptionTranslator getExceptionTranslator() {
+                return null;
             }
         });
         dao = mongoDao;
