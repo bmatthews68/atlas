@@ -19,7 +19,7 @@ package com.btmatthews.atlas.core.dao.mongo;
 import com.btmatthews.atlas.core.common.Paging;
 import com.btmatthews.atlas.core.common.PagingBuilder;
 import com.btmatthews.atlas.core.dao.DAO;
-import com.foursquare.fongo.Fongo;
+import com.github.fakemongo.Fongo;
 import com.mongodb.DB;
 import org.junit.Before;
 import org.junit.Rule;

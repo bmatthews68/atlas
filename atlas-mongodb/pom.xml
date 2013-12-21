@@ -35,7 +35,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.foursquare</groupId>
+            <groupId>com.github.fakemongo</groupId>
             <artifactId>fongo</artifactId>
             <scope>test</scope>
         </dependency>
