@@ -16,6 +16,8 @@
 
 package com.btmatthews.atlas.core.domain.i18n;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -32,6 +34,8 @@ import java.util.Map;
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  * @since 1.0.0
  */
+@JsonSerialize(using = LocalizedSerializer.class)
+@JsonDeserialize(using = LocalizedDeserializer.class)
 public final class Localized<T> {
 
     /**
