@@ -18,6 +18,7 @@ package com.btmatthews.atlas.jcr;
 
 import javax.jcr.Binary;
 import javax.jcr.Node;
+import javax.jcr.nodetype.NodeType;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Calendar;
@@ -73,6 +74,12 @@ public interface JCRAccessor {
     URI getURIProperty(Node node, String name);
 
     URI getURIProperty(Node node, String name, URI defaultValue);
+
+    Node getOrCreateNode(Node node, String leafType, String name);
+
+    Node getOrCreateNode(Node node, String intermediateType, String leafType, String path);
+
+    Node getOrCreateNode(Node node, String intermediateType, String leafType, String... names);
 
     void withRoot(String workspaceName, NodeVoidCallback callback);
 

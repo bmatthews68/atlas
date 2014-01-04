@@ -19,8 +19,10 @@ package com.btmatthews.atlas.jcr.impl;
 import com.btmatthews.atlas.jcr.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import javax.jcr.*;
+import javax.jcr.nodetype.NodeType;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
@@ -275,6 +277,42 @@ public class JCRTemplate implements JCRAccessor {
         }
     }
 
+    public Node getOrCreateNode(final Node node,
+                                final String leafType,
+                                final String name) {
+        try {
+            if (node.hasNode(name)) {
+                return node.getNode(name);
+            } else {
+                return node.addNode(name, leafType);
+            }
+        } catch (RepositoryException e) {
+            throw new RepositoryAccessException(e.getMessage(), e);
+        }
+    }
+
+    public Node getOrCreateNode(final Node node,
+                                final String intermediateType,
+                                final String leafType,
+                                final String path) {
+        return getOrCreateNode(node, intermediateType, leafType, StringUtils.split(path, "/"));
+
+    }
+
+    public Node getOrCreateNode(final Node node,
+                                final String intermediateType,
+                                final String leafType,
+                                final String... names) {
+        Node parent = node;
+        int i = 0;
+        while (i < names.length - 1) {
+            parent = getOrCreateNode(parent, intermediateType, names[i++]);
+        }
+        return getOrCreateNode(parent, leafType, names[i]);
+
+    }
+
+
     /**
      * Perform an operation against the root node of the named workspace.
      *
@@ -423,8 +461,8 @@ public class JCRTemplate implements JCRAccessor {
     }
 
     /**
-     * @param workspaceName
-     * @param callback
+     * @param workspaceName The name of the workspace.
+     * @param callback    The callback.
      */
     public void withSession(final String workspaceName,
                             final SessionVoidCallback callback) {
@@ -442,7 +480,7 @@ public class JCRTemplate implements JCRAccessor {
     }
 
     /**
-     * @param workspaceName
+     * @param workspaceName  The name of the workspace.
      * @param callback      The callback that implements the function to be executed.
      * @param <T>           The type returned by the function.
      * @return The result of the function.
