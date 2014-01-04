@@ -8,4 +8,11 @@ com.btmatthews.atlas.jcr
 com.btmatthews.atlas.jcr.config
 com.btmatthews.atlas.jcr.impl
 com.btmatthews.atlas.jcr.servlet
+com.btmatthews.atlas.opencmis
+com.btmatthews.atlas.opencmis.config
+com.btmatthews.atlas.opencmis.servlet
 com.btmatthews.atlas.quartz
+com.btmatthews.atlas.tenancy.support.domain
+com.btmatthews.atlas.tenancy.support.filter
+com.btmatthews.atlas.tenancy.support.service
+com.btmatthews.atlas.tenancy.support.spring

@@ -4,3 +4,5 @@ com.btmatthews.atlas.core.domain.i18n
 com.btmatthews.atlas.core.id.uuid
 com.btmatthews.atlas.jcr.impl
 com.btmatthews.atlas.quartz
+com.btmatthews.atlas.tenancy.support.filter
+com.btmatthews.atlas.tenancy.support.spring
