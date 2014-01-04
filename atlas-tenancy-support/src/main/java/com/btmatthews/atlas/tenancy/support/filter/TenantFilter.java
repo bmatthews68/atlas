@@ -21,8 +21,6 @@ import com.btmatthews.atlas.tenancy.support.service.TenantService;
 import com.btmatthews.atlas.tenancy.support.spring.TenantContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -38,30 +36,32 @@ public final class TenantFilter implements Filter {
     /**
      * The name of the HTTP header containing the tenant key.
      */
-    private String headerName = "X-Atlas-Tenant";
+    private String headerName;
     /**
      * The tenant service.
      */
     private TenantService tenantService;
 
-    /**
-     * Used to inject the name of the HTTP header containing the tenant key.
-     *
-     * @param name The name of the HTTP header containing the tenant key.
-     */
-    @Value("tenantRequestHeaderName")
-    public void setHeaderName(final String name) {
-        headerName = name;
-    }
 
     /**
-     * Used to inject the tenant service.
+     * Initialize the filter with the tenant service.
      *
      * @param service The tenant service.
      */
-    @Autowired
-    public void setTenantService(final TenantService service) {
+    public TenantFilter(final TenantService service) {
+        this(service, "X-Atlas-Tenant");
+    }
+
+    /**
+     * Initialize the filter with the tenant service and the header name.
+     *
+     * @param service The tenant service.
+     * @param name    The name of the HTTP header containing the tenant key.
+     */
+    public TenantFilter(final TenantService service,
+                        final String name) {
         tenantService = service;
+        headerName = name;
     }
 
     @Override
@@ -86,7 +86,7 @@ public final class TenantFilter implements Filter {
             final FilterChain chain)
             throws ServletException, IOException {
         if (request instanceof HttpServletRequest) {
-            final String headerValue = ((HttpServletRequest)request).getHeader(headerName);
+            final String headerValue = ((HttpServletRequest) request).getHeader(headerName);
             if (headerValue != null) {
                 final Tenant tenant = tenantService.lookupTenantByKey(headerValue);
                 if (tenant != null) {

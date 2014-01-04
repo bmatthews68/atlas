@@ -46,10 +46,7 @@ public class TestTenantFilter {
     @Before
     public void setup() throws Exception {
         initMocks(this);
-        final TenantFilter filterImpl = new TenantFilter();
-        filterImpl.setTenantService(service);
-        filterImpl.setHeaderName("X-Atlas-Tenant");
-        filter = filterImpl;
+        filter = new TenantFilter(service, "X-Atlas-Tenant");
         filter.init(filterConfig);
     }
 
