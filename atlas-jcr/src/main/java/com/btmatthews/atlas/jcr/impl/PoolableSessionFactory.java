@@ -72,7 +72,6 @@ public final class PoolableSessionFactory extends
      *
      * @param key The workspace name.
      * @param obj The session.
-     * @throws Exception If there was an error validating the session.
      */
     @Override
     public boolean validateObject(final String key, final Session obj) {
