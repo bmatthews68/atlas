@@ -132,8 +132,8 @@ public final class PagingBuilder {
     /**
      * Add a sort ordering.
      *
-     * @param name
-     * @param direction
+     * @param name The sort field name.
+     * @param direction The sort field direction.
      * @return Always returns the {@link PagingBuilder} object.
      */
     public PagingBuilder addOrdering(final String name, final SortDirection direction) {

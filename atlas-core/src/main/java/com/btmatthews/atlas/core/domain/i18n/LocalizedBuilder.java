@@ -54,7 +54,7 @@ public final class LocalizedBuilder<T> {
      *
      * @param locale The locale.
      * @param value  The local specific value.
-     * @returns The builder object.
+     * @return The builder object.
      */
     public LocalizedBuilder<T> setValue(final Locale locale, final T value) {
         values.put(locale, value);
@@ -65,7 +65,7 @@ public final class LocalizedBuilder<T> {
      * Remove a locale specific value.
      *
      * @param locale The locale.
-     * @returns The builder object.
+     * @return The builder object.
      */
     public LocalizedBuilder<T> removeValue(final Locale locale) {
         values.remove(locale);
