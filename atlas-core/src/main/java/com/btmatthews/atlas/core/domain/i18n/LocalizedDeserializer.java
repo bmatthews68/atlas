@@ -37,7 +37,7 @@ public class LocalizedDeserializer extends JsonDeserializer<Localized<Object>> {
     public Localized<Object> deserialize(final JsonParser parser,
                                          final DeserializationContext context)
             throws IOException {
-        final LocalizedBuilder<Object> builder = new LocalizedBuilder<>();
+        final LocalizedBuilder<Object> builder = new LocalizedBuilder<Object>();
         final ObjectCodec codec = parser.getCodec();
         final JsonNode node = codec.readTree(parser);
         final Iterator<Map.Entry<String, JsonNode>> iterator = node.fields();
