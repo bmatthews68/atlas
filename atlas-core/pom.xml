@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.btmatthews.atlas</groupId>
         <artifactId>atlas</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.1</version>
     </parent>
     <artifactId>atlas-core</artifactId>
     <name>Atlas Framework - Core</name>
