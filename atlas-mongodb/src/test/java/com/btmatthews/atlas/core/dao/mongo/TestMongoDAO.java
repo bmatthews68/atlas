@@ -91,8 +91,12 @@ public class TestMongoDAO {
     }
 
     /**
-     * Test the {@link MongoDAO#count()}, {@link MongoDAO#find(com.btmatthews.atlas.core.common.Paging)}, {@link MongoDAO#create(Object),
-     * {@link MongoDAO#read(String)}, {@link MongoDAO#update(Object)} and {@link MongoDAO#destroy(Object)} methods.}
+     * Test the {@link com.btmatthews.atlas.core.dao.mongo.MongoDAO#count()},
+     * {@link com.btmatthews.atlas.core.dao.mongo.MongoDAO#find(com.btmatthews.atlas.core.common.Paging)},
+     * {@link com.btmatthews.atlas.core.dao.mongo.MongoDAO#create(Object)},
+     * {@link com.btmatthews.atlas.core.dao.mongo.MongoDAO#read(String)},
+     * {@link com.btmatthews.atlas.core.dao.mongo.MongoDAO#update(Object)} and
+     * {@link com.btmatthews.atlas.core.dao.mongo.MongoDAO#destroy(Object)} methods.
      */
     @Test
     public void checkFullObjectLifecycle() {
