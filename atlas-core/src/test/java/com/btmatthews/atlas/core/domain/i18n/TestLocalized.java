@@ -95,8 +95,11 @@ public class TestLocalized {
         collector.checkThat(multi, is(equalTo(multi_copy)));
         collector.checkThat(multi, is(not(equalTo(null))));
         collector.checkThat(multi, is(not(equalTo(multi_different))));
-        collector.checkThat(multi.toString(), is(equalTo("Localized[{en=" + HELLO_WORLD_ENGLISH + ", de=" + HELLO_WORLD_GERMAN + "}]")));
-        collector.checkThat(multi_copy.toString(), is(equalTo("Localized[{en=" + HELLO_WORLD_ENGLISH + ", de=" + HELLO_WORLD_GERMAN + "}]")));
-        collector.checkThat(multi_different.toString(), is(equalTo("Localized[{en=" + GOODBYE_WORLD_ENGLISH + ", de=" + GOODBYE_WORLD_GERMAN + "}]")));
+        collector.checkThat(multi.toString(), is(equalTo("Localized[{de=" + HELLO_WORLD_GERMAN + ", " +
+                "en=" + HELLO_WORLD_ENGLISH + "}]")));
+        collector.checkThat(multi_copy.toString(), is(equalTo("Localized[{de=" + HELLO_WORLD_GERMAN + ", " +
+                "en=" + HELLO_WORLD_ENGLISH + "}]")));
+        collector.checkThat(multi_different.toString(), is(equalTo("Localized[{de=" + GOODBYE_WORLD_GERMAN + ", " +
+                "en=" + GOODBYE_WORLD_ENGLISH + "}]")));
     }
 }

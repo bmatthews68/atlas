@@ -18,14 +18,16 @@ package com.btmatthews.atlas.core.domain.i18n;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import static com.google.common.collect.Ordering.natural;
 
 /**
  * A localized value. Maps Java locales to the locale-specific value.
@@ -106,6 +108,27 @@ public final class Localized<T> {
      */
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append(values).toString();
+        final StringBuilder builder = new StringBuilder("Localized[{");
+        boolean first = true;
+        final List<Locale> keys = natural()
+                .onResultOf(new Function<Locale, Comparable>() {
+                    @Override
+                    public Comparable apply(Locale o) {
+                        return o.toLanguageTag();
+                    }
+                })
+                .sortedCopy(values.keySet());
+        for (final Locale locale : keys) {
+            if (first) {
+                first = false;
+            } else {
+                builder.append(", ");
+            }
+            builder.append(locale.toLanguageTag());
+            builder.append('=');
+            builder.append(values.get(locale));
+        }
+        builder.append("}]");
+        return builder.toString();
     }
 }
