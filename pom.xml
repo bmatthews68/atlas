@@ -52,7 +52,7 @@
         <slf4j.version>1.7.6</slf4j.version>
         <java.version>1.6</java.version>
         <jcr.version>2.0</jcr.version>
-        <mongo.version>2.12.0-rc2</mongo.version>
+        <mongo.version>2.11.4</mongo.version>
         <commons-pool.version>1.6</commons-pool.version>
     </properties>
 
