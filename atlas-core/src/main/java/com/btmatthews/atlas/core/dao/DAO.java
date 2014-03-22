@@ -24,11 +24,12 @@ import java.util.List;
  * Describes the interface for data access objects that persist entities of
  * described by the interface {@code I} to a data store.
  *
- * @param <I> The interface that describes the persistent entity.
+ * @param <ID> The identifier type.
+ * @param <I>  The interface that describes the persistent entity.
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  * @since 1.0.0
  */
-public interface DAO<I> {
+public interface DAO<ID, I> {
 
     /**
      * Count the number of entities described by {@code I} in the data source.
@@ -48,9 +49,10 @@ public interface DAO<I> {
     /**
      * Persist a newly created entity in the data store.
      *
+     * @param id     The object identifier of the persistent entity.
      * @param entity The newly created entity.
      */
-    void create(I entity);
+    void create(ID id, I entity);
 
     /**
      * Retrieve a persistent entity from the data store.
@@ -58,19 +60,28 @@ public interface DAO<I> {
      * @param id The object identifier of the persistent entity.
      * @return The persistent entity.
      */
-    I read(String id);
+    I read(ID id);
+
+    /**
+     * Retrieve a list of persistent entities from the data store.
+     *
+     * @param ids The object identifiers of the persistent entities.
+     * @return An ordered list of {@code I} entities.
+     */
+    List<I> read(ID... ids);
 
     /**
      * Update a persistent entity in the data store.
      *
+     * @param id     The object identifier of the persistent entity.
      * @param entity The persistent entity.
      */
-    void update(I entity);
+    void update(ID id, I entity);
 
     /**
      * Delete a persistent entity from the data store.
      *
-     * @param entity The persistent entity.
+     * @param id The object identifier of the persistent entity.
      */
-    void destroy(I entity);
+    void destroy(ID id);
 }
