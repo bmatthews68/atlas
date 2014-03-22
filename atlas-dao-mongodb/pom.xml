@@ -7,7 +7,7 @@
         <artifactId>atlas</artifactId>
         <version>1.0.2-SNAPSHOT</version>
     </parent>
-    <artifactId>atlas-mongodb</artifactId>
+    <artifactId>atlas-dao-mongodb</artifactId>
     <name>Atlas Framework - MongoDB Support</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,10 +16,6 @@
         <dependency>
             <groupId>com.btmatthews.atlas</groupId>
             <artifactId>atlas-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-mongodb</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>
