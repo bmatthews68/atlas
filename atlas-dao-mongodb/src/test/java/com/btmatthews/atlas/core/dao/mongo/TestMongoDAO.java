@@ -19,11 +19,14 @@ package com.btmatthews.atlas.core.dao.mongo;
 import com.btmatthews.atlas.core.common.Paging;
 import com.btmatthews.atlas.core.common.PagingBuilder;
 import com.btmatthews.atlas.core.dao.DAO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fakemongo.Fongo;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
+
+import java.util.Currency;
 
 import static org.hamcrest.Matchers.*;
 
@@ -54,7 +57,7 @@ public class TestMongoDAO {
      */
     @Before
     public void setup() {
-        dao = new PersonDAOImpl(fongo.getMongo());
+        dao = new MongoDAO<String,Person,PersonImpl>(fongo.getMongo(), new ObjectMapper(), PersonImpl.class, "db", "people");
     }
 
     /**

@@ -15,7 +15,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -45,7 +44,7 @@ public class RiakDAOImpl<ID, I, T extends I> implements DAO<ID, I> {
 
     @Override
     public long count() {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -56,13 +55,14 @@ public class RiakDAOImpl<ID, I, T extends I> implements DAO<ID, I> {
      */
     @Override
     public List<I> find(final Paging paging) {
-        if (paging == null) {
-            throw new IllegalArgumentException("paging must not be null");
-        }
-        return new ArrayList<I>();
+        throw new UnsupportedOperationException();
     }
 
-
+    @Override
+    public I lookup(final String key,
+                    final Object value) {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
     public void create(final ID id, final I obj) {

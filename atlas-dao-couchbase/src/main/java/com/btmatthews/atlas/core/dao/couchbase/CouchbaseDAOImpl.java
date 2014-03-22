@@ -35,14 +35,19 @@ public class CouchbaseDAOImpl<ID, I, T extends I> implements DAO<ID, I> {
 
     @Override
     public long count() {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<I> find(final Paging paging) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
+    @Override
+    public I lookup(final String key,
+                    final Object value) {
+        throw new UnsupportedOperationException();
+    }
     @Override
     public void create(final ID id, final I obj) {
         client.add(buildKey(id), 0, obj, new JsonTranscoder());

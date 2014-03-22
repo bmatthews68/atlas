@@ -46,6 +46,8 @@ public interface DAO<ID, I> {
      */
     List<I> find(Paging paging);
 
+    I lookup(String key, Object value);
+
     /**
      * Persist a newly created entity in the data store.
      *

@@ -20,10 +20,16 @@ import com.btmatthews.atlas.core.common.Ordering;
 import com.btmatthews.atlas.core.common.Paging;
 import com.btmatthews.atlas.core.common.SortDirection;
 import com.btmatthews.atlas.core.dao.DAO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.mongodb.*;
+import com.mongodb.util.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,23 +42,37 @@ import java.util.List;
  * @param <I>  The interface class.
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  */
-public abstract class MongoDAO<ID, I> implements DAO<ID, I> {
+public class MongoDAO<ID, I, T extends I> implements DAO<ID, I> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MongoDAO.class);
 
     private final MongoClient mongoClient;
+
+    private final ObjectMapper objectMapper;
 
     private final String databaseName;
 
     private final String collectionName;
 
+    private final Class<T> objectClass;
+
     /**
      * Initialise the Mongo data access object setting concrete class to
      * {@code clazz}.
      */
-    protected MongoDAO(final MongoClient mongoClient,
-                       final String databaseName,
-                       final String collectionName) {
+    public MongoDAO(final MongoClient mongoClient,
+                    final ObjectMapper objectMapper,
+                    final Class<T> objectClass,
+                    final String databaseName,
+                    final String collectionName) {
         if (mongoClient == null) {
             throw new IllegalArgumentException("mongoClient must not be null");
+        }
+        if (objectMapper == null) {
+            throw new IllegalArgumentException("objectMapper must not be null");
+        }
+        if (objectClass == null) {
+            throw new IllegalArgumentException("objectClass must not be null");
         }
         if (databaseName == null && databaseName.length() > 0) {
             throw new IllegalArgumentException("databseName must not be null or empty");
@@ -61,6 +81,8 @@ public abstract class MongoDAO<ID, I> implements DAO<ID, I> {
             throw new IllegalArgumentException("collectionName must not be null or empty");
         }
         this.mongoClient = mongoClient;
+        this.objectMapper = objectMapper;
+        this.objectClass = objectClass;
         this.databaseName = databaseName;
         this.collectionName = collectionName;
     }
@@ -71,8 +93,11 @@ public abstract class MongoDAO<ID, I> implements DAO<ID, I> {
      * @return The number of objects.
      */
     @Override
-    public long count() {
-        return getCollection().count();
+    public final long count() {
+        LOGGER.debug("Count objects in collection: {}.{}", databaseName, collectionName);
+        final long count = getCollection().count();
+        LOGGER.debug("Counted {} objects in collection: {}.{}", count, databaseName, collectionName);
+        return count;
     }
 
     /**
@@ -82,11 +107,20 @@ public abstract class MongoDAO<ID, I> implements DAO<ID, I> {
      * @return The subset of the matching objects.
      */
     @Override
-    public List<I> find(final Paging paging) {
+    public final List<I> find(final Paging paging) {
+        LOGGER.debug("Find object in collection: {}.{}", databaseName, collectionName);
         if (paging == null) {
             throw new IllegalArgumentException("paging must not be null");
         }
         return readMany(new BasicDBObject(), paging);
+    }
+
+    @Override
+    public final I lookup(final String key,
+                          final Object value) {
+        LOGGER.debug("Lookup object in collection: {}.{} with key: {}={}", databaseName, collectionName, key, value);
+        final DBObject query = new BasicDBObject(key, value);
+        return readOne(query);
     }
 
     /**
@@ -95,12 +129,16 @@ public abstract class MongoDAO<ID, I> implements DAO<ID, I> {
      * @param entity The newly created object.
      */
     @Override
-    public void create(final ID id, final I entity) {
+    public final void create(final ID id,
+                             final I entity) {
+        if (id == null) {
+            throw new IllegalArgumentException("id must not be null");
+        }
         if (entity == null) {
             throw new IllegalArgumentException("entity must not be null");
         }
-        final DBObject dbObject = new BasicDBObject();
-        marshal(dbObject, entity);
+        LOGGER.debug("Create object in collection: {}.{} with id: {}", databaseName, collectionName, id);
+        final DBObject dbObject = marshal(entity);
         final WriteResult result = getCollection().save(dbObject);
         if (!result.getLastError().ok()) {
         }
@@ -113,16 +151,17 @@ public abstract class MongoDAO<ID, I> implements DAO<ID, I> {
      * @return The matching object.
      */
     @Override
-    public I read(final ID id) {
+    public final I read(final ID id) {
         if (id == null) {
             throw new IllegalArgumentException("id must not be null");
         }
+        LOGGER.debug("Read object from collection: {}.{} with id: {}", databaseName, collectionName, id);
         final DBObject query = new BasicDBObject("_id", id.toString());
         return readOne(query);
     }
 
     @Override
-    public List<I> read(final ID... ids) {
+    public final List<I> read(final ID... ids) {
         final DBObject query = new BasicDBObject();
         final List<String> idsList = Lists.transform(Arrays.asList(ids), new Function<ID, String>() {
             @Override
@@ -144,15 +183,16 @@ public abstract class MongoDAO<ID, I> implements DAO<ID, I> {
      * @param entity The existing object.
      */
     @Override
-    public void update(final ID id, final I entity) {
+    public final void update(final ID id,
+                             final I entity) {
         if (id == null) {
             throw new IllegalArgumentException("id must not be null");
         }
         if (entity == null) {
             throw new IllegalArgumentException("entity must not be null");
         }
-        final DBObject object = new BasicDBObject();
-        marshal(object, entity);
+        LOGGER.debug("Update object in collection: {}.{} with id: {}", databaseName, collectionName, id);
+        final DBObject object = marshal(entity);
         final WriteResult result = getCollection().update(new BasicDBObject("_id", id.toString()), object);
     }
 
@@ -162,10 +202,11 @@ public abstract class MongoDAO<ID, I> implements DAO<ID, I> {
      * @param id The persistent object identifier.
      */
     @Override
-    public void destroy(final ID id) {
+    public final void destroy(final ID id) {
         if (id == null) {
             throw new IllegalArgumentException("id must not be null");
         }
+        LOGGER.debug("Delete object from collection: {}.{} with id: {}", databaseName, collectionName, id);
         final WriteResult result = getCollection().remove(new BasicDBObject("_id", id.toString()));
     }
 
@@ -179,6 +220,7 @@ public abstract class MongoDAO<ID, I> implements DAO<ID, I> {
         if (query == null) {
             throw new IllegalArgumentException("query must not be null");
         }
+        LOGGER.debug("Query single object from collection: {}.{}", databaseName, collectionName);
         final DBObject dbObject = getCollection().findOne(query);
         if (dbObject == null) {
             return null;
@@ -187,6 +229,9 @@ public abstract class MongoDAO<ID, I> implements DAO<ID, I> {
     }
 
     protected final List<I> readMany(final DBObject query) {
+        if (query == null) {
+            throw new IllegalArgumentException("query must not be null");
+        }
         return readMany(query, new Paging(0, Integer.MAX_VALUE));
     }
 
@@ -201,6 +246,10 @@ public abstract class MongoDAO<ID, I> implements DAO<ID, I> {
         if (query == null) {
             throw new IllegalArgumentException("query must not be null");
         }
+        if (paging == null) {
+            throw new IllegalArgumentException("paging must not be null");
+        }
+        LOGGER.debug("Query multiple objects from collection: {}.{}", databaseName, collectionName);
         final DBCursor cursor = getCollection().find(query);
         if (paging.getPageSize() != Integer.MAX_VALUE) {
             cursor.skip(paging.getPageNumber() * paging.getPageSize())
@@ -221,17 +270,43 @@ public abstract class MongoDAO<ID, I> implements DAO<ID, I> {
         while (cursor.hasNext()) {
             final DBObject dbObject = cursor.next();
             final I object = unmarshal(dbObject);
-            objects.add(object);
+            if (object != null) {
+                objects.add(object);
+            }
         }
         return objects;
     }
 
-    protected final DBCollection getCollection() {
+    private DBCollection getCollection() {
         final DB db = mongoClient.getDB(databaseName);
         return db.getCollection(collectionName);
     }
 
-    protected abstract void marshal(DBObject dbObject, I object);
+    private DBObject marshal(final I object) {
+        if (object == null) {
+            throw new IllegalArgumentException("object must not be null");
+        }
+        try {
+            final String json = objectMapper.writeValueAsString(object);
+            LOGGER.debug("Marshalling: {}", json);
+            return (DBObject) JSON.parse(json);
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Error converting JSON string to DBObject", e);
+            return null;
+        }
+    }
 
-    protected abstract I unmarshal(DBObject dbObject);
+    private I unmarshal(final DBObject dbObject) {
+        if (dbObject == null) {
+            throw new IllegalArgumentException("dbObject must not be null");
+        }
+        try {
+            final String json = JSON.serialize(dbObject);
+            LOGGER.debug("Unmarshalling: {}", json);
+            return objectMapper.readValue(json, objectClass);
+        } catch (final IOException e) {
+            LOGGER.error("Error converting JSON string to entity", e);
+            return null;
+        }
+    }
 }
