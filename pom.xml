@@ -62,12 +62,12 @@
             <extension>
                 <groupId>org.apache.maven.scm</groupId>
                 <artifactId>maven-scm-provider-gitexe</artifactId>
-                <version>1.9</version>
+                <version>1.8</version>
             </extension>
             <extension>
                 <groupId>org.apache.maven.scm</groupId>
                 <artifactId>maven-scm-manager-plexus</artifactId>
-                <version>1.9</version>
+                <version>1.8</version>
             </extension>
             <extension>
                 <groupId>com.github.stephenc.wagon</groupId>
@@ -194,7 +194,7 @@
             </build>
         </profile>
     </profiles>
-    <!--reporting>
+    <reporting>
         <plugins>
             <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
@@ -203,13 +203,13 @@
                     <configLocation>config/sun_checks.xml</configLocation>
                 </configuration>
             </plugin>
-            <plugin>
+            <!--plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
                     <targetJdk>${java.version}</targetJdk>
                 </configuration>
-            </plugin>
+            </plugin-->
             <plugin>
                 <artifactId>maven-surefire-report-plugin</artifactId>
                 <version>2.17</version>
@@ -242,7 +242,7 @@
                 <version>2.7</version>
             </plugin>
         </plugins>
-    </reporting-->
+    </reporting>
     <dependencyManagement>
         <dependencies>
             <dependency>
