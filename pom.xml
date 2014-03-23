@@ -51,7 +51,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring.version>4.0.2.RELEASE</spring.version>
         <slf4j.version>1.7.6</slf4j.version>
-        <java.version>1.6</java.version>
+        <java.version>1.8</java.version>
         <jcr.version>2.0</jcr.version>
         <mongo.version>2.11.4</mongo.version>
         <commons-pool.version>1.6</commons-pool.version>
@@ -431,7 +431,7 @@
             <dependency>
                 <groupId>com.github.fakemongo</groupId>
                 <artifactId>fongo</artifactId>
-                <version>1.3.8</version>
+                <version>1.4.0</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
