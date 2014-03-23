@@ -1,7 +1,10 @@
 com.btmatthews.atlas.core.common
 com.btmatthews.atlas.core.dao
+com.btmatthews.atlas.core.dao.couchbase
 com.btmatthews.atlas.core.dao.mongo
+com.btmatthews.atlas.core.dao.riak
 com.btmatthews.atlas.core.domain.i18n
+com.btmatthews.atlas.core.domain.jsr310
 com.btmatthews.atlas.core.id
 com.btmatthews.atlas.core.id.uuid
 com.btmatthews.atlas.jcr
@@ -16,3 +19,4 @@ com.btmatthews.atlas.tenancy.support.domain
 com.btmatthews.atlas.tenancy.support.filter
 com.btmatthews.atlas.tenancy.support.service
 com.btmatthews.atlas.tenancy.support.spring
+com.btmatthews.atlas.validation.esapi
