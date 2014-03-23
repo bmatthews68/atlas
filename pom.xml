@@ -200,6 +200,7 @@
                 <version>2.11</version>
                 <configuration>
                     <configLocation>config/sun_checks.xml</configLocation>
+                    <includeTestResources>false</includeTestResources>
                 </configuration>
             </plugin>
             <plugin>
