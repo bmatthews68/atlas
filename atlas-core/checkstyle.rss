@@ -25,8 +25,8 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2011 - 2014 Brian Thomas Matthews</copyright>
     <item>
-      <title>File: 14,
-             Errors: 30,
+      <title>File: 16,
+             Errors: 38,
              Warnings: 0,
              Infos: 0
       </title>
@@ -167,7 +167,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  1
+                  2
                 </td>
               </tr>
                           <tr>
@@ -228,6 +228,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-core/checkstyle.html#com.btmatthews.atlas.core.domain.jsr310.LocalDateTimeDeserializer.java">com/btmatthews/atlas/core/domain/jsr310/LocalDateTimeDeserializer.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/bmatthews68/atlas/atlas-core/checkstyle.html#com.btmatthews.atlas.core.dao.package-info.java">com/btmatthews/atlas/core/dao/package-info.java</a>
                 </td>
                 <td>
@@ -238,6 +252,20 @@ under the License.
                 </td>
                 <td>
                   1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bmatthews68/atlas/atlas-core/checkstyle.html#com.btmatthews.atlas.core.domain.jsr310.LocalDateTimeSerializer.java">com/btmatthews/atlas/core/domain/jsr310/LocalDateTimeSerializer.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
                 </td>
               </tr>
                       </tbody>
