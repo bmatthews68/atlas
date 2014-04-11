@@ -57,7 +57,7 @@ public class TestMongoDAO {
      */
     @Before
     public void setup() {
-        dao = new MongoDAO<String,Person,PersonImpl>(fongo.getMongo(), new ObjectMapper(), PersonImpl.class, "db", "people");
+        dao = new MongoDAO<String,Person>(fongo.getMongo(), new ObjectMapper(), PersonImpl.class, "db", "people");
     }
 
     /**
@@ -81,7 +81,7 @@ public class TestMongoDAO {
      */
     @Test
     public void checkFullObjectLifecycle() {
-       /* final Paging paging = new PagingBuilder().setPageNumber(0).setPageSize(100).build();
+        final Paging paging = new PagingBuilder().setPageNumber(0).setPageSize(100).build();
         collector.checkThat(dao.count(), is(equalTo(0L)));
         collector.checkThat(dao.find(paging).size(), is(equalTo(0)));
         final Person person1 = new PersonImpl("ee749160-c6a0-11e2-8b8b-0800200c9a66", "Brian Matthews");
@@ -101,7 +101,7 @@ public class TestMongoDAO {
         collector.checkThat(person4, hasProperty("name", is(equalTo("Brian Thomas Matthews"))));
         dao.destroy("ee749160-c6a0-11e2-8b8b-0800200c9a66");
         collector.checkThat(dao.count(), is(equalTo(0L)));
-        collector.checkThat(dao.find(paging).size(), is(equalTo(0))); */
+        collector.checkThat(dao.find(paging).size(), is(equalTo(0)));
     }
 
     /**

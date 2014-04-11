@@ -42,7 +42,7 @@ import java.util.List;
  * @param <I>  The interface class.
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  */
-public class MongoDAO<ID, I, T extends I> implements DAO<ID, I> {
+public class MongoDAO<ID, I> implements DAO<ID, I> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MongoDAO.class);
 
@@ -54,7 +54,7 @@ public class MongoDAO<ID, I, T extends I> implements DAO<ID, I> {
 
     private final String collectionName;
 
-    private final Class<T> objectClass;
+    private final Class<? extends I> objectClass;
 
     /**
      * Initialise the Mongo data access object setting concrete class to
@@ -62,7 +62,7 @@ public class MongoDAO<ID, I, T extends I> implements DAO<ID, I> {
      */
     public MongoDAO(final MongoClient mongoClient,
                     final ObjectMapper objectMapper,
-                    final Class<T> objectClass,
+                    final Class<? extends I> objectClass,
                     final String databaseName,
                     final String collectionName) {
         if (mongoClient == null) {
