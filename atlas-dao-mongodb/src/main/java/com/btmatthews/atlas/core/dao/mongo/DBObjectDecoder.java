@@ -22,6 +22,7 @@ public class DBObjectDecoder {
             final I object = clazz.newInstance();
             final Field[] fields = clazz.getFields();
             for (final Field field : fields) {
+                field.setAccessible(true);
                 final String fieldName = NameUtils.getName(field, dbObject);
                 final Object fieldValue = dbObject.get(fieldName);
                 for (final FieldConverter converter : fieldConverters) {

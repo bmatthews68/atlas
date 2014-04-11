@@ -27,6 +27,7 @@ public class DBObjectEncoder {
         final BasicDBObject dbObject = new BasicDBObject();
         final Field[] fields = object.getClass().getDeclaredFields();
         for (final Field field : fields) {
+            field.setAccessible(true);
             final String fieldName = getName(field, parent);
             final Object fieldValue;
             if (String.class.equals(field.getType())) {
