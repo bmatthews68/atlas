@@ -32,7 +32,7 @@ public final class LocalizedBuilder<T> {
     /**
      * Maps the Java locale to the locale-specific value.
      */
-    private Map<Locale, T> values = new HashMap<Locale, T>();
+    private Map<Locale, T> values = new HashMap<>();
 
     /**
      * Construct a builder that will be used to create a new {@link Localized} object from scratch.
@@ -47,6 +47,16 @@ public final class LocalizedBuilder<T> {
      */
     public LocalizedBuilder(final Localized<T> original) {
         values.putAll(original.getValues());
+    }
+
+    /**
+     * @param values
+     * @return The builder object.
+     */
+    public LocalizedBuilder<T> setValues(final Localized<T> values) {
+        this.values.clear();
+        this.values.putAll(values.getValues());
+        return this;
     }
 
     /**

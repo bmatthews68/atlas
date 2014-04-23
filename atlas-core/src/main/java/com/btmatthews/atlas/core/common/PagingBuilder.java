@@ -41,7 +41,7 @@ public final class PagingBuilder {
     /**
      * The sort orderings used when constructing the {@link Paging} object.
      */
-    private List<Ordering> sortOrderings = new ArrayList<Ordering>();
+    private List<Ordering> sortOrderings = new ArrayList<>();
 
     /**
      * The constructor used when we need to create a new {@link Paging} object from scratch.

@@ -18,14 +18,12 @@ package com.btmatthews.atlas.jcr;
 
 import javax.jcr.Binary;
 import javax.jcr.Node;
-import javax.jcr.nodetype.NodeType;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Calendar;
 import java.util.List;
 
 /**
- *
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  * @since 1.0.0
  */
@@ -81,27 +79,46 @@ public interface JCRAccessor {
 
     Node getOrCreateNode(Node node, String intermediateType, String leafType, String... names);
 
-    void withRoot(String workspaceName, NodeVoidCallback callback);
+    <T> T withRoot(String workspaceName,
+                   NodeCallback<T> callback);
 
-    <T> T withRoot(String workspaceName, NodeCallback<T> callback);
+    <T> T withNodePath(String workspaceName,
+                       String path,
+                       NodeCallback<T> found);
 
-    void withNodePath(String workspaceName, String path,
-                      NodeVoidCallback callback);
+    <T> T withNodePath(String workspaceName,
+                       String path,
+                       NodeCallback<T> found,
+                       ErrorCallback<T> notFound);
 
-    <T> T withNodePath(String workspaceName, String path,
-                       NodeCallback<T> callback);
+    <T> T withNodePath(String workspaceName,
+                       String path,
+                       NodeCallback<T> found,
+                       ErrorCallback<T> notFound,
+                       ErrorCallback<T> error);
 
-    void withNodeId(String workspaceName, String id, NodeVoidCallback callback);
+    <T> T withNodeId(String workspaceName,
+                     String id,
+                     NodeCallback<T> found);
 
-    <T> T withNodeId(String workspaceName, String id, NodeCallback<T> callback);
+    <T> T withNodeId(String workspaceName,
+                     String id,
+                     NodeCallback<T> found,
+                     ErrorCallback<T> notFound);
 
-    void withSession(String workspaceName, SessionVoidCallback callback);
+    <T> T withNodeId(String workspaceName,
+                     String id,
+                     NodeCallback<T> found,
+                     ErrorCallback<T> notFound,
+                     ErrorCallback<T> error);
 
-    <T> T withSession(String workspaceName, SessionCallback<T> callback);
+    <T> T withSession(String workspaceName,
+                      SessionCallback<T> callback);
 
-    void withQueryResults(String workspaceName, String statement,
-                          String language, NodeVoidCallback callback, long offset, long limit);
-
-    <T> List<T> withQueryResults(String workspaceName, String statement,
-                                 String language, NodeCallback<T> callback, long offset, long limit);
+    <T> List<T> withQueryResults(String workspaceName,
+                                 String statement,
+                                 String language,
+                                 NodeCallback<T> callback,
+                                 long offset,
+                                 long limit);
 }

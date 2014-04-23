@@ -13,13 +13,7 @@ import javax.validation.ValidatorFactory;
 public class TestConfig {
 
     @Bean
-    public ValidatorFactory validatorFactory() {
+    public Validator validator() {
         return new LocalValidatorFactoryBean();
-    }
-
-    @Bean
-    @Autowired
-    public Validator validator(final ValidatorFactory validatorFactory) {
-        return validatorFactory.getValidator();
     }
 }

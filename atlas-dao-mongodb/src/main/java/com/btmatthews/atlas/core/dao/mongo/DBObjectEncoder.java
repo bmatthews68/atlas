@@ -1,5 +1,6 @@
 package com.btmatthews.atlas.core.dao.mongo;
 
+import com.btmatthews.atlas.core.domain.i18n.Localized;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
@@ -21,6 +22,25 @@ public class DBObjectEncoder {
         }
     }
 
+    public <T> DBObject encode(final Localized<T> localized) {
+        final DBObject dbObject = new BasicDBObject();
+        if (localized != null) {
+            localized.getValues().forEach((key, value) -> {
+                try {
+                    if (value.getClass().isPrimitive()) {
+                        dbObject.put(key.toLanguageTag(), value);
+                    } else if (String.class.isAssignableFrom(value.getClass())) {
+                        dbObject.put(key.toLanguageTag(), value);
+                    } else {
+                        dbObject.put(key.toLanguageTag(), encode(value, dbObject));
+                    }
+                } catch (final IllegalAccessException e) {
+                }
+            });
+        }
+        return dbObject;
+    }
+
     private DBObject encode(final Object object,
                             final DBObject parent)
             throws IllegalAccessException {
@@ -28,19 +48,23 @@ public class DBObjectEncoder {
         final Field[] fields = object.getClass().getDeclaredFields();
         for (final Field field : fields) {
             field.setAccessible(true);
+            final Class<?> fieldType = field.getType();
             final String fieldName = getName(field, parent);
             final Object fieldValue;
-            if (String.class.equals(field.getType())) {
+            if (fieldType.isPrimitive()) {
                 fieldValue = field.get(object);
-            } else if (int.class.equals(field.getType())) {
-                fieldValue = Integer.valueOf(field.getInt(object));
-            } else if (LocalDateTime.class.equals(field.getType())) {
+            } else if (String.class.isAssignableFrom(fieldType)) {
+                fieldValue = field.get(object);
+           } else if (LocalDateTime.class.equals(field.getType())) {
                 final LocalDateTime value = (LocalDateTime) field.get(object);
                 if (value == null) {
                     fieldValue = null;
                 } else {
                     fieldValue = Date.from(value.toInstant(ZoneOffset.UTC));
                 }
+            } else if (Localized.class.equals(field.getType())) {
+                final Localized<Object> localized = (Localized<Object>) field.get(object);
+                fieldValue = encode(localized);
             } else {
                 final Object value = field.get(object);
                 if (value == null) {

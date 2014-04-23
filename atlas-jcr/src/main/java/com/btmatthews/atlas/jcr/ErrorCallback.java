@@ -19,18 +19,18 @@ package com.btmatthews.atlas.jcr;
 import javax.jcr.Session;
 
 /**
- * This callback is passed to {@link JCRAccessor} methods that perform perform operations on the JCR session.
- *
+ * @param <T> The result type.
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  * @since 1.0.0
  */
-public interface SessionVoidCallback {
+public interface ErrorCallback<T> {
 
     /**
-     * The method that implements the callback.
-     *
      * @param session The session.
-     * @throws Exception The callback can throw an exception but it will get translated to a {@link RepositoryAccessException}.
+     * @param e       The exception.
+     * @return The result.
+     * @throws Exception If there was an error handling the callback event.
      */
-    void doInSession(Session session) throws Exception;
+    T doInSessionWithException(Session session, Exception e)
+            throws Exception;
 }

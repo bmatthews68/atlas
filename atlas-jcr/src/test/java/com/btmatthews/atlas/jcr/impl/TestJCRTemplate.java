@@ -54,7 +54,7 @@ public class TestJCRTemplate {
 
     @Test
     public void initialiseSessionPoolUsingConstructor() throws Exception {
-        final SessionVoidCallback callback = mock(SessionVoidCallback.class);
+        final SessionCallback<Object> callback = mock(SessionCallback.class);
         new JCRTemplate(sessionFactory).withSession(TEST_WORKSPACE_NAME, callback);
         verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
         verify(callback).doInSession(same(session));
@@ -95,7 +95,7 @@ public class TestJCRTemplate {
 
     @Test
     public void withRootUsingVoidCallbackShouldSucceed() throws Exception {
-        final NodeVoidCallback callback = mock(NodeVoidCallback.class);
+        final NodeCallback<Object> callback = mock(NodeCallback.class);
         jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback);
         verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
         verify(session).getRootNode();
@@ -106,7 +106,7 @@ public class TestJCRTemplate {
 
     @Test
     public void withRootNodeUsingVoidCallbackShouldFailWhenBorrowSessionReturnsNull() throws Exception {
-        final NodeVoidCallback callback = mock(NodeVoidCallback.class);
+        final NodeCallback<Object> callback = mock(NodeCallback.class);
         when(sessionFactory.getSession(eq(TEST_WORKSPACE_NAME))).thenReturn(null);
         try {
             jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback);
@@ -119,7 +119,7 @@ public class TestJCRTemplate {
 
     @Test
     public void withRootUsingVoidCallbackShouldFailWhenGetRootNodeThrowsException() throws Exception {
-        final NodeVoidCallback callback = mock(NodeVoidCallback.class);
+        final NodeCallback<Object>  callback = mock(NodeCallback.class);
         when(session.getRootNode()).thenThrow(RepositoryException.class);
         try {
             jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback);
@@ -134,7 +134,7 @@ public class TestJCRTemplate {
 
     @Test
     public void withRootUsingVoidCallbackShouldFailWhenGetRootNodeReturnsNull() throws Exception {
-        final NodeVoidCallback callback = mock(NodeVoidCallback.class);
+        final NodeCallback<Object>  callback = mock(NodeCallback.class);
         when(session.getRootNode()).thenReturn(null);
         try {
             jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback);
@@ -149,7 +149,7 @@ public class TestJCRTemplate {
 
     @Test
     public void withRootUsingVoidCallbackShouldFailWhenCallbackThrowsException() throws Exception {
-        final NodeVoidCallback callback = mock(NodeVoidCallback.class);
+        final NodeCallback<Object>  callback = mock(NodeCallback.class);
         doThrow(RepositoryException.class).when(callback).doInSessionWithNode(same(session), same(rootNode));
         try {
             jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback);
@@ -237,7 +237,7 @@ public class TestJCRTemplate {
 
     @Test
     public void withNodePathWithVoidNodeCallbackIsSuccessful() throws Exception {
-        final NodeVoidCallback callback = mock(NodeVoidCallback.class);
+        final NodeCallback<Object>  callback = mock(NodeCallback.class);
         final Node node = mock(Node.class);
         when(session.getNode(anyString())).thenReturn(node);
         jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback);
@@ -251,7 +251,7 @@ public class TestJCRTemplate {
 
     @Test
     public void withNodePathUsingVoidCallbackShouldFailWhenBorrowSessionReturnsNullIsSuccessful() throws Exception {
-        final NodeVoidCallback callback = mock(NodeVoidCallback.class);
+        final NodeCallback<Object>  callback = mock(NodeCallback.class);
         when(sessionFactory.getSession(eq(TEST_WORKSPACE_NAME))).thenReturn(null);
         try {
             jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback);
@@ -264,7 +264,7 @@ public class TestJCRTemplate {
 
     @Test
     public void withNodePathUsingVoidCallbackShouldFailWhenGetRootNodeThrowsException() throws Exception {
-        final NodeVoidCallback callback = mock(NodeVoidCallback.class);
+        final NodeCallback<Object>  callback = mock(NodeCallback.class);
         when(session.getNode(anyString())).thenThrow(RepositoryException.class);
         try {
             jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback);
@@ -279,8 +279,8 @@ public class TestJCRTemplate {
 
     @Test
     public void withNodePathUsingVoidCallbackShouldFailWhenGetRootNodeReturnsNull() throws Exception {
-        final NodeVoidCallback callback = mock(NodeVoidCallback.class);
-        when(session.getNode(anyString())).thenReturn(null);
+        final NodeCallback<Object>  callback = mock(NodeCallback.class);
+        when(session.getNode(anyString())).thenThrow(PathNotFoundException.class);
         try {
             jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback);
             fail();
@@ -294,7 +294,7 @@ public class TestJCRTemplate {
 
     @Test
     public void withNodePathUsingVoidCallbackShouldFailWhenCallbackThrowsException() throws Exception {
-        final NodeVoidCallback callback = mock(NodeVoidCallback.class);
+        final NodeCallback<Object>  callback = mock(NodeCallback.class);
         final Node node = mock(Node.class);
         when(session.getNode(anyString())).thenReturn(node);
         doThrow(RepositoryException.class).when(callback).doInSessionWithNode(any(Session.class), any(Node.class));
@@ -358,7 +358,7 @@ public class TestJCRTemplate {
     @Test
     public void withNodePathUsingTypedCallbackShouldFailWhenGetRootNodeReturnsNull() throws Exception {
         final NodeCallback<Object> callback = mock(NodeCallback.class);
-        when(session.getNode(anyString())).thenReturn(null);
+        when(session.getNode(anyString())).thenThrow(PathNotFoundException.class);
         try {
             jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback);
             fail();
@@ -391,7 +391,7 @@ public class TestJCRTemplate {
 
     @Test
     public void withNodeIdWithVoidNodeCallbackIsSuccessful() throws Exception {
-        final NodeVoidCallback callback = mock(NodeVoidCallback.class);
+        final NodeCallback<Object>  callback = mock(NodeCallback.class);
         final Node node = mock(Node.class);
         when(session.getNodeByIdentifier(anyString())).thenReturn(node);
         jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);
@@ -405,7 +405,7 @@ public class TestJCRTemplate {
 
     @Test
     public void withNodeIdUsingVoidCallbackShouldFailWhenBorrowSessionReturnsNull() throws Exception {
-        final NodeVoidCallback callback = mock(NodeVoidCallback.class);
+        final NodeCallback<Object>  callback = mock(NodeCallback.class);
         when(sessionFactory.getSession(eq(TEST_WORKSPACE_NAME))).thenReturn(null);
         try {
             jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);
@@ -434,7 +434,7 @@ public class TestJCRTemplate {
     @Test
     public void withNodeIdUsingVoidCallbackShouldFailWhenGetRootNodeReturnsNull() throws Exception {
         final NodeCallback<Object> callback = mock(NodeCallback.class);
-        when(session.getNodeByIdentifier(anyString())).thenReturn(null);
+        when(session.getNodeByIdentifier(anyString())).thenThrow(PathNotFoundException.class);
         try {
             jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);
             fail();
@@ -496,7 +496,7 @@ public class TestJCRTemplate {
 
     @Test
     public void withNodeIdUsingTypedCallbackShouldFailWhenGetRootNodeThrowsException() throws Exception {
-        final NodeVoidCallback callback = mock(NodeVoidCallback.class);
+        final NodeCallback<Object>  callback = mock(NodeCallback.class);
         when(session.getNodeByIdentifier(anyString())).thenThrow(RepositoryException.class);
         try {
             jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);
@@ -511,8 +511,8 @@ public class TestJCRTemplate {
 
     @Test
     public void withNodeIdUsingTypedCallbackShouldFailWhenGetRootNodeReturnsNull() throws Exception {
-        final NodeVoidCallback callback = mock(NodeVoidCallback.class);
-        when(session.getNodeByIdentifier(anyString())).thenReturn(null);
+        final NodeCallback<Object>  callback = mock(NodeCallback.class);
+        when(session.getNodeByIdentifier(anyString())).thenThrow(PathNotFoundException.class);
         try {
             jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);
             fail();
@@ -547,7 +547,7 @@ public class TestJCRTemplate {
 
     @Test
     public void executeWithVoidSessionCallbackIsSuccessful() throws Exception {
-        final SessionVoidCallback callback = mock(SessionVoidCallback.class);
+        final SessionCallback<Object> callback = mock(SessionCallback.class);
         jcrTemplate.withSession(TEST_WORKSPACE_NAME, callback);
         verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
         verify(callback).doInSession(same(session));
@@ -571,7 +571,7 @@ public class TestJCRTemplate {
 
     @Test
     public void executeStatementWithVoidNodeCallbackIsSuccessfulForEmptyResultset() throws Exception {
-        final NodeVoidCallback callback = mock(NodeVoidCallback.class);
+        final NodeCallback<Object>  callback = mock(NodeCallback.class);
         final Workspace workspace = mock(Workspace.class);
         final QueryManager queryManager = mock(QueryManager.class);
         final Query query = mock(Query.class);
@@ -592,6 +592,7 @@ public class TestJCRTemplate {
         verify(query).setLimit(eq(100L));
         verify(query).execute();
         verify(queryResult).getNodes();
+        verify(nodeIterator).getSize();
         verify(nodeIterator).hasNext();
         verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
         verifyNoMoreInteractions(sessionFactory, session, workspace, queryManager, query, queryResult, nodeIterator);

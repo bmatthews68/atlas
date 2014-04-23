@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import javax.jcr.*;
-import javax.jcr.nodetype.NodeType;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
@@ -312,26 +311,6 @@ public class JCRTemplate implements JCRAccessor {
 
     }
 
-
-    /**
-     * Perform an operation against the root node of the named workspace.
-     *
-     * @param workspaceName The workspace name.
-     * @param callback      The callback that implements the operation to be performed.
-     */
-    public void withRoot(final String workspaceName,
-                         final NodeVoidCallback callback) {
-        withSession(workspaceName, new SessionVoidCallback() {
-            public void doInSession(final Session session) throws Exception {
-                final Node node = session.getRootNode();
-                if (node == null) {
-                    throw new RepositoryAccessException(GET_ROOT_NODE_RETURNED_NULL);
-                }
-                callback.doInSessionWithNode(session, node);
-            }
-        });
-    }
-
     /**
      * Execute a function on the root node of the named workspace.
      *
@@ -343,41 +322,15 @@ public class JCRTemplate implements JCRAccessor {
 
     public <T> T withRoot(final String workspaceName,
                           final NodeCallback<T> callback) {
-        return withSession(workspaceName, new SessionCallback<T>() {
-            public T doInSession(final Session session) throws Exception {
-                final Node node = session.getRootNode();
-                if (node == null) {
-                    throw new RepositoryAccessException(GET_ROOT_NODE_RETURNED_NULL);
-                }
-                return callback.doInSessionWithNode(session, node);
+        return withSession(workspaceName, session -> {
+            final Node node = session.getRootNode();
+            if (node == null) {
+                throw new RepositoryAccessException(GET_ROOT_NODE_RETURNED_NULL);
             }
+            return callback.doInSessionWithNode(session, node);
         });
     }
 
-    /**
-     * Perform an operation against a node at the specified path in the named workspace.
-     *
-     * @param workspaceName The workspace name.
-     * @param path          The path to the node.
-     * @param callback      The callback that implements the operation to be performed.
-     */
-    public void withNodePath(final String workspaceName, final String path,
-                             final NodeVoidCallback callback) {
-
-        assert workspaceName != null && Pattern.matches(WORKSPACE_PATTERN, workspaceName);
-        assert path != null && Pattern.matches(PATH_PATTERN, path);
-        assert callback != null;
-
-        withSession(workspaceName, new SessionVoidCallback() {
-            public void doInSession(final Session session) throws Exception {
-                final Node node = session.getNode(path);
-                if (node == null) {
-                    throw new RepositoryAccessException(GET_NODE_RETURNED_NULL);
-                }
-                callback.doInSessionWithNode(session, node);
-            }
-        });
-    }
 
     /**
      * Execute a function on a node at the specified path in the named workspace.
@@ -389,46 +342,53 @@ public class JCRTemplate implements JCRAccessor {
      * @return The result of the function.
      */
 
-    public <T> T withNodePath(final String workspaceName, final String path,
+    public <T> T withNodePath(final String workspaceName,
+                              final String path,
                               final NodeCallback<T> callback) {
-
-        assert workspaceName != null && Pattern.matches(WORKSPACE_PATTERN, workspaceName);
-        assert path != null && Pattern.matches(PATH_PATTERN, path);
-        assert callback != null;
-
-        return withSession(workspaceName, new SessionCallback<T>() {
-            public T doInSession(final Session session) throws Exception {
-                final Node node = session.getNode(path);
-                if (node == null) {
-                    throw new RepositoryAccessException(GET_NODE_RETURNED_NULL);
-                }
-                return callback.doInSessionWithNode(session, node);
-            }
-        });
+        return withNodePath(
+                workspaceName,
+                path,
+                callback,
+                JCRTemplate::defaultNotFoundCallback,
+                JCRTemplate::defaultErrorCallback);
     }
 
-    /**
-     * Perform a callback operation on the node identified by {@code id} in the workspace named {@code workspaceName}.
-     *
-     * @param workspaceName The name of the workspace.
-     * @param id            The identifier of the node.
-     * @param callback      The callback.
-     */
-    public void withNodeId(final String workspaceName, final String id,
-                           final NodeVoidCallback callback) {
-        assert workspaceName != null && Pattern.matches(WORKSPACE_PATTERN, workspaceName);
-        assert id != null && Pattern.matches(ID_PATTERN, id);
-        assert callback != null;
+    public <T> T withNodePath(final String workspaceName,
+                              final String path,
+                              final NodeCallback<T> found,
+                              final ErrorCallback<T> notFound) {
+        return withNodePath(
+                workspaceName,
+                path,
+                found,
+                notFound,
+                JCRTemplate::defaultErrorCallback);
+    }
 
-        withSession(workspaceName, new SessionVoidCallback() {
-            public void doInSession(final Session session) throws Exception {
-                final Node node = session.getNodeByIdentifier(id);
-                if (node == null) {
-                    throw new RepositoryAccessException(GET_NODE_BY_IDENTIFIER_RETURNED_NULL);
+    public <T> T withNodePath(final String workspaceName,
+                              final String path,
+                              final NodeCallback<T> found,
+                              final ErrorCallback<T> notFound,
+                              final ErrorCallback<T> error) {
+        assert workspaceName != null && Pattern.matches(WORKSPACE_PATTERN, workspaceName);
+        assert path != null && Pattern.matches(PATH_PATTERN, path);
+        assert found != null;
+        assert notFound != null;
+        assert error != null;
+
+        return withSession(
+                workspaceName,
+                session -> {
+                    try {
+                        final Node node = session.getNode(path);
+                        return found.doInSessionWithNode(session, node);
+                    } catch (PathNotFoundException e) {
+                        return notFound.doInSessionWithException(session, e);
+                    } catch (final RepositoryException e) {
+                        return error.doInSessionWithException(session, e);
+                    }
                 }
-                callback.doInSessionWithNode(session, node);
-            }
-        });
+        );
     }
 
     /**
@@ -437,50 +397,69 @@ public class JCRTemplate implements JCRAccessor {
      *
      * @param workspaceName The name of the workspace.
      * @param id            The identifier of the node.
-     * @param callback      The callback.
+     * @param found         The callback.
      * @param <T>           The type returned by the callback operation.
      * @return The result of the callback operation.
      */
     public <T> T withNodeId(final String workspaceName,
                             final String id,
-                            final NodeCallback<T> callback) {
+                            final NodeCallback<T> found) {
+        return withNodeId(
+                workspaceName,
+                id,
+                found,
+                JCRTemplate::defaultNotFoundCallback,
+                JCRTemplate::defaultErrorCallback);
+    }
 
+    public <T> T withNodeId(final String workspaceName,
+                            final String id,
+                            final NodeCallback<T> found,
+                            final ErrorCallback<T> notFound) {
+        return withNodeId(workspaceName,
+                id,
+                found,
+                notFound,
+                JCRTemplate::defaultErrorCallback);
+    }
+
+    public <T> T withNodeId(final String workspaceName,
+                            final String id,
+                            final NodeCallback<T> found,
+                            final ErrorCallback<T> notFound,
+                            final ErrorCallback<T> error) {
         assert workspaceName != null && Pattern.matches(WORKSPACE_PATTERN, workspaceName);
         assert id != null && Pattern.matches(ID_PATTERN, id);
-        assert callback != null;
+        assert found != null;
+        assert notFound != null;
+        assert error != null;
 
-        return withSession(workspaceName, new SessionCallback<T>() {
-            public T doInSession(final Session session) throws Exception {
+        return withSession(workspaceName, session -> {
+            try {
                 final Node node = session.getNodeByIdentifier(id);
-                if (node == null) {
-                    throw new RepositoryAccessException(GET_NODE_BY_IDENTIFIER_RETURNED_NULL);
-                }
-                return callback.doInSessionWithNode(session, node);
+                return found.doInSessionWithNode(session, node);
+            } catch (final PathNotFoundException e) {
+                return notFound.doInSessionWithException(session, e);
+            } catch (final RepositoryException e) {
+                return error.doInSessionWithException(session, e);
             }
         });
+    }
+
+    private static <T> T defaultNotFoundCallback(final Session session,
+                                                 final Exception e)
+            throws Exception {
+        throw new RepositoryAccessException(GET_NODE_RETURNED_NULL);
+    }
+
+    private static <T> T defaultErrorCallback(final Session session,
+                                              final Exception e)
+            throws Exception {
+        throw e;
     }
 
     /**
      * @param workspaceName The name of the workspace.
-     * @param callback    The callback.
-     */
-    public void withSession(final String workspaceName,
-                            final SessionVoidCallback callback) {
-
-        assert workspaceName != null && Pattern.matches(WORKSPACE_PATTERN, workspaceName);
-        assert callback != null;
-
-        withSession(workspaceName, new SessionCallback<Object>() {
-            @Override
-            public Object doInSession(Session session) throws Exception {
-                callback.doInSession(session);
-                return null;
-            }
-        });
-    }
-
-    /**
-     * @param workspaceName  The name of the workspace.
      * @param callback      The callback that implements the function to be executed.
      * @param <T>           The type returned by the function.
      * @return The result of the function.
@@ -526,41 +505,6 @@ public class JCRTemplate implements JCRAccessor {
     }
 
     /**
-     * @param workspaceName The workspace name.
-     * @param statement     The query statement.
-     * @param language      The query language.
-     * @param callback      The callback to be invoked for each node in the return set.
-     * @throws RepositoryAccessException If there was an error executing the query or processing the results.
-     */
-    public void withQueryResults(final String workspaceName,
-                                 final String statement,
-                                 final String language,
-                                 final NodeVoidCallback callback,
-                                 final long offset,
-                                 final long limit) {
-
-        assert workspaceName != null && Pattern.matches(WORKSPACE_PATTERN, workspaceName);
-        assert statement != null && Pattern.matches(QUERY_PATTERN, statement);
-        assert language != null && Pattern.matches(LANGUAGE_PATTERN, language);
-        assert callback != null;
-        assert offset >= 0;
-        assert limit > 0;
-
-        withSession(workspaceName, new SessionVoidCallback() {
-            public void doInSession(final Session session) throws Exception {
-                final NodeIterator iterator = getQueryResults(session, statement, language, EMPTY_PARAMETERS, offset, limit);
-                while (iterator.hasNext()) {
-                    final Node node = iterator.nextNode();
-                    if (node == null) {
-                        throw new RepositoryAccessException(NEXT_NODE_RETURNED_NULL);
-                    }
-                    callback.doInSessionWithNode(session, node);
-                }
-            }
-        });
-    }
-
-    /**
      * @param workspaceName The name of the workspace.
      * @param statement     The query statement.
      * @param language      The query language.
@@ -585,21 +529,21 @@ public class JCRTemplate implements JCRAccessor {
         assert offset >= 0;
         assert limit > 0;
 
-        return withSession(workspaceName, new SessionCallback<List<T>>() {
-            public List<T> doInSession(final Session session) throws Exception {
-                final NodeIterator iterator = getQueryResults(session, statement, language, EMPTY_PARAMETERS, offset, limit);
-                final List<T> results = new ArrayList<T>((int) iterator.getSize());
-                while (iterator.hasNext()) {
-                    final Node node = iterator.nextNode();
-                    if (node == null) {
-                        throw new RepositoryAccessException(NEXT_NODE_RETURNED_NULL);
+        return withSession(workspaceName,
+                session -> {
+                    final NodeIterator iterator = getQueryResults(session, statement, language, EMPTY_PARAMETERS, offset, limit);
+                    final List<T> results = new ArrayList<>((int) iterator.getSize());
+                    while (iterator.hasNext()) {
+                        final Node node = iterator.nextNode();
+                        if (node == null) {
+                            throw new RepositoryAccessException(NEXT_NODE_RETURNED_NULL);
+                        }
+                        final T result = callback.doInSessionWithNode(session, node);
+                        results.add(result);
                     }
-                    final T result = callback.doInSessionWithNode(session, node);
-                    results.add(result);
+                    return results;
                 }
-                return results;
-            }
-        });
+        );
     }
 
     /**
