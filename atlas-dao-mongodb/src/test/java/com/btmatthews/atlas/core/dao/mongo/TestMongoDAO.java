@@ -21,13 +21,15 @@ import com.btmatthews.atlas.core.common.PagingBuilder;
 import com.btmatthews.atlas.core.dao.DAO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fakemongo.Fongo;
+import com.jayway.jsonassert.JsonAssert;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
+import org.mongojack.internal.MongoJackModule;
 
-import java.util.Currency;
-
+import static org.fest.assertions.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -57,7 +59,29 @@ public class TestMongoDAO {
      */
     @Before
     public void setup() {
-        dao = new MongoDAO<String,Person>(fongo.getMongo(), new ObjectMapper(), PersonImpl.class, "db", "people");
+        final ObjectMapper objectMapper = new ObjectMapper();
+        MongoJackModule.configure(objectMapper);
+        dao = new MongoDAO<>(fongo.getMongo(), objectMapper, String.class, PersonImpl.class, "db", "people");
+    }
+
+    @Test
+    public void marshal() throws Exception {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final Person person = new PersonImpl("ee749160-c6a0-11e2-8b8b-0800200c9a66", "Brian Matthews");
+        final String json = objectMapper.writeValueAsString(person);
+        JsonAssert
+                .with(json)
+                .assertThat("$.id", Matchers.equalTo("ee749160-c6a0-11e2-8b8b-0800200c9a66"))
+                .assertThat("$.name", Matchers.equalTo("Brian Matthews"));
+    }
+
+    @Test
+    public void unmarshal() throws Exception {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final Person person = objectMapper.readValue("{\"id\": \"ee749160-c6a0-11e2-8b8b-0800200c9a66\", \"name\": \"Brian Matthews\"}", PersonImpl.class);
+        assertThat(person).isNotNull();
+        assertThat(person.getId()).isEqualTo("ee749160-c6a0-11e2-8b8b-0800200c9a66");
+        assertThat(person.getName()).isEqualTo("Brian Matthews");
     }
 
     /**

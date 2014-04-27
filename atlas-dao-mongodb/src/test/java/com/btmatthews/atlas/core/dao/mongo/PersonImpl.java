@@ -18,6 +18,8 @@ package com.btmatthews.atlas.core.dao.mongo;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.mongojack.Id;
+import org.mongojack.MongoCollection;
 
 /**
  * Implements a person object.
@@ -30,12 +32,11 @@ public class PersonImpl implements Person {
     /**
      * The object identifier.
      */
-    @JsonProperty("_id")
+    @Id
     private String id;
     /**
      * The person's name.
      */
-    @JsonProperty("name")
     private String name;
 
     /**
@@ -45,7 +46,7 @@ public class PersonImpl implements Person {
      * @param name The person's name.
      */
     @JsonCreator
-    public PersonImpl(@JsonProperty("_id") final String id,
+    public PersonImpl(@Id @JsonProperty("id") final String id,
                       @JsonProperty("name") final String name) {
         this.id = id;
         this.name = name;
