@@ -59,9 +59,7 @@ public class TestMongoDAO {
      */
     @Before
     public void setup() {
-        final ObjectMapper objectMapper = new ObjectMapper();
-        MongoJackModule.configure(objectMapper);
-        dao = new MongoDAO<>(fongo.getMongo(), objectMapper, String.class, PersonImpl.class, "db", "people");
+         dao = new MongoDAO<>(fongo.getMongo(), String.class, PersonImpl.class, "db", "people");
     }
 
     @Test

@@ -52,16 +52,12 @@ public class MongoDAO<ID, I, T extends I> implements DAO<ID, I> {
      * {@code clazz}.
      */
     public MongoDAO(final MongoClient mongoClient,
-                    final ObjectMapper objectMapper,
                     final Class<ID> keyClass,
                     final Class<T> objectClass,
                     final String databaseName,
                     final String collectionName) {
         if (mongoClient == null) {
             throw new IllegalArgumentException("mongoClient must not be null");
-        }
-        if (objectMapper == null) {
-            throw new IllegalArgumentException("objectMapper must not be null");
         }
         if (keyClass == null) {
             throw new IllegalArgumentException("keyClass must not be null");
@@ -81,7 +77,7 @@ public class MongoDAO<ID, I, T extends I> implements DAO<ID, I> {
 
         final DB db = mongoClient.getDB(databaseName);
         final DBCollection collection = db.getCollection(collectionName);
-        this.collection = (JacksonDBCollection<I, ID>) JacksonDBCollection.wrap(collection, objectClass, keyClass, objectMapper);
+        this.collection = (JacksonDBCollection<I, ID>) JacksonDBCollection.wrap(collection, objectClass, keyClass);
     }
 
     /**
