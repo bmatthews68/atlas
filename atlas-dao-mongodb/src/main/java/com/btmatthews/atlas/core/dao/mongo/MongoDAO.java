@@ -18,7 +18,6 @@ package com.btmatthews.atlas.core.dao.mongo;
 
 import com.btmatthews.atlas.core.common.Paging;
 import com.btmatthews.atlas.core.dao.DAO;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;

@@ -27,7 +27,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
-import org.mongojack.internal.MongoJackModule;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
