@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.btmatthews.atlas.core.domain.jsr310;
+package com.btmatthews.atlas.core.dao.mongo;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -28,15 +28,17 @@ import java.time.format.DateTimeFormatter;
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  * @since 1.0.2
  */
-public class LocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
+public class MongoLocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     @Override
     public void serialize(final LocalDateTime value,
                           final JsonGenerator generator,
                           final SerializerProvider provider) throws
             IOException {
-        generator.writeString(value.format(DATE_TIME_FORMATTER));
+        generator.writeStartObject();
+        generator.writeStringField("$date", value.format(DATE_TIME_FORMATTER));
+        generator.writeEndObject();
     }
 }

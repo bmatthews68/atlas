@@ -1,9 +1,7 @@
-package com.btmatthews.atlas.core.domain.jsr310;
+package com.btmatthews.atlas.core.dao.mongo;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.time.LocalDateTime;
 

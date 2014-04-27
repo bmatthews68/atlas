@@ -21,6 +21,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.mongojack.Id;
 import org.mongojack.MongoCollection;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 /**
  * Implements a person object.
  *
@@ -39,6 +42,10 @@ public class PersonImpl implements Person {
      */
     private String name;
 
+    private LocalDateTime validFrom;
+
+    private LocalDateTime validTo;
+
     /**
      * Construct a person object.
      *
@@ -47,9 +54,13 @@ public class PersonImpl implements Person {
      */
     @JsonCreator
     public PersonImpl(@Id @JsonProperty("id") final String id,
-                      @JsonProperty("name") final String name) {
+                      @JsonProperty("name") final String name,
+                      @JsonProperty("validFrom") final LocalDateTime validFrom,
+                      @JsonProperty("validTo") final LocalDateTime validTo) {
         this.id = id;
         this.name = name;
+        this.validFrom = validFrom;
+        this.validTo = validTo;
     }
 
     /**
@@ -68,5 +79,13 @@ public class PersonImpl implements Person {
      */
     public String getName() {
         return name;
+    }
+
+    public LocalDateTime getValidFrom() {
+        return validFrom;
+    }
+
+    public LocalDateTime getValidTo() {
+        return validTo;
     }
 }

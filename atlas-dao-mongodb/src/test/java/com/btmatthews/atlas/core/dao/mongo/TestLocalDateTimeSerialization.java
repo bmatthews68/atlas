@@ -1,4 +1,4 @@
-package com.btmatthews.atlas.core.domain.jsr310;
+package com.btmatthews.atlas.core.dao.mongo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,16 +11,15 @@ import java.time.LocalDateTime;
 import static org.junit.Assert.assertEquals;
 
 public class TestLocalDateTimeSerialization {
-    private static final String TEST_JSON1 = "{\"dateTime\":\"1999-01-01T00:00:00.000\"}";
-    private static final String TEST_JSON2 = "{\"dateTime\":\"1786-08-08T00:00:00.000\"}";
-    private static final String TEST_JSON3 = "{\"dateTime\":\"9999-12-31T00:00:00.000\"}";
-
+    private static final String TEST_JSON1 = "{\"dateTime\":{\"$date\":\"1999-01-01T00:00:00.000Z\"}}";
+    private static final String TEST_JSON2 = "{\"dateTime\":{\"$date\":\"1786-08-08T00:00:00.000Z\"}}";
+    private static final String TEST_JSON3 = "{\"dateTime\":{\"$date\":\"9999-12-31T00:00:00.000Z\"}}";
     private ObjectMapper objectMapper;
 
     @Before
     public void setup() {
         objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JSR310Module());
+        objectMapper.registerModule(new MongoJSR310Module());
     }
 
     @Test

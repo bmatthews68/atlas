@@ -32,9 +32,9 @@ import java.util.Map;
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  * @since 1.0.1
  */
-public class LocalizedDeserializer extends JsonDeserializer<Localized<Object>> {
+public class LocalizedDeserializer extends JsonDeserializer<Localized> {
     @Override
-    public Localized<Object> deserialize(final JsonParser parser,
+    public Localized deserialize(final JsonParser parser,
                                          final DeserializationContext context)
             throws IOException {
         final LocalizedBuilder<Object> builder = new LocalizedBuilder<>();

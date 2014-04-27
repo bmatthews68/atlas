@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.btmatthews.atlas.core.domain.jsr310;
+package com.btmatthews.atlas.core.dao.mongo;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
@@ -30,9 +30,9 @@ import java.time.format.DateTimeFormatter;
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  * @since 1.0.2
  */
-public class LocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
+public class MongoLocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     @Override
     public LocalDateTime deserialize(final JsonParser parser,
@@ -40,6 +40,7 @@ public class LocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
             throws IOException {
         final ObjectCodec codec = parser.getCodec();
         final JsonNode node = codec.readTree(parser);
-        return LocalDateTime.parse(node.asText(), DATE_TIME_FORMATTER);
+        final JsonNode dateNode = node.get("$date");
+        return LocalDateTime.parse(dateNode.asText(), DATE_TIME_FORMATTER);
     }
 }

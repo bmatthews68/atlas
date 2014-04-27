@@ -19,28 +19,29 @@ package com.btmatthews.atlas.core.domain.i18n;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.google.common.collect.ImmutableMap;
 
 import java.io.IOException;
 import java.util.Locale;
 
 /**
- *
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  * @since 1.0.1
  */
-public class LocalizedSerializer extends JsonSerializer<Localized<Object>> {
+public class LocalizedSerializer extends JsonSerializer<Localized> {
     @Override
-    public void serialize(final Localized<Object> value,
+    public void serialize(final Localized value,
                           final JsonGenerator generator,
                           final SerializerProvider provider) throws
             IOException {
         generator.writeStartObject();
-        for (final ImmutableMap.Entry<Locale, Object> entry : value.getValues().entrySet()) {
-            generator.writeStringField(
-                    entry.getKey().toLanguageTag(),
-                    (String)entry.getValue());
-        }
+        value.getValues().forEach((itemKey, itemValue) -> {
+            try {
+                generator.writeStringField(
+                        ((Locale) itemKey).toLanguageTag(),
+                        (String) itemValue);
+            } catch (final IOException e) {
+            }
+        });
         generator.writeEndObject();
 
     }

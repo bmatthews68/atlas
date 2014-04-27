@@ -19,6 +19,8 @@ package com.btmatthews.atlas.core.dao.mongo;
 import com.btmatthews.atlas.core.common.Paging;
 import com.btmatthews.atlas.core.common.PagingBuilder;
 import com.btmatthews.atlas.core.dao.DAO;
+import com.btmatthews.atlas.core.domain.i18n.I18NModule;
+import com.btmatthews.atlas.core.domain.jsr310.JSR310Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fakemongo.Fongo;
 import com.jayway.jsonassert.JsonAssert;
@@ -27,6 +29,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
+import org.mongojack.internal.MongoJackModule;
+
+import java.time.LocalDateTime;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -38,6 +43,9 @@ import static org.hamcrest.Matchers.*;
  * @since 1.0.0
  */
 public class TestMongoDAO {
+
+    private final static LocalDateTime VALID_FROM = LocalDateTime.of(1900, 1, 1, 0, 0, 0, 0);
+    private final static LocalDateTime VALID_TO = LocalDateTime.of(9999, 12, 31, 23, 59, 59, 999000000);
 
     /**
      * Used to collect test failures within a single test case.
@@ -58,24 +66,38 @@ public class TestMongoDAO {
      */
     @Before
     public void setup() {
-         dao = new MongoDAO<>(fongo.getMongo(), String.class, PersonImpl.class, "db", "people");
+        final ObjectMapper objectMapper = new ObjectMapper();
+        MongoJackModule.configure(objectMapper);
+        objectMapper.registerModule(new I18NModule());
+        objectMapper.registerModule(new MongoJSR310Module());
+        dao = new MongoDAO<String, Person, PersonImpl>(fongo.getMongo(), objectMapper, String.class, PersonImpl.class, "db", "people");
     }
 
     @Test
     public void marshal() throws Exception {
         final ObjectMapper objectMapper = new ObjectMapper();
-        final Person person = new PersonImpl("ee749160-c6a0-11e2-8b8b-0800200c9a66", "Brian Matthews");
+        objectMapper.registerModule(new I18NModule());
+        objectMapper.registerModule(new JSR310Module());
+        final Person person = new PersonImpl(
+                "ee749160-c6a0-11e2-8b8b-0800200c9a66",
+                "Brian Matthews",
+                VALID_FROM,
+                VALID_TO);
         final String json = objectMapper.writeValueAsString(person);
         JsonAssert
                 .with(json)
                 .assertThat("$.id", Matchers.equalTo("ee749160-c6a0-11e2-8b8b-0800200c9a66"))
-                .assertThat("$.name", Matchers.equalTo("Brian Matthews"));
+                .assertThat("$.name", Matchers.equalTo("Brian Matthews"))
+                .assertThat("$.validFrom", Matchers.equalTo("1900-01-01T00:00:00.000"))
+                .assertThat("$.validTo", Matchers.equalTo("9999-12-31T23:59:59.999"));
     }
 
     @Test
     public void unmarshal() throws Exception {
         final ObjectMapper objectMapper = new ObjectMapper();
-        final Person person = objectMapper.readValue("{\"id\": \"ee749160-c6a0-11e2-8b8b-0800200c9a66\", \"name\": \"Brian Matthews\"}", PersonImpl.class);
+        objectMapper.registerModule(new I18NModule());
+        objectMapper.registerModule(new JSR310Module());
+        final Person person = objectMapper.readValue("{\"id\": \"ee749160-c6a0-11e2-8b8b-0800200c9a66\", \"name\": \"Brian Matthews\", \"validFrom\": \"1900-01-01T00:00:00.000\", \"validTo\": \"9999-12-31T23:59:59.999\"}", PersonImpl.class);
         assertThat(person).isNotNull();
         assertThat(person.getId()).isEqualTo("ee749160-c6a0-11e2-8b8b-0800200c9a66");
         assertThat(person.getName()).isEqualTo("Brian Matthews");
@@ -105,7 +127,7 @@ public class TestMongoDAO {
         final Paging paging = new PagingBuilder().setPageNumber(0).setPageSize(100).build();
         collector.checkThat(dao.count(), is(equalTo(0L)));
         collector.checkThat(dao.find(paging).size(), is(equalTo(0)));
-        final Person person1 = new PersonImpl("ee749160-c6a0-11e2-8b8b-0800200c9a66", "Brian Matthews");
+        final Person person1 = new PersonImpl("ee749160-c6a0-11e2-8b8b-0800200c9a66", "Brian Matthews", VALID_FROM, VALID_TO);
         dao.create("ee749160-c6a0-11e2-8b8b-0800200c9a66", person1);
         collector.checkThat(dao.count(), is(equalTo(1L)));
         collector.checkThat(dao.find(paging).size(), is(equalTo(1)));
@@ -114,7 +136,7 @@ public class TestMongoDAO {
         collector.checkThat(person2, hasProperty("id", is(equalTo("ee749160-c6a0-11e2-8b8b-0800200c9a66"))));
         collector.checkThat(person2, hasProperty("name", is(equalTo("Brian Matthews"))));
         collector.checkThat(dao.count(), is(equalTo(1L)));
-        final Person person3 = new PersonImpl("ee749160-c6a0-11e2-8b8b-0800200c9a66", "Brian Thomas Matthews");
+        final Person person3 = new PersonImpl("ee749160-c6a0-11e2-8b8b-0800200c9a66", "Brian Thomas Matthews", VALID_FROM, VALID_TO);
         dao.update("ee749160-c6a0-11e2-8b8b-0800200c9a66", person3);
         final Person person4 = dao.read("ee749160-c6a0-11e2-8b8b-0800200c9a66");
         collector.checkThat(person4, is(not(nullValue())));
