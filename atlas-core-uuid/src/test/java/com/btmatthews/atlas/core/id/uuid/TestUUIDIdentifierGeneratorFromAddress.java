@@ -16,35 +16,32 @@
 
 package com.btmatthews.atlas.core.id.uuid;
 
-import java.util.UUID;
-
 import com.btmatthews.atlas.core.id.IdentifierGenerator;
-import com.fasterxml.uuid.EthernetAddress;
-import com.fasterxml.uuid.Generators;
-import com.fasterxml.uuid.impl.TimeBasedGenerator;
+import org.junit.Before;
+import org.junit.Test;
+
+import static com.btmatthews.hamcrest.regex.PatternMatcher.matches;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.notNullValue;
 
 /**
  * @author <a href="mailto:brian@btmatthews.com">Brian Thomas Matthews</a>
  * @since 1.0.0
  */
-public final class UUIDIdentifierGenerator implements IdentifierGenerator<String> {
+public class TestUUIDIdentifierGeneratorFromAddress {
 
-	private final TimeBasedGenerator generator;
+    private IdentifierGenerator<String> generator;
 
-	public UUIDIdentifierGenerator() {
-		this(EthernetAddress.fromInterface());
-	}
-
-    public UUIDIdentifierGenerator(final String address) {
-        this(EthernetAddress.valueOf(address));
+    @Before
+    public void setup() {
+        generator = new UUIDIdentifierGenerator("df:bc:b7:3f:91:17");
     }
 
-    private UUIDIdentifierGenerator(final EthernetAddress address) {
-        generator = Generators.timeBasedGenerator(address);
+    @Test
+    public void generateReturnsAUUIDString() {
+        final String uuid = generator.generate();
+        assertThat(uuid, is(notNullValue()));
+        assertThat(uuid, matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"));
     }
-
-	public String generate() {
-		final UUID uuid = this.generator.generate();
-		return uuid.toString();
-	}
 }
