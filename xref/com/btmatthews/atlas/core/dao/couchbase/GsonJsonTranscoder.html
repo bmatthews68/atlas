@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>GsonJsonTranscoder xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../../apidocs/com/btmatthews/atlas/core/dao/couchbase/GsonJsonTranscoder.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> com.btmatthews.atlas.core.dao.couchbase;
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> com.google.common.base.Charsets;
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> com.google.gson.Gson;
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> net.spy.memcached.CachedData;
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> GsonJsonTranscoder&lt;I&gt; <strong class="jxr_keyword">extends</strong> AbstractJsonTranscoder&lt;I&gt; {
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>       <strong class="jxr_keyword">public</strong> <a href="../../../../../../com/btmatthews/atlas/core/dao/couchbase/GsonJsonTranscoder.html">GsonJsonTranscoder</a>(<strong class="jxr_keyword">final</strong> Class&lt;? <strong class="jxr_keyword">extends</strong> I&gt; objectClass) {
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>          <strong class="jxr_keyword">super</strong>(objectClass);
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>      }
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>      @Override
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>      <strong class="jxr_keyword">public</strong> CachedData encode(<strong class="jxr_keyword">final</strong> I o) {
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>          <strong class="jxr_keyword">final</strong> Gson gson = <strong class="jxr_keyword">new</strong> Gson();
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>          <strong class="jxr_keyword">final</strong> String json = gson.toJson(o);
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>          <strong class="jxr_keyword">final</strong> byte[] data = json.getBytes(Charsets.UTF_8);
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> CachedData(0, data, data.length);
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>      }
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>      @Override
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>      <strong class="jxr_keyword">public</strong> I decode(<strong class="jxr_keyword">final</strong> CachedData cachedData) {
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>          <strong class="jxr_keyword">final</strong> Gson gson = <strong class="jxr_keyword">new</strong> Gson();
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>          <strong class="jxr_keyword">final</strong> String json = <strong class="jxr_keyword">new</strong> String(cachedData.getData(), Charsets.UTF_8);
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>          <strong class="jxr_keyword">return</strong> gson.fromJson(json, getObjectClass());
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>      }
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2011&#x2013;2014 <a href="http://btmatthews.com">Brian Thomas Matthews</a>. All rights reserved.</div>
+</body>
+</html>

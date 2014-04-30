@@ -1,4 +1,5 @@
 com.btmatthews.atlas.core.common
+com.btmatthews.atlas.core.dao.couchbase
 com.btmatthews.atlas.core.dao.mongo
 com.btmatthews.atlas.core.domain.i18n
 com.btmatthews.atlas.core.domain.jsr310

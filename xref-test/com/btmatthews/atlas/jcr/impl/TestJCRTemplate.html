@@ -62,7 +62,7 @@
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>  
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>      @Test
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> initialiseSessionPoolUsingConstructor() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>          <strong class="jxr_keyword">final</strong> SessionVoidCallback callback = mock(SessionVoidCallback.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>          <strong class="jxr_keyword">final</strong> SessionCallback&lt;Object&gt; callback = mock(SessionCallback.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>          <strong class="jxr_keyword">new</strong> JCRTemplate(sessionFactory).withSession(TEST_WORKSPACE_NAME, callback);
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>          verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>          verify(callback).doInSession(same(session));
@@ -103,7 +103,7 @@
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>  
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>      @Test
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> withRootUsingVoidCallbackShouldSucceed() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>          <strong class="jxr_keyword">final</strong> NodeVoidCallback callback = mock(NodeVoidCallback.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>          <strong class="jxr_keyword">final</strong> NodeCallback&lt;Object&gt; callback = mock(NodeCallback.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>          jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback);
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>         verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>         verify(session).getRootNode();
@@ -114,7 +114,7 @@
 <a class="jxr_linenumber" name="L106" href="#L106">106</a> 
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>     @Test
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> withRootNodeUsingVoidCallbackShouldFailWhenBorrowSessionReturnsNull() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>         <strong class="jxr_keyword">final</strong> NodeVoidCallback callback = mock(NodeVoidCallback.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>         <strong class="jxr_keyword">final</strong> NodeCallback&lt;Object&gt; callback = mock(NodeCallback.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>         when(sessionFactory.getSession(eq(TEST_WORKSPACE_NAME))).thenReturn(<strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>             jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback);
@@ -127,7 +127,7 @@
 <a class="jxr_linenumber" name="L119" href="#L119">119</a> 
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>     @Test
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> withRootUsingVoidCallbackShouldFailWhenGetRootNodeThrowsException() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>         <strong class="jxr_keyword">final</strong> NodeVoidCallback callback = mock(NodeVoidCallback.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>         <strong class="jxr_keyword">final</strong> NodeCallback&lt;Object&gt;  callback = mock(NodeCallback.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>         when(session.getRootNode()).thenThrow(RepositoryException.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L124" href="#L124">124</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>             jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback);
@@ -142,7 +142,7 @@
 <a class="jxr_linenumber" name="L134" href="#L134">134</a> 
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>     @Test
 <a class="jxr_linenumber" name="L136" href="#L136">136</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> withRootUsingVoidCallbackShouldFailWhenGetRootNodeReturnsNull() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>         <strong class="jxr_keyword">final</strong> NodeVoidCallback callback = mock(NodeVoidCallback.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>         <strong class="jxr_keyword">final</strong> NodeCallback&lt;Object&gt;  callback = mock(NodeCallback.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L138" href="#L138">138</a>         when(session.getRootNode()).thenReturn(<strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>             jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback);
@@ -157,7 +157,7 @@
 <a class="jxr_linenumber" name="L149" href="#L149">149</a> 
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>     @Test
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> withRootUsingVoidCallbackShouldFailWhenCallbackThrowsException() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>         <strong class="jxr_keyword">final</strong> NodeVoidCallback callback = mock(NodeVoidCallback.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>         <strong class="jxr_keyword">final</strong> NodeCallback&lt;Object&gt;  callback = mock(NodeCallback.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L153" href="#L153">153</a>         doThrow(RepositoryException.<strong class="jxr_keyword">class</strong>).when(callback).doInSessionWithNode(same(session), same(rootNode));
 <a class="jxr_linenumber" name="L154" href="#L154">154</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L155" href="#L155">155</a>             jcrTemplate.withRoot(TEST_WORKSPACE_NAME, callback);
@@ -245,7 +245,7 @@
 <a class="jxr_linenumber" name="L237" href="#L237">237</a> 
 <a class="jxr_linenumber" name="L238" href="#L238">238</a>     @Test
 <a class="jxr_linenumber" name="L239" href="#L239">239</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> withNodePathWithVoidNodeCallbackIsSuccessful() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L240" href="#L240">240</a>         <strong class="jxr_keyword">final</strong> NodeVoidCallback callback = mock(NodeVoidCallback.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>         <strong class="jxr_keyword">final</strong> NodeCallback&lt;Object&gt;  callback = mock(NodeCallback.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L241" href="#L241">241</a>         <strong class="jxr_keyword">final</strong> Node node = mock(Node.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L242" href="#L242">242</a>         when(session.getNode(anyString())).thenReturn(node);
 <a class="jxr_linenumber" name="L243" href="#L243">243</a>         jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback);
@@ -259,7 +259,7 @@
 <a class="jxr_linenumber" name="L251" href="#L251">251</a> 
 <a class="jxr_linenumber" name="L252" href="#L252">252</a>     @Test
 <a class="jxr_linenumber" name="L253" href="#L253">253</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> withNodePathUsingVoidCallbackShouldFailWhenBorrowSessionReturnsNullIsSuccessful() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L254" href="#L254">254</a>         <strong class="jxr_keyword">final</strong> NodeVoidCallback callback = mock(NodeVoidCallback.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>         <strong class="jxr_keyword">final</strong> NodeCallback&lt;Object&gt;  callback = mock(NodeCallback.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L255" href="#L255">255</a>         when(sessionFactory.getSession(eq(TEST_WORKSPACE_NAME))).thenReturn(<strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L256" href="#L256">256</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L257" href="#L257">257</a>             jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback);
@@ -272,7 +272,7 @@
 <a class="jxr_linenumber" name="L264" href="#L264">264</a> 
 <a class="jxr_linenumber" name="L265" href="#L265">265</a>     @Test
 <a class="jxr_linenumber" name="L266" href="#L266">266</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> withNodePathUsingVoidCallbackShouldFailWhenGetRootNodeThrowsException() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L267" href="#L267">267</a>         <strong class="jxr_keyword">final</strong> NodeVoidCallback callback = mock(NodeVoidCallback.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>         <strong class="jxr_keyword">final</strong> NodeCallback&lt;Object&gt;  callback = mock(NodeCallback.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L268" href="#L268">268</a>         when(session.getNode(anyString())).thenThrow(RepositoryException.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L269" href="#L269">269</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L270" href="#L270">270</a>             jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback);
@@ -287,8 +287,8 @@
 <a class="jxr_linenumber" name="L279" href="#L279">279</a> 
 <a class="jxr_linenumber" name="L280" href="#L280">280</a>     @Test
 <a class="jxr_linenumber" name="L281" href="#L281">281</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> withNodePathUsingVoidCallbackShouldFailWhenGetRootNodeReturnsNull() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L282" href="#L282">282</a>         <strong class="jxr_keyword">final</strong> NodeVoidCallback callback = mock(NodeVoidCallback.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L283" href="#L283">283</a>         when(session.getNode(anyString())).thenReturn(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>         <strong class="jxr_keyword">final</strong> NodeCallback&lt;Object&gt;  callback = mock(NodeCallback.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>         when(session.getNode(anyString())).thenThrow(PathNotFoundException.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L284" href="#L284">284</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L285" href="#L285">285</a>             jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback);
 <a class="jxr_linenumber" name="L286" href="#L286">286</a>             fail();
@@ -302,7 +302,7 @@
 <a class="jxr_linenumber" name="L294" href="#L294">294</a> 
 <a class="jxr_linenumber" name="L295" href="#L295">295</a>     @Test
 <a class="jxr_linenumber" name="L296" href="#L296">296</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> withNodePathUsingVoidCallbackShouldFailWhenCallbackThrowsException() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L297" href="#L297">297</a>         <strong class="jxr_keyword">final</strong> NodeVoidCallback callback = mock(NodeVoidCallback.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>         <strong class="jxr_keyword">final</strong> NodeCallback&lt;Object&gt;  callback = mock(NodeCallback.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L298" href="#L298">298</a>         <strong class="jxr_keyword">final</strong> Node node = mock(Node.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L299" href="#L299">299</a>         when(session.getNode(anyString())).thenReturn(node);
 <a class="jxr_linenumber" name="L300" href="#L300">300</a>         doThrow(RepositoryException.<strong class="jxr_keyword">class</strong>).when(callback).doInSessionWithNode(any(Session.<strong class="jxr_keyword">class</strong>), any(Node.<strong class="jxr_keyword">class</strong>));
@@ -366,7 +366,7 @@
 <a class="jxr_linenumber" name="L358" href="#L358">358</a>     @Test
 <a class="jxr_linenumber" name="L359" href="#L359">359</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> withNodePathUsingTypedCallbackShouldFailWhenGetRootNodeReturnsNull() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L360" href="#L360">360</a>         <strong class="jxr_keyword">final</strong> NodeCallback&lt;Object&gt; callback = mock(NodeCallback.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L361" href="#L361">361</a>         when(session.getNode(anyString())).thenReturn(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>         when(session.getNode(anyString())).thenThrow(PathNotFoundException.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L362" href="#L362">362</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L363" href="#L363">363</a>             jcrTemplate.withNodePath(TEST_WORKSPACE_NAME, TEST_PATH, callback);
 <a class="jxr_linenumber" name="L364" href="#L364">364</a>             fail();
@@ -399,7 +399,7 @@
 <a class="jxr_linenumber" name="L391" href="#L391">391</a> 
 <a class="jxr_linenumber" name="L392" href="#L392">392</a>     @Test
 <a class="jxr_linenumber" name="L393" href="#L393">393</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> withNodeIdWithVoidNodeCallbackIsSuccessful() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L394" href="#L394">394</a>         <strong class="jxr_keyword">final</strong> NodeVoidCallback callback = mock(NodeVoidCallback.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>         <strong class="jxr_keyword">final</strong> NodeCallback&lt;Object&gt;  callback = mock(NodeCallback.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L395" href="#L395">395</a>         <strong class="jxr_keyword">final</strong> Node node = mock(Node.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L396" href="#L396">396</a>         when(session.getNodeByIdentifier(anyString())).thenReturn(node);
 <a class="jxr_linenumber" name="L397" href="#L397">397</a>         jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);
@@ -413,7 +413,7 @@
 <a class="jxr_linenumber" name="L405" href="#L405">405</a> 
 <a class="jxr_linenumber" name="L406" href="#L406">406</a>     @Test
 <a class="jxr_linenumber" name="L407" href="#L407">407</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> withNodeIdUsingVoidCallbackShouldFailWhenBorrowSessionReturnsNull() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L408" href="#L408">408</a>         <strong class="jxr_keyword">final</strong> NodeVoidCallback callback = mock(NodeVoidCallback.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>         <strong class="jxr_keyword">final</strong> NodeCallback&lt;Object&gt;  callback = mock(NodeCallback.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L409" href="#L409">409</a>         when(sessionFactory.getSession(eq(TEST_WORKSPACE_NAME))).thenReturn(<strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L410" href="#L410">410</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L411" href="#L411">411</a>             jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);
@@ -442,7 +442,7 @@
 <a class="jxr_linenumber" name="L434" href="#L434">434</a>     @Test
 <a class="jxr_linenumber" name="L435" href="#L435">435</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> withNodeIdUsingVoidCallbackShouldFailWhenGetRootNodeReturnsNull() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L436" href="#L436">436</a>         <strong class="jxr_keyword">final</strong> NodeCallback&lt;Object&gt; callback = mock(NodeCallback.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L437" href="#L437">437</a>         when(session.getNodeByIdentifier(anyString())).thenReturn(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>         when(session.getNodeByIdentifier(anyString())).thenThrow(PathNotFoundException.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L438" href="#L438">438</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L439" href="#L439">439</a>             jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);
 <a class="jxr_linenumber" name="L440" href="#L440">440</a>             fail();
@@ -504,7 +504,7 @@
 <a class="jxr_linenumber" name="L496" href="#L496">496</a> 
 <a class="jxr_linenumber" name="L497" href="#L497">497</a>     @Test
 <a class="jxr_linenumber" name="L498" href="#L498">498</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> withNodeIdUsingTypedCallbackShouldFailWhenGetRootNodeThrowsException() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L499" href="#L499">499</a>         <strong class="jxr_keyword">final</strong> NodeVoidCallback callback = mock(NodeVoidCallback.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L499" href="#L499">499</a>         <strong class="jxr_keyword">final</strong> NodeCallback&lt;Object&gt;  callback = mock(NodeCallback.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L500" href="#L500">500</a>         when(session.getNodeByIdentifier(anyString())).thenThrow(RepositoryException.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L501" href="#L501">501</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L502" href="#L502">502</a>             jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);
@@ -519,8 +519,8 @@
 <a class="jxr_linenumber" name="L511" href="#L511">511</a> 
 <a class="jxr_linenumber" name="L512" href="#L512">512</a>     @Test
 <a class="jxr_linenumber" name="L513" href="#L513">513</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> withNodeIdUsingTypedCallbackShouldFailWhenGetRootNodeReturnsNull() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L514" href="#L514">514</a>         <strong class="jxr_keyword">final</strong> NodeVoidCallback callback = mock(NodeVoidCallback.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L515" href="#L515">515</a>         when(session.getNodeByIdentifier(anyString())).thenReturn(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L514" href="#L514">514</a>         <strong class="jxr_keyword">final</strong> NodeCallback&lt;Object&gt;  callback = mock(NodeCallback.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L515" href="#L515">515</a>         when(session.getNodeByIdentifier(anyString())).thenThrow(PathNotFoundException.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L516" href="#L516">516</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L517" href="#L517">517</a>             jcrTemplate.withNodeId(TEST_WORKSPACE_NAME, TEST_ID, callback);
 <a class="jxr_linenumber" name="L518" href="#L518">518</a>             fail();
@@ -555,7 +555,7 @@
 <a class="jxr_linenumber" name="L547" href="#L547">547</a> 
 <a class="jxr_linenumber" name="L548" href="#L548">548</a>     @Test
 <a class="jxr_linenumber" name="L549" href="#L549">549</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> executeWithVoidSessionCallbackIsSuccessful() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L550" href="#L550">550</a>         <strong class="jxr_keyword">final</strong> SessionVoidCallback callback = mock(SessionVoidCallback.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L550" href="#L550">550</a>         <strong class="jxr_keyword">final</strong> SessionCallback&lt;Object&gt; callback = mock(SessionCallback.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L551" href="#L551">551</a>         jcrTemplate.withSession(TEST_WORKSPACE_NAME, callback);
 <a class="jxr_linenumber" name="L552" href="#L552">552</a>         verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
 <a class="jxr_linenumber" name="L553" href="#L553">553</a>         verify(callback).doInSession(same(session));
@@ -579,7 +579,7 @@
 <a class="jxr_linenumber" name="L571" href="#L571">571</a> 
 <a class="jxr_linenumber" name="L572" href="#L572">572</a>     @Test
 <a class="jxr_linenumber" name="L573" href="#L573">573</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> executeStatementWithVoidNodeCallbackIsSuccessfulForEmptyResultset() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L574" href="#L574">574</a>         <strong class="jxr_keyword">final</strong> NodeVoidCallback callback = mock(NodeVoidCallback.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L574" href="#L574">574</a>         <strong class="jxr_keyword">final</strong> NodeCallback&lt;Object&gt;  callback = mock(NodeCallback.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L575" href="#L575">575</a>         <strong class="jxr_keyword">final</strong> Workspace workspace = mock(Workspace.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L576" href="#L576">576</a>         <strong class="jxr_keyword">final</strong> QueryManager queryManager = mock(QueryManager.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L577" href="#L577">577</a>         <strong class="jxr_keyword">final</strong> Query query = mock(Query.<strong class="jxr_keyword">class</strong>);
@@ -600,46 +600,47 @@
 <a class="jxr_linenumber" name="L592" href="#L592">592</a>         verify(query).setLimit(eq(100L));
 <a class="jxr_linenumber" name="L593" href="#L593">593</a>         verify(query).execute();
 <a class="jxr_linenumber" name="L594" href="#L594">594</a>         verify(queryResult).getNodes();
-<a class="jxr_linenumber" name="L595" href="#L595">595</a>         verify(nodeIterator).hasNext();
-<a class="jxr_linenumber" name="L596" href="#L596">596</a>         verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
-<a class="jxr_linenumber" name="L597" href="#L597">597</a>         verifyNoMoreInteractions(sessionFactory, session, workspace, queryManager, query, queryResult, nodeIterator);
-<a class="jxr_linenumber" name="L598" href="#L598">598</a>     }
-<a class="jxr_linenumber" name="L599" href="#L599">599</a> 
-<a class="jxr_linenumber" name="L600" href="#L600">600</a>     <em class="jxr_comment">// &lt;T&gt; List&lt;T&gt; withSession(String workspaceName, String statement,</em>
-<a class="jxr_linenumber" name="L601" href="#L601">601</a>     <em class="jxr_comment">//                    String language, NodeCallback&lt;T&gt; callback);</em>
-<a class="jxr_linenumber" name="L602" href="#L602">602</a> 
-<a class="jxr_linenumber" name="L603" href="#L603">603</a>     @Test
-<a class="jxr_linenumber" name="L604" href="#L604">604</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> executeStatementWithTypedNodeCallbackIsSuccessfulForEmptyResultset() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L605" href="#L605">605</a>         <strong class="jxr_keyword">final</strong> NodeCallback&lt;Object&gt; callback = mock(NodeCallback.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L606" href="#L606">606</a>         <strong class="jxr_keyword">final</strong> Workspace workspace = mock(Workspace.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L607" href="#L607">607</a>         <strong class="jxr_keyword">final</strong> QueryManager queryManager = mock(QueryManager.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L608" href="#L608">608</a>         <strong class="jxr_keyword">final</strong> Query query = mock(Query.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L609" href="#L609">609</a>         <strong class="jxr_keyword">final</strong> QueryResult queryResult = mock(QueryResult.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L610" href="#L610">610</a>         <strong class="jxr_keyword">final</strong> NodeIterator nodeIterator = mock(NodeIterator.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L611" href="#L611">611</a>         when(session.getWorkspace()).thenReturn(workspace);
-<a class="jxr_linenumber" name="L612" href="#L612">612</a>         when(workspace.getQueryManager()).thenReturn(queryManager);
-<a class="jxr_linenumber" name="L613" href="#L613">613</a>         when(queryManager.createQuery(anyString(), anyString())).thenReturn(query);
-<a class="jxr_linenumber" name="L614" href="#L614">614</a>         when(query.execute()).thenReturn(queryResult);
-<a class="jxr_linenumber" name="L615" href="#L615">615</a>         when(queryResult.getNodes()).thenReturn(nodeIterator);
-<a class="jxr_linenumber" name="L616" href="#L616">616</a>         when(nodeIterator.getSize()).thenReturn(0L);
-<a class="jxr_linenumber" name="L617" href="#L617">617</a>         when(nodeIterator.hasNext()).thenReturn(false);
-<a class="jxr_linenumber" name="L618" href="#L618">618</a>         <strong class="jxr_keyword">final</strong> List&lt;Object&gt; results = jcrTemplate.withQueryResults(TEST_WORKSPACE_NAME, TEST_STATEMENT, Query.JCR_SQL2, callback, 0, 100);
-<a class="jxr_linenumber" name="L619" href="#L619">619</a>         assertNotNull(results);
-<a class="jxr_linenumber" name="L620" href="#L620">620</a>         assertEquals(0, results.size());
-<a class="jxr_linenumber" name="L621" href="#L621">621</a>         verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
-<a class="jxr_linenumber" name="L622" href="#L622">622</a>         verify(session).getWorkspace();
-<a class="jxr_linenumber" name="L623" href="#L623">623</a>         verify(workspace).getQueryManager();
-<a class="jxr_linenumber" name="L624" href="#L624">624</a>         verify(queryManager).createQuery(eq(TEST_STATEMENT), eq(Query.JCR_SQL2));
-<a class="jxr_linenumber" name="L625" href="#L625">625</a>         verify(query).setOffset(eq(0L));
-<a class="jxr_linenumber" name="L626" href="#L626">626</a>         verify(query).setLimit(eq(100L));
-<a class="jxr_linenumber" name="L627" href="#L627">627</a>         verify(query).execute();
-<a class="jxr_linenumber" name="L628" href="#L628">628</a>         verify(queryResult).getNodes();
-<a class="jxr_linenumber" name="L629" href="#L629">629</a>         verify(nodeIterator).getSize();
-<a class="jxr_linenumber" name="L630" href="#L630">630</a>         verify(nodeIterator).hasNext();
-<a class="jxr_linenumber" name="L631" href="#L631">631</a>         verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
-<a class="jxr_linenumber" name="L632" href="#L632">632</a>         verifyNoMoreInteractions(sessionFactory, session, workspace, queryManager, query, queryResult, nodeIterator);
-<a class="jxr_linenumber" name="L633" href="#L633">633</a>     }
-<a class="jxr_linenumber" name="L634" href="#L634">634</a> }
+<a class="jxr_linenumber" name="L595" href="#L595">595</a>         verify(nodeIterator).getSize();
+<a class="jxr_linenumber" name="L596" href="#L596">596</a>         verify(nodeIterator).hasNext();
+<a class="jxr_linenumber" name="L597" href="#L597">597</a>         verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+<a class="jxr_linenumber" name="L598" href="#L598">598</a>         verifyNoMoreInteractions(sessionFactory, session, workspace, queryManager, query, queryResult, nodeIterator);
+<a class="jxr_linenumber" name="L599" href="#L599">599</a>     }
+<a class="jxr_linenumber" name="L600" href="#L600">600</a> 
+<a class="jxr_linenumber" name="L601" href="#L601">601</a>     <em class="jxr_comment">// &lt;T&gt; List&lt;T&gt; withSession(String workspaceName, String statement,</em>
+<a class="jxr_linenumber" name="L602" href="#L602">602</a>     <em class="jxr_comment">//                    String language, NodeCallback&lt;T&gt; callback);</em>
+<a class="jxr_linenumber" name="L603" href="#L603">603</a> 
+<a class="jxr_linenumber" name="L604" href="#L604">604</a>     @Test
+<a class="jxr_linenumber" name="L605" href="#L605">605</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> executeStatementWithTypedNodeCallbackIsSuccessfulForEmptyResultset() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L606" href="#L606">606</a>         <strong class="jxr_keyword">final</strong> NodeCallback&lt;Object&gt; callback = mock(NodeCallback.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L607" href="#L607">607</a>         <strong class="jxr_keyword">final</strong> Workspace workspace = mock(Workspace.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L608" href="#L608">608</a>         <strong class="jxr_keyword">final</strong> QueryManager queryManager = mock(QueryManager.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L609" href="#L609">609</a>         <strong class="jxr_keyword">final</strong> Query query = mock(Query.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L610" href="#L610">610</a>         <strong class="jxr_keyword">final</strong> QueryResult queryResult = mock(QueryResult.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L611" href="#L611">611</a>         <strong class="jxr_keyword">final</strong> NodeIterator nodeIterator = mock(NodeIterator.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L612" href="#L612">612</a>         when(session.getWorkspace()).thenReturn(workspace);
+<a class="jxr_linenumber" name="L613" href="#L613">613</a>         when(workspace.getQueryManager()).thenReturn(queryManager);
+<a class="jxr_linenumber" name="L614" href="#L614">614</a>         when(queryManager.createQuery(anyString(), anyString())).thenReturn(query);
+<a class="jxr_linenumber" name="L615" href="#L615">615</a>         when(query.execute()).thenReturn(queryResult);
+<a class="jxr_linenumber" name="L616" href="#L616">616</a>         when(queryResult.getNodes()).thenReturn(nodeIterator);
+<a class="jxr_linenumber" name="L617" href="#L617">617</a>         when(nodeIterator.getSize()).thenReturn(0L);
+<a class="jxr_linenumber" name="L618" href="#L618">618</a>         when(nodeIterator.hasNext()).thenReturn(false);
+<a class="jxr_linenumber" name="L619" href="#L619">619</a>         <strong class="jxr_keyword">final</strong> List&lt;Object&gt; results = jcrTemplate.withQueryResults(TEST_WORKSPACE_NAME, TEST_STATEMENT, Query.JCR_SQL2, callback, 0, 100);
+<a class="jxr_linenumber" name="L620" href="#L620">620</a>         assertNotNull(results);
+<a class="jxr_linenumber" name="L621" href="#L621">621</a>         assertEquals(0, results.size());
+<a class="jxr_linenumber" name="L622" href="#L622">622</a>         verify(sessionFactory).getSession(eq(TEST_WORKSPACE_NAME));
+<a class="jxr_linenumber" name="L623" href="#L623">623</a>         verify(session).getWorkspace();
+<a class="jxr_linenumber" name="L624" href="#L624">624</a>         verify(workspace).getQueryManager();
+<a class="jxr_linenumber" name="L625" href="#L625">625</a>         verify(queryManager).createQuery(eq(TEST_STATEMENT), eq(Query.JCR_SQL2));
+<a class="jxr_linenumber" name="L626" href="#L626">626</a>         verify(query).setOffset(eq(0L));
+<a class="jxr_linenumber" name="L627" href="#L627">627</a>         verify(query).setLimit(eq(100L));
+<a class="jxr_linenumber" name="L628" href="#L628">628</a>         verify(query).execute();
+<a class="jxr_linenumber" name="L629" href="#L629">629</a>         verify(queryResult).getNodes();
+<a class="jxr_linenumber" name="L630" href="#L630">630</a>         verify(nodeIterator).getSize();
+<a class="jxr_linenumber" name="L631" href="#L631">631</a>         verify(nodeIterator).hasNext();
+<a class="jxr_linenumber" name="L632" href="#L632">632</a>         verify(sessionFactory).releaseSession(eq(TEST_WORKSPACE_NAME), same(session));
+<a class="jxr_linenumber" name="L633" href="#L633">633</a>         verifyNoMoreInteractions(sessionFactory, session, workspace, queryManager, query, queryResult, nodeIterator);
+<a class="jxr_linenumber" name="L634" href="#L634">634</a>     }
+<a class="jxr_linenumber" name="L635" href="#L635">635</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2011&#x2013;2014 <a href="http://btmatthews.com">Brian Thomas Matthews</a>. All rights reserved.</div>
