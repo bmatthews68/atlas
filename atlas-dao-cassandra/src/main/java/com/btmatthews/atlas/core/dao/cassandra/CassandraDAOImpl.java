@@ -6,6 +6,7 @@ import com.datastax.driver.core.*;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.datastax.driver.core.querybuilder.QueryBuilder.*;
 import static com.google.common.collect.Lists.transform;
@@ -36,9 +37,9 @@ public class CassandraDAOImpl<ID, I> implements DAO<ID, I> {
     }
 
     @Override
-    public I lookup(final String key,
+    public Optional<I> lookup(final String key,
                     final Object value) {
-        return cassandraTemplate.execute(session -> doLookup(session, key, value));
+          return cassandraTemplate.execute(session -> doLookup(session, key, value));
     }
 
     @Override
@@ -48,12 +49,12 @@ public class CassandraDAOImpl<ID, I> implements DAO<ID, I> {
     }
 
     @Override
-    public I read(final ID id) {
+    public Optional<I> read(final ID id) {
         return cassandraTemplate.execute(session -> doRead(session, id));
     }
 
     @Override
-    public List<I> read(final ID... ids) {
+    public List<Optional<I>> read(final ID... ids) {
         return cassandraTemplate.execute(session -> transform(asList(ids), id -> doRead(session, id)));
     }
 
@@ -75,7 +76,7 @@ public class CassandraDAOImpl<ID, I> implements DAO<ID, I> {
         return row.getLong(0);
     }
 
-    private I doLookup(final Session session,
+    private Optional<I> doLookup(final Session session,
                        final String key,
                        final Object value) {
         final Statement statement = select().from(keyspace, table).where(eq(key, value));
@@ -96,7 +97,7 @@ public class CassandraDAOImpl<ID, I> implements DAO<ID, I> {
         session.execute(statement);
     }
 
-    private I doRead(final Session session,
+    private Optional<I> doRead(final Session session,
                      final ID id) {
         final Statement statement = select().from(keyspace, table).where(eq("id", id));
         return fetchOne(session, statement);
@@ -116,11 +117,11 @@ public class CassandraDAOImpl<ID, I> implements DAO<ID, I> {
         session.execute(statement);
     }
 
-    private I fetchOne(final Session session,
+    private Optional<I> fetchOne(final Session session,
                        final Statement statement) {
         final ResultSet results = session.execute(statement);
         final Row row = results.one();
-        return decode(row);
+        return Optional.of(decode(row));
     }
 
     private List<I> fetchMany(final Session session,

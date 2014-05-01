@@ -17,6 +17,7 @@ import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -43,28 +44,6 @@ public class RiakDAOImpl<ID, I, T extends I> implements DAO<ID, I> {
     }
 
     @Override
-    public long count() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Retrieve a subset of the matching objects of the specified type from the data store.
-     *
-     * @param paging Describes the portion of the result set to return.
-     * @return The subset of the matching objects.
-     */
-    @Override
-    public List<I> find(final Paging paging) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public I lookup(final String key,
-                    final Object value) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void create(final ID id, final I obj) {
         try {
             final String json = objectMapper.writeValueAsString(obj);
@@ -75,23 +54,23 @@ public class RiakDAOImpl<ID, I, T extends I> implements DAO<ID, I> {
     }
 
     @Override
-    public I read(final ID id) {
+    public Optional<I> read(final ID id) {
         try {
             final String json = bucket().fetch(id.toString(), String.class).execute();
-            return objectMapper.readValue(json, objectClass);
+            return Optional.of(objectMapper.readValue(json, objectClass));
         } catch (RiakRetryFailedException e) {
-            return null;
+            return Optional.empty();
         } catch (final JsonMappingException e) {
-            return null;
+            return Optional.empty();
         } catch (final JsonParseException e) {
-            return null;
+            return Optional.empty();
         } catch (final IOException e) {
-            return null;
+            return Optional.empty();
         }
     }
 
     @Override
-    public List<I> read(final ID... ids) {
+    public List<Optional<I>> read(final ID... ids) {
         try {
             final List<String> idsList = Lists.transform(Arrays.asList(ids), new Function<ID, String>() {
                 @Override
@@ -100,17 +79,17 @@ public class RiakDAOImpl<ID, I, T extends I> implements DAO<ID, I> {
                 }
             });
             final List<MultiFetchFuture<String>> futuresList = bucket().multiFetch(idsList, String.class).execute();
-            return Lists.transform(futuresList, new Function<MultiFetchFuture<String>, I>() {
+            return Lists.transform(futuresList, new Function<MultiFetchFuture<String>, Optional<I>>() {
                 @Override
-                public I apply(MultiFetchFuture<String> future) {
+                public Optional<I> apply(MultiFetchFuture<String> future) {
                     try {
-                        return objectMapper.readValue(future.get(), objectClass);
+                        return Optional.of(objectMapper.readValue(future.get(), objectClass));
                     } catch (final IOException e) {
-                        return null;
+                        return Optional.empty();
                     } catch (final InterruptedException e) {
-                        return null;
+                        return Optional.empty();
                     } catch (final ExecutionException e) {
-                        return null;
+                        return Optional.empty();
                     }
                 }
             });

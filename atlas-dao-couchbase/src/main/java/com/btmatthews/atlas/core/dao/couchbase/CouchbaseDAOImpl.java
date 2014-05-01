@@ -6,6 +6,7 @@ import com.couchbase.client.CouchbaseClientIF;
 import net.spy.memcached.transcoders.Transcoder;
 
 import java.util.List;
+import java.util.Optional;
 
 public class CouchbaseDAOImpl<ID, I> implements DAO<ID, I> {
 
@@ -24,34 +25,13 @@ public class CouchbaseDAOImpl<ID, I> implements DAO<ID, I> {
     }
 
     @Override
-    public long count() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public List<I> find(final Paging paging) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public I lookup(final String key,
-                    final Object value) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void create(final ID id, final I obj) {
         client.add(buildKey(id), 0, obj, transcoder);
     }
 
     @Override
-    public I read(final ID id) {
-        return client.get(buildKey(id), transcoder);
-    }
-
-    @Override
-    public List<I> read(final ID... ids) {
-        return null;
+    public Optional<I> read(final ID id) {
+        return Optional.ofNullable(client.get(buildKey(id), transcoder));
     }
 
     @Override

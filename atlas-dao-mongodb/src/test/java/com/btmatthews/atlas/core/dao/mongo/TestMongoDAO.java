@@ -32,6 +32,7 @@ import org.junit.rules.ErrorCollector;
 import org.mongojack.internal.MongoJackModule;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -131,17 +132,17 @@ public class TestMongoDAO {
         dao.create("ee749160-c6a0-11e2-8b8b-0800200c9a66", person1);
         collector.checkThat(dao.count(), is(equalTo(1L)));
         collector.checkThat(dao.find(paging).size(), is(equalTo(1)));
-        final Person person2 = dao.read("ee749160-c6a0-11e2-8b8b-0800200c9a66");
-        collector.checkThat(person2, is(not(nullValue())));
-        collector.checkThat(person2, hasProperty("id", is(equalTo("ee749160-c6a0-11e2-8b8b-0800200c9a66"))));
-        collector.checkThat(person2, hasProperty("name", is(equalTo("Brian Matthews"))));
+        final Optional<Person> person2 = dao.read("ee749160-c6a0-11e2-8b8b-0800200c9a66");
+        collector.checkThat(person2.isPresent(), is(true));
+        collector.checkThat(person2.get(), hasProperty("id", is(equalTo("ee749160-c6a0-11e2-8b8b-0800200c9a66"))));
+        collector.checkThat(person2.get(), hasProperty("name", is(equalTo("Brian Matthews"))));
         collector.checkThat(dao.count(), is(equalTo(1L)));
         final Person person3 = new PersonImpl("ee749160-c6a0-11e2-8b8b-0800200c9a66", "Brian Thomas Matthews", VALID_FROM, VALID_TO);
         dao.update("ee749160-c6a0-11e2-8b8b-0800200c9a66", person3);
-        final Person person4 = dao.read("ee749160-c6a0-11e2-8b8b-0800200c9a66");
-        collector.checkThat(person4, is(not(nullValue())));
-        collector.checkThat(person4, hasProperty("id", is(equalTo("ee749160-c6a0-11e2-8b8b-0800200c9a66"))));
-        collector.checkThat(person4, hasProperty("name", is(equalTo("Brian Thomas Matthews"))));
+        final Optional<Person> person4 = dao.read("ee749160-c6a0-11e2-8b8b-0800200c9a66");
+        collector.checkThat(person4.isPresent(), is(true));
+        collector.checkThat(person4.get(), hasProperty("id", is(equalTo("ee749160-c6a0-11e2-8b8b-0800200c9a66"))));
+        collector.checkThat(person4.get(), hasProperty("name", is(equalTo("Brian Thomas Matthews"))));
         dao.destroy("ee749160-c6a0-11e2-8b8b-0800200c9a66");
         collector.checkThat(dao.count(), is(equalTo(0L)));
         collector.checkThat(dao.find(paging).size(), is(equalTo(0)));
@@ -186,7 +187,7 @@ public class TestMongoDAO {
      */
     @Test
     public void readFromEmptyDatabaseShouldFail() {
-        final Person result = dao.read("2c6c4910-c69f-11e2-8b8b-0800200c9a66");
-        collector.checkThat(result, is(nullValue()));
+        final Optional<Person> result = dao.read("2c6c4910-c69f-11e2-8b8b-0800200c9a66");
+        collector.checkThat(result.isPresent(), is(false));
     }
 }

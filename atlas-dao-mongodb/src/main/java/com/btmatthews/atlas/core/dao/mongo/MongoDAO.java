@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Abstract base class that implements common features of data access objects that
@@ -121,14 +122,14 @@ public class MongoDAO<ID, I, T extends I> implements DAO<ID, I> {
     }
 
     @Override
-    public final I lookup(final String key,
-                          final Object value) {
+    public final Optional<I> lookup(final String key,
+                                    final Object value) {
         LOGGER.debug("Lookup object in collection: {}.{} with key: {}={}", databaseName, collectionName, key, value);
         final DBCursor<I> cursor = collection.find().is(key, value);
         if (cursor.hasNext()) {
-            return cursor.next();
+            return Optional.of(cursor.next());
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -159,24 +160,12 @@ public class MongoDAO<ID, I, T extends I> implements DAO<ID, I> {
      * @return The matching object.
      */
     @Override
-    public final I read(final ID id) {
+    public final Optional<I> read(final ID id) {
         if (id == null) {
             throw new IllegalArgumentException("id must not be null");
         }
         LOGGER.debug("Read object from collection: {}.{} with id: {}", databaseName, collectionName, id);
-        return collection.findOneById(id);
-    }
-
-    @Override
-    public final List<I> read(final ID... ids) {
-        final List<I> entities = new ArrayList<>();
-        for (final ID id : ids) {
-            if (id == null) {
-                throw new IllegalArgumentException("ids must not contain null");
-            }
-            entities.add(collection.findOneById(id));
-        }
-        return entities;
+        return Optional.ofNullable(collection.findOneById(id));
     }
 
     /**

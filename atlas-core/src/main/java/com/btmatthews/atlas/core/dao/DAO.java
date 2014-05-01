@@ -18,7 +18,9 @@ package com.btmatthews.atlas.core.dao;
 
 import com.btmatthews.atlas.core.common.Paging;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Describes the interface for data access objects that persist entities of
@@ -36,7 +38,9 @@ public interface DAO<ID, I> {
      *
      * @return The number of entities.
      */
-    long count();
+    default long count() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Retrieve a portion of the ordered entities described by interface {@code I} from the data store.
@@ -44,9 +48,14 @@ public interface DAO<ID, I> {
      * @param paging Describes the portion of the result set to return.
      * @return An ordered list of {@code I} entities.
      */
-    List<I> find(Paging paging);
+    default List<I> find(final Paging paging) {
+        throw new UnsupportedOperationException();
+    }
 
-    I lookup(String key, Object value);
+    default Optional<I> lookup(final String key,
+                               final Object value) {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Persist a newly created entity in the data store.
@@ -54,7 +63,9 @@ public interface DAO<ID, I> {
      * @param id     The object identifier of the persistent entity.
      * @param entity The newly created entity.
      */
-    void create(ID id, I entity);
+    default void create(final ID id, final I entity) {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Retrieve a persistent entity from the data store.
@@ -62,7 +73,9 @@ public interface DAO<ID, I> {
      * @param id The object identifier of the persistent entity.
      * @return The persistent entity.
      */
-    I read(ID id);
+    default Optional<I> read(final ID id) {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Retrieve a list of persistent entities from the data store.
@@ -70,7 +83,13 @@ public interface DAO<ID, I> {
      * @param ids The object identifiers of the persistent entities.
      * @return An ordered list of {@code I} entities.
      */
-    List<I> read(ID... ids);
+    default List<Optional<I>> read(final ID... ids) {
+        final List<Optional<I>> entities = new ArrayList<>(ids.length);
+        for (final ID id : ids) {
+            entities.add(read(id));
+        }
+        return entities;
+    }
 
     /**
      * Update a persistent entity in the data store.
@@ -78,12 +97,16 @@ public interface DAO<ID, I> {
      * @param id     The object identifier of the persistent entity.
      * @param entity The persistent entity.
      */
-    void update(ID id, I entity);
+    default void update(final ID id, final I entity) {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Delete a persistent entity from the data store.
      *
      * @param id The object identifier of the persistent entity.
      */
-    void destroy(ID id);
+    default void destroy(final ID id) {
+        throw new UnsupportedOperationException();
+    }
 }
