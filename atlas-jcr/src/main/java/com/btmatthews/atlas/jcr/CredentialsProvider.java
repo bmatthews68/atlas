@@ -41,5 +41,7 @@ public interface CredentialsProvider {
      *
      * @return The end-user credentials.
      */
-    Credentials getUserCredentials();
+    default Credentials getUserCredentials() {
+        return getGlobalCredentials();
+    }
 }
